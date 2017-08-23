@@ -3,6 +3,8 @@
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/ggd-auth"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/ggd-core"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/ggd-web"/>
         <dependent-module archiveName="ggd-lib.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ggd-lib/ggd-lib">
             <dependency-type>uses</dependency-type>
         </dependent-module>

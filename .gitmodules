@@ -4,3 +4,9 @@
 [submodule "ggd/ggd-auth"]
 	path = ggd/ggd-auth
 	url = https://github.com/gauciouss/ggd-auth.git
+[submodule "ggd/ggd-core"]
+	path = ggd/ggd-core
+	url = https://github.com/gauciouss/ggd-core.git
+[submodule "ggd/ggd-web"]
+	path = ggd/ggd-web
+	url = https://github.com/gauciouss/ggd-web.git
