@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/task
+	http://www.springframework.org/schema/task/spring-task-3.0.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    http://www.springframework.org/schema/util 
+    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+    
+    
+    
+
+	<util:map id="COMMON_MAP" key-type="java.lang.String"
+		value-type="java.lang.String">
+		<description>這裡的設定都是跟系統參數有關的資訊</description>
+	</util:map>
+	
+	<util:map id = "adminUser" map-class="java.util.HashMap" key-type="java.lang.String" value-type="java.lang.String">
+		<entry key="account" value="admin"/>
+		<entry key="password" value="MSadmin"/>
+	</util:map>
+
+
+	<util:list id="ACL_WHITE_LIST" value-type="java.lang.String">
+		<value>/main/*</value>
+		<value>/auth/*</value>
+		<value>/config/*</value>
+		<value>/applycase/*</value>
+		<value>/service/*</value>
+		<value>/redirect/*</value>
+		<value>/help/*</value>
+	</util:list>
+</beans>

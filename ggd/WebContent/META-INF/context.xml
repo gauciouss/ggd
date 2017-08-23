@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Resource 
+	name="jdbc/ggd" 
+	auth="Container" 
+	type="javax.sql.DataSource"
+	factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+	driverClassName="com.mysql.jdbc.Driver" 
+	url="jdbc:mysql://192.168.191.128:3306/ggd"
+	username="ggd" 
+	password="12345678"
+	maxActive="20" maxIdle="10" />
