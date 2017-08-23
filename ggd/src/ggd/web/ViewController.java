@@ -62,8 +62,6 @@ public class ViewController extends CommonController {
 	@Qualifier(DispatcherConfig.GGD_ACL)
 	private AclManager acl;
 	
-	
-	
 	private static final String BEAN_ENTITY = "%1$s.%2$s";
 	
 	
@@ -98,14 +96,9 @@ public class ViewController extends CommonController {
 				if(!Util.isEmpty(path)){
 					return new ModelAndView(path);
 				}
-				
-				
 				view.addObject(Constant.SESSION, request.getSession());
-				
-				
 				String beanEntity = String.format(BEAN_ENTITY, category, command);
 				log.debug("context.getBean(\"{}\")", beanEntity);
-				
 				if(context.containsBean(beanEntity)){
 					Dispatcher d = context.getBean(beanEntity, Dispatcher.class);
 					if(d != null){
@@ -155,7 +148,7 @@ public class ViewController extends CommonController {
 		view.addObject(Constant.URL_CONFIG, urlConfig);
 		view.addObject(Constant.COMMON_CONFIG, commonConfig);
 		view.addObject(Constant.DISPLAY_CONFIG, displayConfig);
-		//以下是給HTML及ＪＳ快數取得URL用的
+		//以下是給HTML及JS快數取得URL用的
 		
 		DispatchData data = new DispatchDataImpl(category, command, arg, WebUtil.getClientIpAddr(request));
 		
@@ -172,10 +165,6 @@ public class ViewController extends CommonController {
 			String name = es.nextElement();
 			view.addObject(name, request.getParameter(name));
 		}
-		
-		
-		
-		
 		return view;
 		
 	}
