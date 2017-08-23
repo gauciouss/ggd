@@ -1,0 +1,6 @@
+[submodule "ggd/ggd-lib"]
+	path = ggd/ggd-lib
+	url = https://github.com/gauciouss/-ggd-lib.git
+[submodule "ggd/ggd-auth"]
+	path = ggd/ggd-auth
+	url = https://github.com/gauciouss/ggd-auth.git
