@@ -106,16 +106,16 @@ public class JSONController extends CommonController{
 		return new ServiceResponse(header, view.getModel().get(Constant.JSON_RESPONSE));
 	}
 	
-	private ModelAndView createModelAndView(String folder, String jsp, String arg, HttpServletRequest request){
-		ModelAndView view = new ModelAndView(StringUtil.concat(Constant.SLASH, folder, jsp));
-		
+	
+	private ModelAndView createModelAndView(String folder, String jsp, String arg, HttpServletRequest request) {
+		ModelAndView view = new ModelAndView(StringUtil.concat(Constant.SLASH, folder, jsp));		
 		DispatchData data = new DispatchDataImpl(folder, jsp, arg, WebUtil.getClientIpAddr(request));
 		view.addObject(Constant.DISPATCH_DATA, data);
 		view.addObject(Constant.ARG, arg);
-		if(data.getUserInfo() != null){
+		//TODO 這裏要改，當機上盒來呼叫的時候怎麼辦
+		if(data.getUserInfo() != null) {
 			view.addObject(Constant.USER_INFO, data.getUserInfo());
 		}
-		
 		
 		return view;
 		
