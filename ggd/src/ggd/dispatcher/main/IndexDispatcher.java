@@ -25,7 +25,7 @@ import ggd.core.dispatcher.Dispatcher;
 @Component("main.index")
 public class IndexDispatcher implements Dispatcher {
 	
-	private final static Logger log = LoggerFactory.getLogger(AdmUserDao.class);
+	private final static Logger log = LoggerFactory.getLogger(IndexDispatcher.class);
 
 	/* (non-Javadoc)
 	 * @see ggd.core.dispatcher.Dispatcher#handler(org.springframework.web.servlet.ModelAndView, javax.servlet.http.HttpServletRequest)
