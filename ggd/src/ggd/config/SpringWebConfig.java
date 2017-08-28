@@ -17,7 +17,7 @@ import ggd.core.interceptor.CrossDomainInterceptor;
  
 @EnableWebMvc
 @Configuration
-@ComponentScan({ "masterlink.futures.controller" })
+@ComponentScan({ "ggd.web" })
 @Import({DispatcherConfig.class})
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
 	

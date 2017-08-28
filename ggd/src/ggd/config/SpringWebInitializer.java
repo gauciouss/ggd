@@ -22,7 +22,7 @@ public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServ
 		case TEST :  
 			tmp.add(XML_TEST_Config.class);
 			break;
-		case PRODUCTION :  
+		case PRODUCTION :
 			tmp.add(XML_PROD_Config.class);
 			break;
 		default : 

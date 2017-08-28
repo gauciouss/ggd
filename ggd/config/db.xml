@@ -23,9 +23,10 @@
 		scope="singleton" destroy-method="destroy">
 
 		<!-- 使用 Tomcat jdbc connection pool 的 DataSource -->
-		<property name="dataSource" ref="jndidatasource" />
-		<property name="hibernateProperties">
+		<property name="dataSource" ref="jndidatasource" />		
+		<property name="hibernateProperties">		
 			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
 				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.format_sql">true</prop>
 				<!--<prop key="hibernate.hbm2ddl.auto">none</prop> -->
@@ -40,8 +41,7 @@
 
 		<property name="packagesToScan">
 			<array>
-				<value>masterlink.futures.eopen.vo</value>
-				<value>masterlink.futures.ms.entity</value>
+				<value>ggd.auth.vo</value>
 			</array>
 		</property>
 	</bean>
@@ -49,7 +49,7 @@
 	
 	
 	<bean id="jndidatasource" class="org.springframework.jndi.JndiObjectFactoryBean">
-		<property name="jndiName" value="java:comp/env/jdbc/futures"/>
+		<property name="jndiName" value="java:comp/env/jdbc/ggd"/>
 		<property name="lookupOnStartup" value="true"/>
 		<property name="cache" value="true"/>
 		<property name="proxyInterface" value="javax.sql.DataSource"/>

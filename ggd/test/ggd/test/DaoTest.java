@@ -55,4 +55,30 @@ public class DaoTest {
 		System.out.println(grp.getUsers());
 		System.out.println("******* END testFindGroup() *******");
 	}
+	
+	@Test
+	public void testAddNewGroup() {
+		System.out.println("******* START testFindGroup() *******");
+		admGroupDao.addNewGroup("主管");
+		System.out.println("******* END testFindGroup() *******");
+	}
+	
+	@Test
+	public void testUpdateGroupInfo() {
+		System.out.println("******* START testFindGroup() *******");
+		AdmGroup grp = admGroupDao.findById("GRP0000001");
+		grp.setGroupName("測試測試");
+		admGroupDao.updateGroupInfo(grp);
+		grp = admGroupDao.findById("GRP0000001");
+		System.out.println("new grp: " + grp);
+		System.out.println("******* END testFindGroup() *******");
+	}
+	
+	@Test
+	public void testGetNextId() {
+		System.out.println("******* START testGetNextId() *******");
+		String nextId = admGroupDao.getNextId();
+		System.out.println(nextId);
+		System.out.println("******* END testGetNextId() *******");
+	}
 }

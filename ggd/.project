@@ -3,7 +3,6 @@
 	<name>ggd</name>
 	<comment></comment>
 	<projects>
-		<project>ggd-lib</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
