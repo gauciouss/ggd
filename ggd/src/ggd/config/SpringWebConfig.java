@@ -17,7 +17,7 @@ import ggd.core.interceptor.CrossDomainInterceptor;
  
 @EnableWebMvc
 @Configuration
-@ComponentScan({ "ggd.web" })
+@ComponentScan({ "ggd.web", "ggd.auth", "ggd.core", "ggd.dispatcher" })
 @Import({DispatcherConfig.class})
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
 	

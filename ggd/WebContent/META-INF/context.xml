@@ -2,9 +2,8 @@
 <context>
 	<Resource 
 		name="jdbc/ggd" 
-		global="jdbc/ggd"
-		auth="Container" 
 		type="javax.sql.DataSource"
+		auth="Container"
 		driverClassName="com.mysql.jdbc.Driver" 
 		url="jdbc:mysql://192.168.191.128:3306/ggd"
 		username="ggd" 
