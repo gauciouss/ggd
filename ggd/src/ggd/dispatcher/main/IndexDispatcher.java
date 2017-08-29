@@ -33,7 +33,7 @@ public class IndexDispatcher implements Dispatcher {
 	@Override
 	public void handler(ModelAndView view, HttpServletRequest request) throws CoreException {
 		Profiler p = new Profiler();
-		Object obj = request.getSession().getAttribute(Constant.USER_INFO);
+		Object obj = request.getSession().getAttribute(Constant.USER);
 		log.trace("START: {}.handler(), user obj: {}", this.getClass(), obj);
 		AdmUser user = null;
 		if(obj != null) { 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+	<!-- 建立Console顯示的設定 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<!--設定log顯示的格式, 其中: %d->SLF4j會帶入日期. %p->SLF4j會帶入Log層級 . %C{0}->SLF4j會帶入產生 
+				Log的程式名稱 %L->SLF4j會帶入產生 Log的行數 %msg->SLF4j會帶入我們寫的log訊息 %n-> SLF4j會換行 -->
+			<pattern>[%d][%p][%t][%C{0}:%L]: %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 建立將log寫入檔案的設定. RollingFileAppender的設定會將隔天的log檔備份出去 -->
+	<appender name="ALL_LOG"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 設定log檔路徑及名稱 -->
+		<!-- <file>../logs/futures.log</file> -->
+		<file>c:/apache-tomcat-8.5.4/logs/futures.log</file>
+		<!-- 如果要讓多個JVM寫到同一個log檔 file就不能設定而要改設定prudent -->
+		<!-- <prudent>true</prudent> -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- 設定log檔備份出去的路徑及名稱 -->
+			<!-- <fileNamePattern>../logs/all/futures.%d{yyyy-MM-dd}.log</fileNamePattern> -->
+			<fileNamePattern>c:/apache-tomcat-8.5.4/logs/all/futures.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- 設定log檔備最多保留的天數 -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<!--設定log顯示的格式, 其中: %d->SLF4j會帶入日期. %p->SLF4j會帶入Log層級 . %C{0}->SLF4j會帶入產生 
+				Log的程式名稱 %L->SLF4j會帶入產生 Log的行數 %msg->SLF4j會帶入我們寫的log訊息 %n-> SLF4j會換行 -->
+			<pattern>[%d][%p][%C{0}:%L]: %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="ggd.core" level="INFO">
+		<appender-ref ref="ALL_LOG" />
+	</logger>
+
+	<logger name="ggd" level="TRACE">
+		<appender-ref ref="ALL_LOG" />
+	</logger>
+	
+	<logger name="ggd.auth" level="TRACE">
+		<appender-ref ref="ALL_LOG" />
+	</logger>
+
+	<!-- Default要用哪一種設定產生log -->
+	<root level="ALL">
+		<!-- Default將所有程式的log寫到Console裡 -->
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

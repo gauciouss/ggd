@@ -20,7 +20,7 @@
 	
     <util:map id="DISPLAY_MAP" key-type="java.lang.String" value-type="java.lang.String">
     	<description>這裡的設定都是跟顯示說明有關的資訊</description>
-    	<entry key="KEY1" value="XXXXXXXX"/>
+    	<entry key="PAGE_TITLE" value="XXXXXXXX"/>
     </util:map>
     
 </beans>

@@ -21,6 +21,7 @@
 	<util:map id="COMMON_MAP" key-type="java.lang.String"
 		value-type="java.lang.String">
 		<description>這裡的設定都是跟系統參數有關的資訊</description>
+		<entry key="MAIN_PATH" value-ref="MAIN_PATH"/>
 	</util:map>
 	
 	<util:map id = "adminUser" map-class="java.util.HashMap" key-type="java.lang.String" value-type="java.lang.String">
@@ -38,4 +39,9 @@
 		<value>/redirect/*</value>
 		<value>/help/*</value>
 	</util:list>
+	
+	<bean id="MAIN_PATH" class="java.lang.String">
+   		<description>根目錄</description>
+   		<constructor-arg value="http://127.0.0.1:8080/ggd/"/>
+   	</bean>
 </beans>

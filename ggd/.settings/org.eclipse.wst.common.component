@@ -5,6 +5,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/ggd-core"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
+        <wb-resource deploy-path="/ggd-js" source-path="/ggd-js"/>
         <property name="context-root" value="ggd"/>
         <property name="java-output-path" value="/ggd/build/classes"/>
     </wb-module>
