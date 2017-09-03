@@ -42,7 +42,7 @@ public class DaoTest {
 		System.out.println("******* START testAddNewUser() *******");
 		Timestamp now = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		AdmGroup grp = admGroupDao.findById("GRP0000001");
-		AdmUser user = new AdmUser("power", "12345678", "power@gmail.com", "", "", "", now, null, true, true, grp);
+		AdmUser user = new AdmUser("power", "12345678", "AAA", "power@gmail.com", "", "", "", now, null, true, true, grp);
 		admUserDao.save(user);
 		System.out.println("******* END testAddNewUser() *******");
 	}

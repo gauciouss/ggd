@@ -11,14 +11,12 @@
 <!DOCTYPE>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=BIG5">
 <title><%=display.getValue("PAGE_TITLE")%> - 登入</title>
-<link rel="stylesheet" type="text/css"
-	href="<%=common.getValue("MAIN_PATH")%>ggd-js/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ggd-js/bootstrap-3.3.7-dist/css/bootstrap.min.css">
 </head>
 <body>
 	
-	<form method="post" action="<%=common.getValue("MAIN_PATH")%>ui/view/main/login">
+	<form method="post" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/login">
 		<div class="container">
 			<div class="panel panel-default">
 				<div class="form-group">

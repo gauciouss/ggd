@@ -1,5 +1,8 @@
 package ggd.test;
 
+import java.util.List;
+import java.util.Set;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -12,6 +15,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import ggd.auth.AuthService;
+import ggd.auth.vo.AdmFunc;
 import ggd.auth.vo.AdmUser;
 import ggd.config.DispatcherConfig;
 import ggd.config.SpringWebInitializer;
@@ -36,6 +40,15 @@ public class ServiceTest {
 	public void testAuth() {
 		log.trace("******* START: {}.testAuth() *******", this.getClass());
 		AdmUser user = service.authenticate("admin", "123456");
+		Set<AdmFunc> funcs = user.getGroup().getFuncs();
+		log.debug("******* all funcs: {}", funcs);
 		log.info("******* END: {}.testAuth(), user: {}", this.getClass(), user);
+	}
+	
+	@Test
+	public void testFindUsers() {
+		log.trace("******* START: {}.testFindUsers() *******", this.getClass());
+		List<AdmUser> users = service.findUsers(1, 5);
+		log.info("******* END: {}.testFindUsers(), user: {}", this.getClass(), users);
 	}
 }
