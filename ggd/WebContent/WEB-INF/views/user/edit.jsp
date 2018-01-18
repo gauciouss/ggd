@@ -10,10 +10,9 @@
 	Config display = (Config) request.getAttribute(Constant.DISPLAY_CONFIG);
 	Config common = (Config) request.getAttribute(Constant.COMMON_CONFIG);
 	AdmUser user = (AdmUser) request.getAttribute(Constant.DATA_LIST);
-	Integer iPage = (Integer) request.getAttribute(Constant.PAGE);
 	AdmUser loginUser = (AdmUser) session.getAttribute(Constant.USER);
 	List<AdmGroup> groups = (List<AdmGroup>) request.getAttribute(UserDispatcher.ALL_APPROVED_GROUPS);
-	System.out.println(loginUser.getGroup());
+	System.out.println(loginUser.getGroup());	
 %>
 <!DOCTYPE>
 <html>
@@ -73,7 +72,10 @@
 
 <script>
 
-	var group = "<%=user.getGroup().getGroupId() %>";
+	<%
+		String groupId = user.getGroup() == null ? "" : user.getGroup().getGroupId();
+	%>
+	var group = "<%=groupId %>";
 	$("#group").val(group);
 
 </script>

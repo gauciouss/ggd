@@ -25,7 +25,8 @@
 <div>
 
 使用者帳號/姓名: <input type="text" class="text" name="account" id="account"/>&nbsp;&nbsp;
-<input type="button" value="查詢" id="searchBtn"/>
+<a href="#" class="btn btn-default" id="searchBtn">查詢</a>
+<a href="#" class="btn btn-info" id="saveBtn">新增</a>
 
 </div>
 <div>	
@@ -80,6 +81,12 @@
 			$("#<%=Constant.ACTION_TYPE%>").val("search");
 			document.form.submit();
 		});
+		
+		$("#saveBtn").on("click", function() {
+			$("#<%=Constant.ACTION_TYPE%>").val("edit");
+			document.form.submit();
+		});
+		
 	})();
 
 </script>

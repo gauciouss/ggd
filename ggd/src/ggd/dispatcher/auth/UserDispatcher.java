@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import baytony.util.Profiler;
 import baytony.util.StringUtil;
+import baytony.util.Util;
 import ggd.auth.AuthService;
 import ggd.auth.vo.AdmGroup;
 import ggd.auth.vo.AdmUser;
@@ -49,6 +50,7 @@ public class UserDispatcher implements Dispatcher {
 				doEdit(view, request);
 				break;			
 			case "save":
+				doEdit(view, request);
 				break;
 			case "confirm":
 				doConfirm(view, request);
@@ -80,9 +82,11 @@ public class UserDispatcher implements Dispatcher {
 		this.doIndex(view, request);
 	}
 	
+	
+	
 	private void doEdit(ModelAndView view, HttpServletRequest request) {
 		String account = request.getParameter("account"); 
-		AdmUser user = service.findUserById(account);
+		AdmUser user = Util.isEmpty(account) ? new AdmUser() : service.findUserById(account);
 		List<AdmGroup> groups = service.findAllGroup(true, true);
 		view.addObject(Constant.DATA_LIST, user);
 		view.addObject(ALL_APPROVED_GROUPS, groups);
