@@ -38,21 +38,21 @@
         <tr>
             <td>發送至</td>
             <td>
-                <select>
-                    <option>群組</option>
-                    <option>地區</option>
+                <select id="type">
+                    <option value="1">群組</option>
+                    <option value="2">地區</option>
                 </select>   
                 <div id="factory">
-                        <input type="checkbox"/>A廠商
-                        <input type="checkbox"/>B廠商
-                        <input type="checkbox"/>C廠商
-                        <input type="checkbox"/>D廠商
+                        <input type="checkbox"/>A廠商
+                        <input type="checkbox"/>B廠商
+                        <input type="checkbox"/>C廠商
+                        <input type="checkbox"/>D廠商
                 </div>
                 <div id="area" style="display: none">
-                        <input type="checkbox"/>台北
-                        <input type="checkbox"/>台中
-                        <input type="checkbox"/>C廠商
-                        <input type="checkbox"/>D廠商
+                        <input type="checkbox"/>台北
+                        <input type="checkbox"/>台中
+                        <input type="checkbox"/>台南
+                        <input type="checkbox"/>高雄
                 </div>
             </td>
         </tr>
@@ -62,11 +62,11 @@
         </tr>
         <tr>
             <td>上架時間</td>
-            <td><input type="date"/></td>
+            <td><input type="date" value="2017-01-01"/></td>
         </tr>
         <tr>
             <td>下架時間</td>
-            <td><input type="date"/></td>
+            <td><input type="date" value="2017-01-02"/></td>
         </tr>
         <tr>
             <td colspan="2">
@@ -78,5 +78,29 @@
 </div>
 
 </body>
+<script src="../../ggd-js/jquery-1.11.3.min.js"></script>
+<script>
+	
+	var switchType = function() {
+		$("#type").on("change", function() {
+			var v = $(this).val();
+			switch(v) {
+			case "1":
+				$("#factory").show();
+				$("#area").hide();
+				break;
+			case "2":
+				$("#factory").hide();
+				$("#area").show();
+				break;
+			}
+		});
+	};
+	
+	$(function() {
+		switchType();
+	});
+
+</script>
 
 </html>

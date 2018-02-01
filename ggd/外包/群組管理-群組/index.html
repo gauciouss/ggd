@@ -1,27 +1,37 @@
 <html>
-<head>群組列表-群組</head>
+<head>群組列表-群組
+</head>
 <body>
 
-<div>
-    <input type="button" value="新增" onclick="javascript: location.href='edit.html'"/>    
-</div>
-<div>
-    <table border="1">
-        <tr>
-            <td colspan="3">群組列表</td>
-        </tr>
-        <tr>
-            <td>ID</td>
-            <td>名稱</td>
-            <td>所在地區</td>
-        </tr>
-        <tr>
-            <td>12345678</td>            
-            <td>XX國際公司</td>
-            <td>台北市文山區</td>
-        </tr>        
-    </table>    
-</div>
+	<div>
+		<input type="button" value="新增"
+			onclick="javascript: location.href='edit.html'" />
+	</div>
+	<div>
+		<table border="1">
+			<tr>
+				<td colspan="6">群組列表</td>
+			</tr>
+			<tr>
+				<td>統一編號</td>
+				<td>名稱</td>
+				<td>所在地區</td>
+				<td>跑馬燈</td>
+				<td>廣告</td>
+				<td>機上盒</td>
+				<td>基本資料</td>
+			</tr>
+			<tr>
+				<td>12345678</td>
+				<td>XX國際公司</td>
+				<td>台北市文山區</td>
+				<td><a href="../跑馬燈管理/index.html">查詢</a></td>
+				<td><a href="../廣告管理/index.html">查詢</a></td>
+				<td><a href="../機上盒管理/index.html">查詢</a></td>
+				<td><a href="./edit.html">編輯</a></td>
+			</tr>
+		</table>
+	</div>
 
 </body>
 
