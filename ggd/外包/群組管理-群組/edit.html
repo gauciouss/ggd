@@ -1,28 +1,28 @@
-<html>
-
+<html>    
+<head>群組編輯-群組</head>
 <body>
 
 <div>
     <table border="1">
         <tr>
-            <td colspan="2">廠商編輯</td>
+            <td colspan="2">群組編輯</td>
         </tr>
         <tr>
             <td>ID</td>
-            <td><input type="text"/></td>            
+            <td><input type="text" value="12345678" disabled="disabled"/></td>
         </tr>
         <tr>
-            <td>名稱</td>                        
-            <td><input type="text"/></td>
+            <td>名稱</td>                               
+            <td><input type="text" value="XX國際公司" disabled="disabled"/></td>       
         </tr>
         <tr>
             <td>所在地區</td>                        
             <td>
-                <select>
+                <select disabled="disabled">
                     <option>台北市</option>
                     <option>新北市</option>
                 </select>
-                <select>
+                <select disabled="disabled">
                     <option>文山區</option>
                     <option>萬華區</option>
                 </select>
@@ -38,13 +38,13 @@
             </td>
         </tr>
         <tr>
-            <td>選擇特定頻道</td>            
-            <td>
-                <input type="checkbox"/>非凡財經
-                <input type="checkbox"/>中天衛視
-                <input type="checkbox"/>龍祥電影                   
-            </td>
-        </tr>
+                <td>首頁快捷APP</td>            
+                <td>
+                    <input type="checkbox"/>LINE
+                    <input type="checkbox"/>FACEBOOK
+                    <input type="checkbox"/>Youtube                    
+                </td>
+            </tr>
         <tr>
             <td>background-image上傳</td>
             <td><input type="file"/></td>
@@ -54,8 +54,17 @@
             <td><input type="file"/></td>
         </tr>
         <tr>
+                <td>啟用</td>
+                <td>
+                    <select disabled="disabled">
+                        <option>是</option>
+                        <option>否</option>
+                    </select>
+                </td>
+            </tr>
+        <tr>
             <td colspan="2">
-                <input type="button" value="OK"/>
+                <input type="button" value="OK" onclick="javascript: location.href='index.html'"/>
                 <input type="button" value="cancel"/>
             </td>
         </tr>
