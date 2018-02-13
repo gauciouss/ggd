@@ -29,17 +29,5 @@
         <entry key="CUST_DATA_OPR" value="CustDataOPR.jsp"/>
     </util:map>
     
-    <bean id="FUTURES_PATH" class="java.lang.String">
-    	<constructor-arg value="http://192.168.5.156/futures/"/>
-    </bean>
-    
-    
-    <bean id="MAIN_PATH" class="java.lang.String">
-    	<constructor-arg value="http://172.21.5.11/eopen-ap/"/>
-    </bean>
-
-    <bean id="REDIRECT" class="java.lang.String">
-    	<constructor-arg value="/eopen-ap/ui/view/redirect/300"/>
-    </bean>
     
 </beans>

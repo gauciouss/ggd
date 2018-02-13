@@ -11,25 +11,31 @@
 <!DOCTYPE>
 <html>
 <head>
-<title><%=display.getValue("PAGE_TITLE")%> - 登入</title>
-<link rel="stylesheet" type="text/css" href="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ggd-js/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+<jsp:include page="/WEB-INF/views/include/header.jsp">
+	<jsp:param value="登入" name="title"/>
+	<jsp:param value="<%=common.getValue(Constant.MAIN_PATH_HOST) %>" name="main"/>
+</jsp:include>
 </head>
-<body>
-	
-	<form method="post" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/login">
-		<div class="container">
-			<div class="panel panel-default">
-				<div class="form-group">
-					<label for="account">登入帳號</label> 
-						<input type="text" class="form-control" id="account" name="<%=LoginDispatcher.ACCOUNT %>" placeholder="登入帳號">
-				</div>
-				<div class="form-group">
-					<label for="password">密碼</label> <input type="password" class="form-control" id="password" name="<%=LoginDispatcher.PASSWORD %>" placeholder="密碼">
-				</div>		
-				<button type="submit" class="btn btn-primary">登入</button>
-			</div>
-		</div>
-	</form>
-	
+<body class="bg-dark">
+
+	<div class="container">
+    <div class="card card-login mx-auto mt-5">
+      <div class="card-header">Login</div>
+      <div class="card-body">
+        <form method="post" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/login">
+          <div class="form-group">
+            <label for="account">登入帳號</label> 
+            <input class="form-control" id="account" type="text" name="<%=LoginDispatcher.ACCOUNT %>" placeholder="輸入帳號">
+          </div>
+          <div class="form-group">
+            <label for="password">密碼</label> 
+            <input type="password" class="form-control" id="password" name="<%=LoginDispatcher.PASSWORD %>" placeholder="密碼">
+          </div>                    
+          <input type="submit" class="btn btn-primary btn-block" value="登入"/>
+          
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

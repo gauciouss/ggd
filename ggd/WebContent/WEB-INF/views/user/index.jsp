@@ -17,7 +17,7 @@
 	<jsp:param value="使用者管理" name="title"/>
 	<jsp:param value="<%=common.getValue(Constant.MAIN_PATH_HOST) %>" name="main"/>
 </jsp:include>
-</head>
+</head> 
 <body>
 <form method="post" name="form" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/auth/user">
 <input type="hidden" name="<%=Constant.ACTION_TYPE %>" id="<%=Constant.ACTION_TYPE %>"/>
