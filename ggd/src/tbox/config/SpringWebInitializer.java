@@ -1,4 +1,4 @@
-package ggd.config;
+package tbox.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +19,14 @@ public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServ
 		tmp.add(DispatcherConfig.class);
 		tmp.add(XML_Config.class);
 		switch(Constant.MACHINE){
-		case TEST :  
-			tmp.add(XML_TEST_Config.class);
-			break;
-		case PRODUCTION :
-			tmp.add(XML_PROD_Config.class);
-			break;
-		default : 
-			tmp.add(XML_DEV_Config.class);
+			case TEST :  
+				tmp.add(XML_TEST_Config.class);
+				break;
+			case PRODUCTION :
+				tmp.add(XML_PROD_Config.class);
+				break;
+			default : 
+				tmp.add(XML_DEV_Config.class);
 		}
 		config = tmp.toArray(new Class<?>[tmp.size()]);
 	}

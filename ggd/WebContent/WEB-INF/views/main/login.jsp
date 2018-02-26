@@ -1,5 +1,5 @@
 <%@page import="ggd.core.common.Config"%>
-<%@page import="ggd.dispatcher.main.LoginDispatcher"%>
+<%@page import="tbox.dispatcher.main.LoginDispatcher"%>
 <%@page import="ggd.core.common.Constant"%>
 <%@page import="java.util.Map"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"

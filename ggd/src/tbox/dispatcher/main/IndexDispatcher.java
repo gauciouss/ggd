@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ggd.dispatcher.main;
+package tbox.dispatcher.main;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import baytony.util.Profiler;
-import ggd.auth.dao.AdmUserDao;
-import ggd.auth.vo.AdmUser;
 import ggd.core.CoreException;
 import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
@@ -35,13 +33,10 @@ public class IndexDispatcher implements Dispatcher {
 		Profiler p = new Profiler();
 		Object obj = request.getSession().getAttribute(Constant.USER);
 		log.trace("START: {}.handler(), user obj: {}", this.getClass(), obj);
-		AdmUser user = null;
-		if(obj != null) { 
-			user = (AdmUser) obj;
-		}
-		else {
+		if(obj == null) { 
 			view.setViewName("main/login");
 		}
+		log.info("END: {}.handler(), user: {}, exec TIME: {} ms.", this.getClass(), obj, p.executeTime());
 	}
 
 }

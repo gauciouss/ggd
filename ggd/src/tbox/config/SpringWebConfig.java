@@ -1,4 +1,4 @@
-package ggd.config;
+package tbox.config;
  
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import ggd.core.interceptor.CrossDomainInterceptor;
  
 @EnableWebMvc
 @Configuration
-@ComponentScan({ "ggd.web", "ggd.auth", "ggd.core", "ggd.dispatcher" })
+@ComponentScan({ "ggd.auth", "ggd.core", "tbox.dispatcher", "tbox.web" })
 @Import({DispatcherConfig.class})
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
 	

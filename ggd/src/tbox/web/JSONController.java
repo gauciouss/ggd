@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ggd.web;
+package tbox.web;
 
 import javax.servlet.http.HttpServletRequest;
 

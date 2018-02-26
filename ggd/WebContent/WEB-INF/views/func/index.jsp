@@ -1,3 +1,5 @@
+<%@page import="ggd.auth.vo.AdmFunc"%>
+<%@page import="ggd.auth.vo.AdmGroup"%>
 <%@page import="baytony.util.Util"%>
 <%@page import="ggd.auth.vo.AdmUser"%>
 <%@page import="java.util.List"%>
@@ -7,7 +9,7 @@
 <%
 	Config display = (Config) request.getAttribute(Constant.DISPLAY_CONFIG);
 	Config common = (Config) request.getAttribute(Constant.COMMON_CONFIG);
-	List<AdmUser> users = (List<AdmUser>) request.getAttribute(Constant.DATA_LIST);
+	List<AdmFunc> funcs = (List<AdmFunc>) request.getAttribute(Constant.DATA_LIST);
 	String actionResult = (String) request.getAttribute(Constant.ACTION_RESULT);
 %>
 <!DOCTYPE>
@@ -19,35 +21,35 @@
 </jsp:include>
 </head> 
 <body>
-<form method="post" name="form" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/auth/user">
+<form method="post" name="form" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/auth/func">
 <input type="hidden" name="<%=Constant.ACTION_TYPE %>" id="<%=Constant.ACTION_TYPE %>"/>
-<input type="hidden" name="account" id="account"/>
+<input type="hidden" name="dataId" id="dataId"/>
 <div>	
 	<div class="card-header">
-		<i class="fa fa-table"></i>使用者管理
+		<i class="fa fa-table"></i>功能管理
 		<a href="#" class="btn btn-info" id="saveBtn">新增</a>
 	</div>
-	<div class="card-body">		
+	<div class="card-body">
 		<div class="table-responsive">
 			<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 				<thead>
 					<tr>
-						<th>帳號</th>
-						<th>姓名</th>
+						<th>功能編號</th>
+						<th>功能名稱</th>
 						<th>核准</th>
 						<th>啟用</th>
 					</tr>
 				</thead>
 				<tbody>	
 				<%
-					if(!Util.isEmpty(users)) {	
-						for(AdmUser user : users) {
+					if(!Util.isEmpty(funcs)) {	
+						for(AdmFunc func : funcs) {
 				%>
-					<tr class="data" account="<%=user.getAccount() %>">
-						<td><%=user.getAccount() %></td>
-						<td><%=user.getName() %></td>
-						<td><%=user.isEnabled() %></td>
-						<td><%=user.isApproved() %></td>
+					<tr class="data" dataId="<%=func.getFuncId() %>">
+						<td><%=func.getFuncId() %></td>
+						<td><%=func.getFuncName() %></td>
+						<td><%=func.isEnabled() == true ? "核准" : "未核准" %></td>
+						<td><%=func.isApproved() == true ? "啟用" : "未啟用" %></td>
 					</tr>
 				<%		
 						}
@@ -73,9 +75,9 @@
 		(function() {
 			
 			$(".data").on("click", function() {
-				var account = $(this).attr("account");
+				var dataId = $(this).attr("dataId");
 				$("#<%=Constant.ACTION_TYPE%>").val("edit");
-				$("#account").val(account);
+				$("#dataId").val(dataId);
 				document.form.submit();
 			});
 			
@@ -96,6 +98,7 @@
 				alert("執行成功");			
 			else if(ar == "0")
 				alert("執行失敗");
+			
 			
 		})();
 	

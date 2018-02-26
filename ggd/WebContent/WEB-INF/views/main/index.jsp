@@ -9,7 +9,7 @@
 	pageEncoding="UTF-8"%>
 <%!
 
-	private static final String TREE_NODE_PARAM = "{id: '%1$s', pId: '%2$s', name: '%3$s', funcURL: '%4$s', click: false}";
+	private static final String TREE_NODE_PARAM = "{id: '%1$s', pId: '%2$s', name: '%3$s', funcURL: '%4$s', isRoot: %5$s}";
 	
 	public String createTreeNodeJson(Set<AdmFunc> funcs) {
 		StringBuilder sb = new StringBuilder();
@@ -19,11 +19,11 @@
 			if(i != 0) 
 				sb.append(",");
 			if(func.isRoot()) {
-				String p = String.format(TREE_NODE_PARAM, func.getFuncId(), "0", func.getFuncName(), "");
+				String p = String.format(TREE_NODE_PARAM, func.getFuncId(), "0", func.getFuncName(), "", func.isRoot());
 				sb.append(p);
 			}
 			else {
-				String s = String.format(TREE_NODE_PARAM, func.getFuncId(), func.getParent().getFuncId(), func.getFuncName(), func.getUrl());
+				String s = String.format(TREE_NODE_PARAM, func.getFuncId(), func.getParent().getFuncId(), func.getFuncName(), func.getUrl(), func.isRoot());
 				sb.append(s);
 			}			
 			i++;
@@ -60,53 +60,13 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
-      <ul class="navbar-nav navbar-sidenav" id="menu">
+      <!-- 左方 menu 區 start -->
+      <ul class="navbar-nav navbar-sidenav" id="menu">        
         
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#menu">
-            <i class="fa fa-fw fa-sitemap"></i>
-            <span class="nav-link-text">Menu Levels</span>
-          </a>
-          <ul class="sidenav-second-level collapse" id="collapseMulti">
-            <li>
-              <a href="#">Second Level Item</a>
-            </li>
-            <li>
-              <a href="#">Second Level Item</a>
-            </li>
-            <li>
-              <a href="#">Second Level Item</a>
-            </li>
-            <li>
-              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti2">Third Level</a>
-              <ul class="sidenav-third-level collapse" id="collapseMulti2">
-                <li>
-                  <a href="#">Third Level Item</a>
-                </li>
-                <li>
-                  <a href="#">Third Level Item</a>
-                </li>
-                <li>
-                  <a href="#">Third Level Item</a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Link">
-          <a class="nav-link" href="#">
-            <i class="fa fa-fw fa-link"></i>
-            <span class="nav-link-text">Link</span>
-          </a>
-        </li>
       </ul>
-      <ul class="navbar-nav sidenav-toggler">
-        <li class="nav-item">
-          <a class="nav-link text-center" id="sidenavToggler">
-            <i class="fa fa-fw fa-angle-left"></i>
-          </a>
-        </li>
-      </ul>
+      <!-- 左方 menu 區 end -->
+
+     
       <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle mr-lg-2" id="messagesDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -205,9 +165,14 @@
     </div>
   </nav>
   <div class="content-wrapper">
+    <!-- 右方 content 區 start -->
     <div class="container-fluid">
-            
+		<iframe id="iCtn" frameBorder="0" style="width: 100%; height: 100%;"></iframe>
     </div>
+	<!-- 右方 content 區 end -->
+	
+
+
     <!-- /.container-fluid-->
     <!-- /.content-wrapper-->
     <footer class="sticky-footer">
@@ -242,27 +207,45 @@
     
   </div>
 </body>
-<jsp:include page="/WEB-INF/views/include/script.jsp">
-	<jsp:param value="首頁" name="title" />
+<jsp:include page="/WEB-INF/views/include/script.jsp">	
 	<jsp:param value="<%=common.getValue(Constant.MAIN_PATH_HOST)%>" name="main" />
 </jsp:include>
 <script>
 
 	var menuJson = <%=tn %>;
+	var pMs = new Map();
 
-	var createMenuTree = function() {
-		var menuTree = $("#left_area");
-		var pMs = [];
-		$.each(menuJson, function(i, mObj) {					
-			if(mObj.pId == "0") {
+	var gotoURL = function(url) {
+		$("#iCtn").attr("src", "<%=common.getValue(Constant.MAIN_PATH_HOST)%>/ui/view/" + url);
+	};
+
+	var createMenuTree = function() {		
+		
+		$.each(menuJson, function(i, mObj) {						
+			if(mObj.pId == 0) {
 				var pM = $("<li class='nav-item' data-toggle='tooltip' data-placement='right'>").attr("title", mObj.name);
-				pMs[mObj.id] = pM;
+				var rootNode = $("<a class='nav-link nav-link-collapse collapsed' data-toggle='collapse' data-parent='menu'>").attr("href", "#"+mObj.id);
+				rootNode.append("<i class='fa fa-fw fa-sitemap'></i><span class='nav-link-text'>"+mObj.name+"</span>");
+				pM.append(rootNode);
+				console.log(pM);
+				pM.append("<ul class='sidenav-second-level collapse' id='"+mObj.id+"'>");
+				//pMs[mObj.id] = pM;
+				pMs.set(mObj.id, pM);
 			}
 			else {				
-				var pm = pMs[mObj.pId];				
-				
+				var pm = pMs.get(mObj.pId);				
+				var ul = pm.find("ul[id='"+mObj.pId+"']");				
+				var li = $("<li>");
+				var a = $("<a>").attr("href", "javascript: gotoURL('"+mObj.funcURL+"')").text(mObj.name);
+				li.append(a);
+				ul.append(li);
 			}
 		});
+		
+		
+		pMs.forEach(function(v, i) {
+			$("#menu").append(v);
+		});		
 	};
 	
 	createMenuTree();

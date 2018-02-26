@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ggd.web;
+package tbox.web;
 
 import java.util.Enumeration;
 
@@ -22,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 import baytony.util.Profiler;
 import baytony.util.StringUtil;
 import baytony.util.Util;
-import ggd.config.DispatcherConfig;
 import ggd.core.acl.AclManager;
 import ggd.core.common.Config;
 import ggd.core.common.Constant;
@@ -32,6 +31,7 @@ import ggd.core.dispatcher.DispatchData;
 import ggd.core.dispatcher.DispatchDataImpl;
 import ggd.core.dispatcher.Dispatcher;
 import ggd.core.util.WebUtil;
+import tbox.config.DispatcherConfig;
 
 /**
  *

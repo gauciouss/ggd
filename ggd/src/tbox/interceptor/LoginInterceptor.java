@@ -1,4 +1,4 @@
-package ggd.interceptor;
+package tbox.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

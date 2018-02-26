@@ -1,4 +1,4 @@
-package ggd.config;
+package tbox.config;
  
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;

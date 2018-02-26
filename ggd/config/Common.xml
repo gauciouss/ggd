@@ -24,11 +24,6 @@
 		<entry key="MAIN_PATH_HOST" value-ref="MAIN_PATH"/>
 	</util:map>
 	
-	<util:map id = "adminUser" map-class="java.util.HashMap" key-type="java.lang.String" value-type="java.lang.String">
-		<entry key="account" value="admin"/>
-		<entry key="password" value="MSadmin"/>
-	</util:map>
-
 
 	<util:list id="ACL_WHITE_LIST" value-type="java.lang.String">
 		<value>/main/*</value>

@@ -42,6 +42,7 @@
 		<property name="packagesToScan">
 			<array>
 				<value>ggd.auth.vo</value>
+				<value>tbox.data.vo</value>
 			</array>
 		</property>
 	</bean>

@@ -1,4 +1,4 @@
-package ggd.dispatcher.main;
+package tbox.dispatcher.main;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import baytony.util.Profiler;
+import baytony.util.StringUtil;
+import ggd.auth.AuthException;
 import ggd.auth.AuthService;
 import ggd.auth.vo.AdmUser;
 import ggd.core.CoreException;
@@ -36,12 +38,20 @@ public class LoginDispatcher implements Dispatcher {
 		String account = request.getParameter(ACCOUNT);
 		String pwd = request.getParameter(PASSWORD);
 		log.debug("account: {}, pwd: {}", account, pwd);
-		AdmUser user = authService.authenticate(account, pwd);		
-		if(user != null) {
-			request.getSession().setAttribute(Constant.USER, user);
-			view.setViewName("main/index");
+		try {
+			AdmUser user = authService.authenticate(account, pwd);		
+			if(user != null) {
+				request.getSession().setAttribute(Constant.USER, user);
+				view.setViewName("main/index");
+			}
+			log.info("END: {}.handler(), account: {}, pwd: {}, user: {}, exec TIME: {} ms.", this.getClass(), account, pwd, user, p.executeTime());
 		}
-		log.info("END: {}.handler(), user: {}, exec TIME: {} ms.", this.getClass(), user, p.executeTime());
+		catch(AuthException e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
+		catch(Exception e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
 	}
 
 }
