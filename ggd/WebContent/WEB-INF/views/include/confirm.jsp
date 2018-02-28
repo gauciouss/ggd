@@ -2,7 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
-<div class="form-group">	
+<div class="form-group control-panel">	
 	<label for="isEnabled">啟用 / 取消啟用</label> 
 	<select class="form-control" name="isEnabled" id="isEnabled">
 		<option value=0>取消啟用</option>
@@ -10,7 +10,7 @@
 	</select>		
 </div>
 
-<div class="form-group">	
+<div class="form-group control-panel">	
  	<label for="isApproved"> 開通 / 取消開通</label>
 	<select class="form-control" name="isApproved" id="isApproved">
 		<option value=0>取消開通</option>
@@ -33,12 +33,18 @@
 var isEnabled = ${param.isEnabled} == true ? 1 : 0;
 var isApproved = ${param.isApproved} == true ? 1 : 0;
 var isManager = ${param.isManager} == true ? 1 : 0;
+var cp = ${param.showPanel} == true ? 1 : 0;
 
 (function() {
 	
 	if(!isManager) {
 		$("#isApproved").hide();
 	}
+	
+	if(!cp) {
+		$(".control-panel").hide();
+	}
+	
 	$("#isEnabled").val(isEnabled).trigger("change");
 	$("#isApproved").val(isApproved).trigger("change");
 	
@@ -51,6 +57,8 @@ var isManager = ${param.isManager} == true ? 1 : 0;
 		$("#<%=Constant.ACTION_TYPE %>").val("index");
 		document.form.submit();
 	});
+	
+	
 	
 })();
 

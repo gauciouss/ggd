@@ -5,6 +5,7 @@
 <script src="${param.main }ggd-js/vendor/datatables/dataTables.bootstrap4.js"></script>
 <script src="${param.main }ggd-js/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/ggd/ggd-js/vendor/js/sb-admin.min.js"></script>
+<script src="/ggd/ggd-js/ggd.js"></script>
 
 <script>
 

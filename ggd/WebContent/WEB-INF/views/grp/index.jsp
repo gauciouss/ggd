@@ -1,3 +1,4 @@
+<%@page import="ggd.auth.vo.AdmGroupEntity"%>
 <%@page import="ggd.auth.vo.AdmGroup"%>
 <%@page import="baytony.util.Util"%>
 <%@page import="ggd.auth.vo.AdmUser"%>
@@ -8,7 +9,7 @@
 <%
 	Config display = (Config) request.getAttribute(Constant.DISPLAY_CONFIG);
 	Config common = (Config) request.getAttribute(Constant.COMMON_CONFIG);
-	List<AdmGroup> grps = (List<AdmGroup>) request.getAttribute(Constant.DATA_LIST);
+	List<AdmGroupEntity> grps = (List<AdmGroupEntity>) request.getAttribute(Constant.DATA_LIST);
 	String actionResult = (String) request.getAttribute(Constant.ACTION_RESULT);
 %>
 <!DOCTYPE>
@@ -42,7 +43,7 @@
 				<tbody>	
 				<%
 					if(!Util.isEmpty(grps)) {	
-						for(AdmGroup grp : grps) {
+						for(AdmGroupEntity grp : grps) {
 				%>
 					<tr class="data" dataId="<%=grp.getGroupId() %>">
 						<td><%=grp.getGroupId() %></td>

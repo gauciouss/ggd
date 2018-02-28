@@ -219,9 +219,9 @@
 		$("#iCtn").attr("src", "<%=common.getValue(Constant.MAIN_PATH_HOST)%>/ui/view/" + url);
 	};
 
-	var createMenuTree = function() {		
+	var createMenuTree = function() {
 		
-		$.each(menuJson, function(i, mObj) {						
+		$.each(menuJson, function(i, mObj) {
 			if(mObj.pId == 0) {
 				var pM = $("<li class='nav-item' data-toggle='tooltip' data-placement='right'>").attr("title", mObj.name);
 				var rootNode = $("<a class='nav-link nav-link-collapse collapsed' data-toggle='collapse' data-parent='menu'>").attr("href", "#"+mObj.id);
@@ -229,10 +229,12 @@
 				pM.append(rootNode);
 				console.log(pM);
 				pM.append("<ul class='sidenav-second-level collapse' id='"+mObj.id+"'>");
-				//pMs[mObj.id] = pM;
 				pMs.set(mObj.id, pM);
 			}
-			else {				
+		});
+		
+		$.each(menuJson, function(i, mObj) {
+			if(mObj.pId != 0) {
 				var pm = pMs.get(mObj.pId);				
 				var ul = pm.find("ul[id='"+mObj.pId+"']");				
 				var li = $("<li>");
@@ -241,7 +243,6 @@
 				ul.append(li);
 			}
 		});
-		
 		
 		pMs.forEach(function(v, i) {
 			$("#menu").append(v);

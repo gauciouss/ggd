@@ -22,7 +22,7 @@ import ggd.core.config.XML_Config;
  *
  */
 @Configuration
-@ComponentScan({"ggd.core", "ggd.auth", "tbox.data"})
+@ComponentScan({"ggd.core", "ggd.auth", "tbox.data", "tbox.dispatcher", "tbox.service"})
 public class DispatcherConfig {
 	
 	private static final Logger log = LoggerFactory.getLogger(DispatcherConfig.class);

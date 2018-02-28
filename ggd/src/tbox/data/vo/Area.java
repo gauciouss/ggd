@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -23,23 +24,16 @@ public class Area implements Serializable {
 	@Column(name = "area_name")
 	private String areaName;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name = "parent_id", insertable = false, updatable = false)
 	private Set<Area> citys;
 
 	@Column(name = "sort")
 	private Integer sort = 1;
+	
+	@Column(name = "parent_id")
+	private Integer parentId;
 
-	public Area() {
-	}
-
-	public Area(Integer areaId, String areaName, Set<Area> citys, Integer sort) {
-		super();
-		this.areaId = areaId;
-		this.areaName = areaName;
-		this.citys = citys;
-		this.sort = sort;
-	}
 
 	/**
 	 * @return the areaId
@@ -107,10 +101,16 @@ public class Area implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
+	public Integer getParentId() {
+		return parentId;
+	}
+	
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -124,6 +124,8 @@ public class Area implements Serializable {
 		builder.append(citys);
 		builder.append(", sort=");
 		builder.append(sort);
+		builder.append(", parentId=");
+		builder.append(parentId);
 		builder.append("]");
 		return builder.toString();
 	}

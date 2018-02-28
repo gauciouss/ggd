@@ -20,7 +20,7 @@
 	List<AdmFunc> funcs = (List<AdmFunc>) request.getAttribute(GroupDispatcher.ALL_APPROVE_FUNCS);
 	Set<AdmFunc> selectedFunc = grp.getFuncs();
 	
-	String selectedFuncStr = "undefined";
+	String selectedFuncStr = "[]";
 	StringBuilder sb = new StringBuilder();
 	if(!Util.isEmpty(selectedFunc)) {
 		int f = 0;
@@ -123,6 +123,7 @@
 					<jsp:include page="/WEB-INF/views/include/confirm.jsp">
 						<jsp:param value="<%=grp.isEnabled()%>" name="isEnabled" />
 						<jsp:param value="<%=grp.isApproved()%>" name="isApproved" />
+						<jsp:param value="true" name="showPanel"/>
 						<jsp:param value="<%=loginUser.getGroup().isManager()%>" name="isManager" />
 					</jsp:include>
 				</form>
@@ -152,6 +153,7 @@
 			});			
 			var index = m.indexOf(val[0]);
 			fJson.splice(index, 1);
+			$("#execFunc").val(JSON.stringify(fJson));
 		}
 	});
 	

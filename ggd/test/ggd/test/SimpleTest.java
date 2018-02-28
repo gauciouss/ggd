@@ -1,5 +1,7 @@
 package ggd.test;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,7 +14,25 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class ParseTest {
+import baytony.org.apache.commons.codec.binary.Base64;
+
+
+public class SimpleTest {
+	
+	@Test
+	public void readFile() {
+		try {
+			File f = new File("G:/外包/tbox/89125266/logo.jpg");
+			FileInputStream fis = new FileInputStream(f);
+			byte[] bs = new byte[(int) f.length()];			
+			fis.read(bs);
+			System.out.println(Base64.encodeBase64String(bs));
+			fis.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 	@Test
 	public void testParseJson2List() throws JsonParseException, JsonMappingException, IOException {

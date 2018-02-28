@@ -19,8 +19,8 @@ public class Company implements Serializable {
 	private static final long serialVersionUID = 2790177970557710941L;
 
 	@Id
-	@Column(name = "company_id")
-	private String cid;
+	@Column(name = "EIN")
+	private String EIN;
 
 	@Column(name = "name")
 	private String name;
@@ -48,16 +48,16 @@ public class Company implements Serializable {
 	private String fastKey4;
 
 	@OneToOne
-	@JoinColumn(name = "group_id")
+	@JoinColumn(name = "group_id", updatable = false, insertable = false)
 	private AdmGroup group;
 
 	public Company() {
 	}
 
-	public Company(String cid, String name, Area area, String logoURL, String backgroundURL, String fastKey1,
+	public Company(String EIN, String name, Area area, String logoURL, String backgroundURL, String fastKey1,
 			String fastKey2, String fastKey3, String fastKey4, AdmGroup group) {
 		super();
-		this.cid = cid;
+		this.EIN = EIN;
 		this.name = name;
 		this.area = area;
 		this.logoURL = logoURL;
@@ -69,19 +69,12 @@ public class Company implements Serializable {
 		this.group = group;
 	}
 
-	/**
-	 * @return the cid
-	 */
-	public String getCid() {
-		return cid;
+	public String getEIN() {
+		return EIN;
 	}
-
-	/**
-	 * @param cid
-	 *            the cid to set
-	 */
-	public void setCid(String cid) {
-		this.cid = cid;
+	
+	public void setEIN(String eIN) {
+		EIN = eIN;
 	}
 
 	/**
@@ -227,8 +220,8 @@ public class Company implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Company [cid=");
-		builder.append(cid);
+		builder.append("Company [EIN=");
+		builder.append(EIN);
 		builder.append(", name=");
 		builder.append(name);
 		builder.append(", area=");
@@ -251,4 +244,36 @@ public class Company implements Serializable {
 		return builder.toString();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((EIN == null) ? 0 : EIN.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Company other = (Company) obj;
+		if (EIN == null) {
+			if (other.EIN != null)
+				return false;
+		} else if (!EIN.equals(other.EIN))
+			return false;
+		return true;
+	}
+
+	
 }

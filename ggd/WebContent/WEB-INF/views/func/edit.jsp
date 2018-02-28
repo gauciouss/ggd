@@ -76,6 +76,7 @@
 					<jsp:include page="/WEB-INF/views/include/confirm.jsp">
 						<jsp:param value="<%=func.isEnabled()%>" name="isEnabled" />
 						<jsp:param value="<%=func.isApproved()%>" name="isApproved" />
+						<jsp:param value="true" name="showPanel"/>
 						<jsp:param value="<%=loginUser.getGroup().isManager()%>" name="isManager" />
 					</jsp:include>
 				</form>

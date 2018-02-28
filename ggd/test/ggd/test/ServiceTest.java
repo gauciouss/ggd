@@ -20,10 +20,13 @@ import ggd.auth.vo.AdmFunc;
 import ggd.auth.vo.AdmGroup;
 import ggd.auth.vo.AdmUser;
 import ggd.core.config.XML_Config;
+import tbox.TBoxException;
 import tbox.config.DispatcherConfig;
 import tbox.config.SpringWebInitializer;
 import tbox.config.XML_DEV_UNIT_Config;
-import tbox.dispatcher.main.IndexDispatcher;
+import tbox.data.vo.Company;
+import tbox.data.vo.CompanyEntity;
+import tbox.service.TBoxService;
 
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,6 +40,25 @@ public class ServiceTest {
 	@Autowired
 	@Qualifier("AuthService")
 	private AuthService service;
+	
+	@Autowired
+	@Qualifier("TBoxService")
+	private TBoxService tboxService;
+	
+	@Test
+	public void testFindAllCompany() {
+		log.trace("******* START: {}.testFindAllCompany() *******", this.getClass());
+		try {
+			List<CompanyEntity> comps = tboxService.findAllComp();
+			for(CompanyEntity comp : comps)
+				System.out.println(comp);
+			log.info("******* END: {}.testFindAllCompany()", this.getClass());
+		} catch (TBoxException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	
 	@Test
 	public void testFindGroup() {

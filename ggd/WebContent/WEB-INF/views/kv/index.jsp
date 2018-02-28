@@ -1,5 +1,5 @@
-<%@page import="ggd.auth.vo.AdmFuncEntity"%>
-<%@page import="ggd.auth.vo.AdmGroup"%>
+<%@page import="tbox.service.MsgEnum"%>
+<%@page import="tbox.data.vo.KVEntity"%>
 <%@page import="baytony.util.Util"%>
 <%@page import="ggd.auth.vo.AdmUser"%>
 <%@page import="java.util.List"%>
@@ -9,7 +9,7 @@
 <%
 	Config display = (Config) request.getAttribute(Constant.DISPLAY_CONFIG);
 	Config common = (Config) request.getAttribute(Constant.COMMON_CONFIG);
-	List<AdmFuncEntity> funcs = (List<AdmFuncEntity>) request.getAttribute(Constant.DATA_LIST);
+	List<KVEntity> kvs = (List<KVEntity>) request.getAttribute(Constant.DATA_LIST);
 	String actionResult = (String) request.getAttribute(Constant.ACTION_RESULT);
 %>
 <!DOCTYPE>
@@ -21,35 +21,37 @@
 </jsp:include>
 </head> 
 <body>
-<form method="post" name="form" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/auth/func">
+<form method="post" name="form" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/kv">
 <input type="hidden" name="<%=Constant.ACTION_TYPE %>" id="<%=Constant.ACTION_TYPE %>"/>
-<input type="hidden" name="dataId" id="dataId"/>
+<input type="hidden" name="account" id="account"/>
 <div>	
 	<div class="card-header">
-		<i class="fa fa-table"></i>功能管理
+		<i class="fa fa-table"></i>使用者管理
 		<a href="#" class="btn btn-info" id="saveBtn">新增</a>
 	</div>
-	<div class="card-body">
+	<div class="card-body">		
 		<div class="table-responsive">
 			<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 				<thead>
 					<tr>
-						<th>功能編號</th>
-						<th>功能名稱</th>
-						<th>核准</th>
-						<th>啟用</th>
+						<th>序號</th>
+						<th>種類</th>
+						<th>上架日期</th>
+						<th>下架日期</th>
+						<th>上/下架</th>
 					</tr>
 				</thead>
 				<tbody>	
 				<%
-					if(!Util.isEmpty(funcs)) {	
-						for(AdmFuncEntity func : funcs) {
+					if(!Util.isEmpty(kvs)) {	
+						for(KVEntity kv : kvs) {
 				%>
-					<tr class="data" dataId="<%=func.getFuncId() %>">
-						<td><%=func.getFuncId() %></td>
-						<td><%=func.getFuncName() %></td>
-						<td><%=func.isEnabled() == true ? "核准" : "未核准" %></td>
-						<td><%=func.isApproved() == true ? "啟用" : "未啟用" %></td>
+					<tr class="data" serialNo="<%=kv.getSerialNo() %>">
+						<td><%=kv.getSerialNo() %></td>
+						<td><%=MsgEnum.getName(kv.getKind()) %></td>
+						<td><%=kv.getStartDate() %></td>
+						<td><%=kv.getEndDate() %></td>
+						<td><%=kv.isEnabled() %></td>
 					</tr>
 				<%		
 						}
@@ -75,9 +77,9 @@
 		(function() {
 			
 			$(".data").on("click", function() {
-				var dataId = $(this).attr("dataId");
+				var serialNo = $(this).attr("serialNo");
 				$("#<%=Constant.ACTION_TYPE%>").val("edit");
-				$("#dataId").val(dataId);
+				$("#serialNo").val(account);
 				document.form.submit();
 			});
 			
@@ -98,7 +100,6 @@
 				alert("執行成功");			
 			else if(ar == "0")
 				alert("執行失敗");
-			
 			
 		})();
 	
