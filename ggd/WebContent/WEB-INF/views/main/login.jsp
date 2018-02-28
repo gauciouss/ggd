@@ -7,6 +7,7 @@
 <%
 	Config display = (Config) request.getAttribute(Constant.DISPLAY_CONFIG);
 	Config common = (Config) request.getAttribute(Constant.COMMON_CONFIG);
+	String msg = (String) request.getAttribute(LoginDispatcher.LOGIN_MSG);
 %>
 <!DOCTYPE>
 <html>
@@ -38,4 +39,21 @@
     </div>
   </div>
 </body>
+<jsp:include page="/WEB-INF/views/include/script.jsp">	
+	<jsp:param value="<%=common.getValue(Constant.MAIN_PATH_HOST)%>" name="main" />
+</jsp:include>
+<script>
+
+	var msg = "<%=msg %>";
+	
+	$(document).ready(function() {
+		if(!ggd.util.isEmpty(msg)) {
+			ggd.message.showModal({
+				msgContent: "帳號或密碼錯誤，或是尚未開通",
+				msgTitle: "說明",
+			});
+		}
+	});
+
+</script>
 </html>

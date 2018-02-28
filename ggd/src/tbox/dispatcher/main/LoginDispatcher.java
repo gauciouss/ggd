@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import baytony.util.Profiler;
 import baytony.util.StringUtil;
+import baytony.util.Util;
 import ggd.auth.AuthException;
 import ggd.auth.AuthService;
 import ggd.auth.vo.AdmUser;
@@ -25,6 +26,8 @@ public class LoginDispatcher implements Dispatcher {
 	
 	public static final String ACCOUNT = LoginDispatcher.class + "_ACCOUNT";
 	public static final String PASSWORD = LoginDispatcher.class + "_PASSWORD";
+	public static final String LOGIN_MSG = LoginDispatcher.class + "_MSG"; 
+	
 	
 	@Autowired
 	@Qualifier("AuthService")
@@ -43,6 +46,9 @@ public class LoginDispatcher implements Dispatcher {
 			if(user != null) {
 				request.getSession().setAttribute(Constant.USER, user);
 				view.setViewName("main/index");
+			}
+			else {
+				view.addObject(LOGIN_MSG, Util.isEmpty(account) ? "" : "LOGIN FAIL");
 			}
 			log.info("END: {}.handler(), account: {}, pwd: {}, user: {}, exec TIME: {} ms.", this.getClass(), account, pwd, user, p.executeTime());
 		}
