@@ -45,6 +45,9 @@ public class KV implements Serializable {
 
 	@Column(name = "update_user")
 	private String updateUser;
+	
+	@Column(name = "click_count")
+	private Integer clickCount;
 
 	@ManyToMany
 	@JoinTable(name = "kv_comp_mapping", joinColumns = {
@@ -200,6 +203,14 @@ public class KV implements Serializable {
 	 */
 	public void setCompanies(Set<Company> companies) {
 		this.companies = companies;
+	}
+	
+	public Integer getClickCount() {
+		return clickCount;
+	}
+	
+	public void setClickCount(Integer clickCount) {
+		this.clickCount = clickCount;
 	}
 
 	/*

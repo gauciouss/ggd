@@ -20,7 +20,7 @@ public class KVEntity implements Serializable {
 	private Integer serialNo;
 
 	@Column(name = "kind")
-	private Integer kind;
+	private String kind;
 
 	@Column(name = "img_path")
 	private String imgPath;
@@ -59,14 +59,14 @@ public class KVEntity implements Serializable {
 	/**
 	 * @return the kind
 	 */
-	public Integer getKind() {
+	public String getKind() {
 		return kind;
 	}
 
 	/**
 	 * @param kind the kind to set
 	 */
-	public void setKind(Integer kind) {
+	public void setKind(String kind) {
 		this.kind = kind;
 	}
 

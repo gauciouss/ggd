@@ -13,24 +13,23 @@ import org.springframework.web.servlet.ModelAndView;
 
 import baytony.util.Profiler;
 import baytony.util.StringUtil;
-import baytony.util.Util;
 import ggd.auth.AuthService;
-import ggd.auth.vo.AdmGroup;
 import ggd.auth.vo.AdmUser;
 import ggd.core.CoreException;
 import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
 import tbox.TBoxException;
-import tbox.data.vo.Area;
-import tbox.data.vo.Company;
+import tbox.data.vo.KV;
 import tbox.data.vo.KVEntity;
-import tbox.service.MsgEnum;
+import tbox.data.vo.KVKind;
 import tbox.service.TBoxService;
 
 @Component("main.kv")
 public class KVDispatcher implements Dispatcher {
 	
 	private final static Logger log = LoggerFactory.getLogger(CompanyDispatcher.class);
+	
+	public static final String ALL_KV_KIND = KVDispatcher.class + "_KINDS";
 	
 	@Autowired
 	@Qualifier("TBoxService")
@@ -76,11 +75,11 @@ public class KVDispatcher implements Dispatcher {
 		String serialNo = request.getParameter("serialNo"); 
 		log.trace("START: {}.deEdit(), serialNo: {}", this.getClass(), serialNo);
 		try {
-			//KVEntity comp = Util.isEmpty(serialNo) ? new KVEntity() : service.findCompanyByEIN(serialNo);
-			List<AdmGroup> groups = authService.findAllGroup(true, true);
-			List<Area> areas = service.findAllArea();
-			//view.addObject(Constant.DATA_LIST, comp);
-			view.setViewName("comp/edit");
+			KV kv = service.findKVBySerialNo(Integer.parseInt(serialNo));
+			List<KVKind> kinds = service.findAllKVKind();
+			view.addObject(Constant.DATA_LIST, kv);
+			view.addObject(ALL_KV_KIND, kinds);
+			view.setViewName("kv/edit");
 		}
 		catch(TBoxException e) {
 			log.error(StringUtil.getStackTraceAsString(e));
@@ -97,7 +96,7 @@ public class KVDispatcher implements Dispatcher {
 		log.trace("START: {}.doIndex()", this.getClass());
 		try {
 			AdmUser loginUser = (AdmUser) request.getSession().getAttribute(Constant.USER);
-			List<KVEntity> kvs = service.findKVsByAccount(loginUser.getAccount(), MsgEnum.ALL);
+			List<KVEntity> kvs = service.findKVsByAccount(loginUser.getAccount(), 0);
 			view.addObject(Constant.DATA_LIST, kvs);
 			view.setViewName("kv/index");
 		}

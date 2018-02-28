@@ -1,4 +1,3 @@
-<%@page import="tbox.service.MsgEnum"%>
 <%@page import="tbox.data.vo.KVEntity"%>
 <%@page import="baytony.util.Util"%>
 <%@page import="ggd.auth.vo.AdmUser"%>
@@ -23,7 +22,7 @@
 <body>
 <form method="post" name="form" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/kv">
 <input type="hidden" name="<%=Constant.ACTION_TYPE %>" id="<%=Constant.ACTION_TYPE %>"/>
-<input type="hidden" name="account" id="account"/>
+<input type="hidden" name="serialNo" id="serialNo"/>
 <div>	
 	<div class="card-header">
 		<i class="fa fa-table"></i>使用者管理
@@ -48,7 +47,7 @@
 				%>
 					<tr class="data" serialNo="<%=kv.getSerialNo() %>">
 						<td><%=kv.getSerialNo() %></td>
-						<td><%=MsgEnum.getName(kv.getKind()) %></td>
+						<td><%=kv.getKind() %></td>
 						<td><%=kv.getStartDate() %></td>
 						<td><%=kv.getEndDate() %></td>
 						<td><%=kv.isEnabled() %></td>
@@ -79,7 +78,7 @@
 			$(".data").on("click", function() {
 				var serialNo = $(this).attr("serialNo");
 				$("#<%=Constant.ACTION_TYPE%>").val("edit");
-				$("#serialNo").val(account);
+				$("#serialNo").val(serialNo);
 				document.form.submit();
 			});
 			

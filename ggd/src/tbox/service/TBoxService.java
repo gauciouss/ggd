@@ -8,20 +8,45 @@ import tbox.TBoxException;
 import tbox.data.vo.Area;
 import tbox.data.vo.Company;
 import tbox.data.vo.CompanyEntity;
+import tbox.data.vo.KV;
 import tbox.data.vo.KVEntity;
+import tbox.data.vo.KVKind;
 
 @Transactional
 public interface TBoxService {
 	
-	public List<KVEntity> findKVsByAccount(String account, MsgEnum type) throws TBoxException;
+	/**
+	 * 查詢所有訊息種類
+	 * @return
+	 * @throws TBoxException
+	 */
+	public List<KVKind> findAllKVKind() throws TBoxException;
+	
+	/**
+	 * 查詢訊息
+	 * @param serial
+	 * @return
+	 * @throws TBoxException
+	 */
+	public KV findKVBySerialNo(int serial) throws TBoxException;
+	
+	/**
+	 * 查詢所有訊息
+	 * @param account
+	 * @param type
+	 * @return
+	 * @throws TBoxException
+	 */
+	public List<KVEntity> findKVsByAccount(String account, int type) throws TBoxException;
 	
 	/**
 	 * 查詢所有訊息
 	 * @param EIN
+	 * @param type
 	 * @return
 	 * @throws TBoxException
 	 */
-	public List<KVEntity> findKVsByComp(String EIN, MsgEnum type) throws TBoxException;
+	public List<KVEntity> findKVsByComp(String EIN, int type) throws TBoxException;
 	
 	/**
 	 * 查詢統一編號

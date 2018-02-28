@@ -17,8 +17,9 @@ public class KVQuery extends HibernateQuery {
 	private final static Logger log = LoggerFactory.getLogger(KVQuery.class);
 	
 	private static final String SQL_FIND_ALL_KV_BY_ALL = 
-			"select distinct kv.kv_serial_no, kv.kind, kv.img_path, kv.click_link, kv.msg, map.start_date, map.end_date, map.isEnabled "
+			"select distinct kv.kv_serial_no, kind.kind_name kind, kv.img_path, kv.click_link, kv.msg, map.start_date, map.end_date, map.isEnabled "
 			+ " from KV kv "
+			+ " inner join kv_kind kind on kv.kind = kind.kind "
 			+ " inner join kv_comp_mapping map on kv.kv_serial_no = map.kv_serial_no "
 			+ " inner join company c on map.EIN = c.EIN "
 			+ " inner join adm_user au on au.group_id = c.group_id"
