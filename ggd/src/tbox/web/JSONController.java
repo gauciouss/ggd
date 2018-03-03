@@ -21,11 +21,11 @@ import baytony.util.Profiler;
 import baytony.util.StringUtil;
 import ggd.core.common.Constant;
 import ggd.core.controller.CommonController;
-import ggd.core.dispatcher.DispatchData;
-import ggd.core.dispatcher.DispatchDataImpl;
 import ggd.core.dispatcher.Dispatcher;
 import ggd.core.entity.ServiceResponse;
 import ggd.core.util.WebUtil;
+import tbox.core.TBoxData;
+import tbox.core.TBoxDataImpl;
 
 /**
  * @author baytony
@@ -87,7 +87,8 @@ public class JSONController extends CommonController{
 		ServiceResponse.Header header = new ServiceResponse.Header();
 		ModelAndView view = null;
 		try {
-			view = createModelAndView(category, command, arg, request);
+			view = createModelAndView(category, command, arg, request);		
+			TBoxData data = (TBoxData) view.getModel().get(Constant.DISPATCH_DATA);
 			String beanName = String.format(BEAN_ENTITY, category, command);
 			Dispatcher d = context.getBean(beanName, Dispatcher.class);
 			if(d != null){
@@ -96,7 +97,8 @@ public class JSONController extends CommonController{
 				header.setCode("00-000");
 			} else {
 				log.trace("No Dispatcher found for folder: {}. Call JSP: {}.", category, view.getViewName());
-			}
+			}			
+			
 		} 		
 		catch (Exception e) {
 			log.warn("doRequest() ERROR! MSG : {}", e.getMessage(), e);
@@ -109,14 +111,9 @@ public class JSONController extends CommonController{
 	
 	private ModelAndView createModelAndView(String folder, String jsp, String arg, HttpServletRequest request) {
 		ModelAndView view = new ModelAndView(StringUtil.concat(Constant.SLASH, folder, jsp));		
-		DispatchData data = new DispatchDataImpl(folder, jsp, arg, WebUtil.getClientIpAddr(request));
+		TBoxData data = new TBoxDataImpl(folder, jsp, arg, WebUtil.getClientIpAddr(request));		
 		view.addObject(Constant.DISPATCH_DATA, data);
 		view.addObject(Constant.ARG, arg);
-		//TODO 這裏要改，當機上盒來呼叫的時候怎麼辦
-		if(data.getUserInfo() != null) {
-			view.addObject(Constant.USER_INFO, data.getUserInfo());
-		}
-		
 		return view;
 		
 	}
