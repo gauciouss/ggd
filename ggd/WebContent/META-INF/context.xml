@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<context>
+<Context>
+	
 	<Resource 
 		name="jdbc/ggd" 
 		type="javax.sql.DataSource"
 		auth="Container"
 		driverClassName="com.mysql.jdbc.Driver" 
-		url="jdbc:mysql://192.168.191.128:3306/ggd"
+		url="jdbc:mysql://192.168.131.128:3306/ggd"
 		username="ggd" 
 		password="12345678"
 		maxActive="20" maxIdle="10" />
-</context>	
+	
+	<!--******* test env. ******* -->
+	<!-- <Resource 
+		name="jdbc/ggd" 
+		type="javax.sql.DataSource"
+		auth="Container"
+		driverClassName="com.mysql.jdbc.Driver" 
+		url="jdbc:mysql://127.0.0.1:3306/ggd"
+		username="ggd" 
+		password="1qaz@WSX"
+		maxActive="20" maxIdle="10" />  -->
+</Context>
