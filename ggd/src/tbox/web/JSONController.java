@@ -88,7 +88,6 @@ public class JSONController extends CommonController{
 		ModelAndView view = null;
 		try {
 			view = createModelAndView(category, command, arg, request);		
-			TBoxData data = (TBoxData) view.getModel().get(Constant.DISPATCH_DATA);
 			String beanName = String.format(BEAN_ENTITY, category, command);
 			Dispatcher d = context.getBean(beanName, Dispatcher.class);
 			if(d != null){
@@ -112,6 +111,7 @@ public class JSONController extends CommonController{
 	private ModelAndView createModelAndView(String folder, String jsp, String arg, HttpServletRequest request) {
 		ModelAndView view = new ModelAndView(StringUtil.concat(Constant.SLASH, folder, jsp));		
 		TBoxData data = new TBoxDataImpl(folder, jsp, arg, WebUtil.getClientIpAddr(request));		
+		log.debug("box data: {}", data);
 		view.addObject(Constant.DISPATCH_DATA, data);
 		view.addObject(Constant.ARG, arg);
 		return view;

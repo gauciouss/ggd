@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import baytony.util.StringUtil;
 import ggd.core.util.JSONUtil;
 
 public class TBoxDataImpl implements TBoxData {
@@ -36,6 +37,7 @@ public class TBoxDataImpl implements TBoxData {
 			log.debug("{}", this.toString());
 		}
 		catch(Exception e) {
+			log.error(StringUtil.getStackTraceAsString(e));
 			this.isJson = false;
 		}
 	}

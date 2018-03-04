@@ -10,5 +10,7 @@ public class TBoxConstant {
 	
 	public static final String ACTION = "action";
 	
+	public static final String HEADER = "header";
+	
 	public static final String BODY = "body";
 }

@@ -21,10 +21,11 @@ public class TBoxInfoImpl implements TBoxInfo {
 	private final JsonNode params;
 
 	public TBoxInfoImpl(JsonNode node, String clientIP) throws CoreException {
-		this.machineSN = JSONUtil.getString(node, TBoxConstant.SN, CodeMsg.getCodeMessage(TBoxCodeMsg.CORE_001));
-		this.MAC = JSONUtil.getString(node, TBoxConstant.MAC, CodeMsg.getCodeMessage(TBoxCodeMsg.CORE_002));
-		this.WIFIMAC = JSONUtil.getString(node, TBoxConstant.WIFI_MAC, CodeMsg.getCodeMessage(TBoxCodeMsg.CORE_003));
-		this.action = JSONUtil.getString(node, TBoxConstant.ACTION, CodeMsg.getCodeMessage(TBoxCodeMsg.CORE_004));
+		JsonNode header = node.get(TBoxConstant.HEADER);
+		this.machineSN = JSONUtil.getString(header, TBoxConstant.SN, CodeMsg.getCodeMessage(TBoxCodeMsg.CORE_001));
+		this.MAC = JSONUtil.getString(header, TBoxConstant.MAC, CodeMsg.getCodeMessage(TBoxCodeMsg.CORE_002));
+		this.WIFIMAC = JSONUtil.getString(header, TBoxConstant.WIFI_MAC, CodeMsg.getCodeMessage(TBoxCodeMsg.CORE_003));
+		this.action = JSONUtil.getString(header, TBoxConstant.ACTION, CodeMsg.getCodeMessage(TBoxCodeMsg.CORE_004));
 		this.params = node.get(TBoxConstant.BODY);
 	}
 	
