@@ -5,11 +5,10 @@ import org.springframework.context.annotation.ImportResource;
 
 @Configuration
 @ImportResource(value = { 
-		"file:c:/apache-tomcat-7.0.70/eopen_ap_config/URL.test.xml",
-		"file:c:/apache-tomcat-7.0.70/eopen_ap_config/Common.xml",
-		"file:c:/apache-tomcat-7.0.70/eopen_ap_config/Display.xml",
-		"file:c:/apache-tomcat-7.0.70/eopen_ap_config/auth_core.xml",
-		"file:c:/apache-tomcat-7.0.70/eopen_ap_config/db.xml"
+		"file:/usr/local/tomcat/apache-tomcat-8.5.20/tox_config/Common.xml",
+		"file:/usr/local/tomcat/apache-tomcat-8.5.20/tox_config/db.xml", 
+		"file:/usr/local/tomcat/apache-tomcat-8.5.20/tox_config/URL.test.xml",
+		"file:/usr/local/tomcat/apache-tomcat-8.5.20/tox_config/Display.xml"
 		})
 public class XML_TEST_Config {
 

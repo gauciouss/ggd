@@ -116,28 +116,16 @@ public class CompanyDispatcher implements Dispatcher {
 	}
 	
 	private void doConfirm(ModelAndView view, HttpServletRequest request) {
-//		Profiler p = new Profiler();
-//		String account = request.getParameter("account");
-//		String password = request.getParameter("password");
-//		String name = request.getParameter("name");
-//		String email = request.getParameter("email");
-//		String address = request.getParameter("address");
-//		String tel = request.getParameter("tel");
-//		String phone = request.getParameter("phone");
-//		String group = request.getParameter("group");
-//		String isEnabled = request.getParameter("isEnabled");
-//		String isApproved = request.getParameter("isApproved");
-//		log.debug("START: {}.doConfirm(), account: {}, password: {}, name: {}, email: {}, address: {}, tel: {}, phone: {}, group: {}, isEnabled: {}, isApproved: {}", this.getClass(), account, password, name, email, address, tel, phone, group, isEnabled, isApproved);
+		Profiler p = new Profiler();
+		
+		String EIN = request.getParameter("EIN");
+		String compName = request.getParameter("compName");
+		String city = request.getParameter("city");
+		String group = request.getParameter("group");
+		String logo = request.getParameter("logoB64");
+		String bgimg = request.getParameter("bgimgB64");
 //		try {
-//			AdmUser user = service.findUserById(account);
-//			if(user == null) {
-//				service.addUser(new AdmUser(account, password, name, email, address, tel, phone, new Timestamp(System.currentTimeMillis()), null, Integer.parseInt(isEnabled) == 1, Integer.parseInt(isApproved) == 1, service.findGroup(group)));
-//			}
-//			else {
-//				service.updateUser(account, password, name, email, address, tel, phone, group, Integer.parseInt(isEnabled) == 1, Integer.parseInt(isApproved) == 1);
-//			}	
-//			view.addObject(Constant.ACTION_RESULT, "1");
-//			log.info("END: {}.doConfirm(), account: {}, password: {}, name: {}, email: {}, address: {}, tel: {}, phone: {}, group: {}, isEnabled: {}, isApproved: {}, exec TIME: {} ms.", this.getClass(), account, password, name, email, address, tel, phone, group, isEnabled, isApproved, p.executeTime());
+//			
 //		}
 //		catch(AuthException e) {
 //			view.addObject(Constant.ACTION_RESULT, "0");
@@ -147,7 +135,7 @@ public class CompanyDispatcher implements Dispatcher {
 //			view.addObject(Constant.ACTION_RESULT, "0");
 //			log.error(StringUtil.getStackTraceAsString(e));
 //		}
-//		this.doIndex(view, request);
+		this.doIndex(view, request);
 	}
 	
 	

@@ -19,6 +19,7 @@ import ggd.core.CoreException;
 import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
 import tbox.TBoxException;
+import tbox.data.vo.CompanyEntity;
 import tbox.data.vo.KV;
 import tbox.data.vo.KVEntity;
 import tbox.data.vo.KVKind;
@@ -30,6 +31,7 @@ public class KVDispatcher implements Dispatcher {
 	private final static Logger log = LoggerFactory.getLogger(CompanyDispatcher.class);
 	
 	public static final String ALL_KV_KIND = KVDispatcher.class + "_KINDS";
+	public static final String ALL_KV_COMP = KVDispatcher.class + "_COMPS";
 	
 	@Autowired
 	@Qualifier("TBoxService")
@@ -77,8 +79,10 @@ public class KVDispatcher implements Dispatcher {
 		try {
 			KV kv = service.findKVBySerialNo(Integer.parseInt(serialNo));
 			List<KVKind> kinds = service.findAllKVKind();
+			List<CompanyEntity> comps = service.findAllComp();
 			view.addObject(Constant.DATA_LIST, kv);
 			view.addObject(ALL_KV_KIND, kinds);
+			view.addObject(ALL_KV_COMP, comps);
 			view.setViewName("kv/edit");
 		}
 		catch(TBoxException e) {

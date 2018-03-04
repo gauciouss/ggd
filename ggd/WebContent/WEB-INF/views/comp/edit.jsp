@@ -101,7 +101,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<div class="form-row">
 							<div class="col-md-6">
 								<label for="group">logo</label> 
@@ -112,11 +112,25 @@
 							</div>
 							<div class="col-md-6">
 								<label for="group">背景圖</label> 
-								<input type="file" name="logo" id="logo" class="form-control"/>
+								<input type="file" name="bgimg" id="bgimg" class="form-control"/>
 								<% if(!Util.isEmpty(comp.getBackgroundURL())) { %>
 								<a href="#" class="img" type="bg">預覽</a>
 								<% } %>
 							</div>
+						</div>
+					</div> -->
+					<div class="form-group" id="imgTag">
+						<div class="form-row">
+							<input type="file" id="logoFile" name="logoFile" class="form-control"/>
+							<input type="hidden" is="logoB64" name="logoB64"/>
+							<img id="logo" name="logo" class="form-control"/>
+						</div>
+					</div>
+					
+					<div class="form-group" id="imgTag">
+						<div class="form-row">
+							<input type="file" id="kv" class="form-control"/>
+							<img id="kvimg" class="form-control"/>
 						</div>
 					</div>
 

@@ -99,7 +99,7 @@
 								<%
 										List<AdmFunc> list = map.get(key);
 											for(AdmFunc func : list) {
-												if(selectedFunc.contains(func)) {
+												if(selectedFunc != null &&selectedFunc.contains(func)) {
 								%>												
 												<option value="<%=func.getFuncId()%>" selected="selected"><%=func.getFuncName() %></option>								
 								<%				

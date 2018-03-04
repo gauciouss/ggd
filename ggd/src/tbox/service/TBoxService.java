@@ -11,9 +11,45 @@ import tbox.data.vo.CompanyEntity;
 import tbox.data.vo.KV;
 import tbox.data.vo.KVEntity;
 import tbox.data.vo.KVKind;
+import tbox.data.vo.MachineBox;
 
 @Transactional
 public interface TBoxService {
+	
+	/**
+	 * 啟動機上盒並記錄最後登入時間&IP，若已經啟動機上盒，則只記錄最後登入時間&IP
+	 * @param sn
+	 * @param mac
+	 * @param wifi
+	 * @throws TBoxException
+	 */
+	public long activeMachine(String sn, String mac, String wifi, String ip) throws TBoxException;
+	
+	/**
+	 * 匯入機上盒資料
+	 * @param box
+	 * @return
+	 * @throws TBoxException
+	 */
+	public int importMachineBoxData(List<MachineBox> boxes) throws TBoxException;
+	
+	/**
+	 * 查詢機上盒資料
+	 * @param sn
+	 * @param mac
+	 * @param wifi
+	 * @return
+	 * @throws TBoxException
+	 */
+	public MachineBox findMachine(String sn, String mac, String wifi) throws TBoxException;
+	
+	/**
+	 * 查詢機上盒資料
+	 * @param serialNo
+	 * @return
+	 * @throws TBoxException
+	 */
+	public MachineBox findMachine(Integer serialNo) throws TBoxException;
 	
 	/**
 	 * 查詢所有訊息種類

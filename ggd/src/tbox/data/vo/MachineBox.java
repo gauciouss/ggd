@@ -6,6 +6,8 @@ import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,23 +21,25 @@ public class MachineBox implements Serializable {
 	private static final long serialVersionUID = -3637417535721807561L;
 
 	@Id
+	@Column(name = "serial_no")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer serialNo;
+
 	@Column(name = "machine_sn")
 	private String machineSN;
 
-	@Id
 	@Column(name = "wifi_mac")
 	private String wifiMAC;
 
-	@Id
 	@Column(name = "ethernet_mac")
 	private String ethernetMAC;
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "areaId", insertable = false, updatable = false)
+	@JoinColumn(name = "area_id", insertable = false, updatable = false)
 	private Area area;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "cid", insertable = false, updatable = false)
+	@JoinColumn(name = "company_id", insertable = false, updatable = false)
 	private Company company;
 
 	@Column(name = "last_login_time")
@@ -49,6 +53,9 @@ public class MachineBox implements Serializable {
 
 	@Column(name = "customer_name")
 	private String customerName;
+
+	@Column(name = "email")
+	private String email;
 
 	@Column(name = "start_date")
 	private Timestamp startDate;
@@ -65,10 +72,11 @@ public class MachineBox implements Serializable {
 	public MachineBox() {
 	}
 
-	public MachineBox(String machineSN, String wifiMAC, String ethernetMAC, Area area, Company company,
-			Timestamp lastLoginTime, String loginIP, String phone, String customerName, Timestamp startDate,
-			boolean isEnabled, Timestamp authorizedStartDate, Timestamp authorizedEndDate) {
+	public MachineBox(Integer serialNo, String machineSN, String wifiMAC, String ethernetMAC, Area area,
+			Company company, Timestamp lastLoginTime, String loginIP, String phone, String customerName, String email,
+			Timestamp startDate, boolean isEnabled, Timestamp authorizedStartDate, Timestamp authorizedEndDate) {
 		super();
+		this.serialNo = serialNo;
 		this.machineSN = machineSN;
 		this.wifiMAC = wifiMAC;
 		this.ethernetMAC = ethernetMAC;
@@ -78,10 +86,26 @@ public class MachineBox implements Serializable {
 		this.loginIP = loginIP;
 		this.phone = phone;
 		this.customerName = customerName;
+		this.email = email;
 		this.startDate = startDate;
 		this.isEnabled = isEnabled;
 		this.authorizedStartDate = authorizedStartDate;
 		this.authorizedEndDate = authorizedEndDate;
+	}
+
+	/**
+	 * @return the serialNo
+	 */
+	public Integer getSerialNo() {
+		return serialNo;
+	}
+
+	/**
+	 * @param serialNo
+	 *            the serialNo to set
+	 */
+	public void setSerialNo(Integer serialNo) {
+		this.serialNo = serialNo;
 	}
 
 	/**
@@ -220,6 +244,21 @@ public class MachineBox implements Serializable {
 	}
 
 	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email
+	 *            the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
 	 * @return the startDate
 	 */
 	public Timestamp getStartDate() {
@@ -282,12 +321,47 @@ public class MachineBox implements Serializable {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((serialNo == null) ? 0 : serialNo.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MachineBox other = (MachineBox) obj;
+		if (serialNo == null) {
+			if (other.serialNo != null)
+				return false;
+		} else if (!serialNo.equals(other.serialNo))
+			return false;
+		return true;
+	}
+
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("MachineBox [machineSN=");
+		builder.append("MachineBox [serialNo=");
+		builder.append(serialNo);
+		builder.append(", machineSN=");
 		builder.append(machineSN);
 		builder.append(", wifiMAC=");
 		builder.append(wifiMAC);
@@ -305,6 +379,8 @@ public class MachineBox implements Serializable {
 		builder.append(phone);
 		builder.append(", customerName=");
 		builder.append(customerName);
+		builder.append(", email=");
+		builder.append(email);
 		builder.append(", startDate=");
 		builder.append(startDate);
 		builder.append(", isEnabled=");
@@ -316,5 +392,7 @@ public class MachineBox implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
+	
+	
 
 }

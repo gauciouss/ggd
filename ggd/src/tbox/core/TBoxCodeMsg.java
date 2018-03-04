@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import baytony.util.Util;
+import ggd.core.common.CodeMsg;
 
 public class TBoxCodeMsg {
 	
@@ -64,7 +65,9 @@ public class TBoxCodeMsg {
 	public static final String getCodeMessage(String code) {
 		String msg = map.get(code);
 		if( Util.isEmpty(msg) ){
-			return CODE_ERROR;
+			msg = CodeMsg.getCodeMessage(code);
+			if( Util.isEmpty(msg) )
+				return CODE_ERROR;
 		}
 		return msg;
 	}

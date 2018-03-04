@@ -36,8 +36,8 @@
 	</util:list>
 	
 	<bean id="MAIN_PATH" class="java.lang.String">
-   		<description>根目錄</description>
-   		<constructor-arg value="http://127.0.0.1:8080/ggd/"/>
+   		<description>根目錄</description>   		
+   		<constructor-arg value="http://60.248.131.18/ggd/"/>
    	</bean>
    	
    	<bean id="IMG_PHYSICAL_PATH" class="java.lang.String">

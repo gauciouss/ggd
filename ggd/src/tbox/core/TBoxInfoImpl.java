@@ -40,7 +40,6 @@ public class TBoxInfoImpl implements TBoxInfo {
 
 	@Override
 	public String getMachineSN() {
-		// TODO Auto-generated method stub
 		return machineSN;
 	}
 

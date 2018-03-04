@@ -6,7 +6,7 @@
 		type="javax.sql.DataSource"
 		auth="Container"
 		driverClassName="com.mysql.jdbc.Driver" 
-		url="jdbc:mysql://192.168.131.128:3306/ggd"
+		url="jdbc:mysql://192.168.191.128:3306/ggd"
 		username="ggd" 
 		password="12345678"
 		maxActive="20" maxIdle="10" />
