@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +25,13 @@ import ggd.core.controller.CommonController;
 import ggd.core.dispatcher.Dispatcher;
 import ggd.core.entity.ServiceResponse;
 import ggd.core.util.WebUtil;
+import tbox.core.TBoxCodeMsg;
 import tbox.core.TBoxData;
 import tbox.core.TBoxDataImpl;
+import tbox.core.TBoxInfo;
+import tbox.core.TBoxServieResponseHeader;
+import tbox.data.vo.MachineBox;
+import tbox.service.TBoxService;
 
 /**
  * @author baytony
@@ -42,6 +48,10 @@ public class JSONController extends CommonController{
 	
 	@Autowired
 	private ApplicationContext context;
+	
+	@Autowired
+	@Qualifier("TBoxService")
+	private TBoxService service;
 	
 	@Override
 	public TYPE getType() {
@@ -84,25 +94,35 @@ public class JSONController extends CommonController{
 	
 	
 	private ServiceResponse doRequest(String category, String command, String arg, HttpServletRequest request){
-		ServiceResponse.Header header = new ServiceResponse.Header();
+		TBoxServieResponseHeader header = new TBoxServieResponseHeader();
 		ModelAndView view = null;
 		try {
-			view = createModelAndView(category, command, arg, request);		
-			String beanName = String.format(BEAN_ENTITY, category, command);
-			Dispatcher d = context.getBean(beanName, Dispatcher.class);
-			if(d != null){
-				log.trace("Folder : {}, Found : Dispatcher {}.", category, d.getClass());
-				d.handler(view, request);
-				header.setCode("00-000");
-			} else {
-				log.trace("No Dispatcher found for folder: {}. Call JSP: {}.", category, view.getViewName());
-			}			
-			
+			view = createModelAndView(category, command, arg, request);
+			TBoxData data = (TBoxData) view.getModel().get(Constant.DISPATCH_DATA);
+			TBoxInfo info = data.getTBoxInfo();
+			header.setSn(info.getMachineSN());
+			header.setMac(info.getMAC());
+			header.setWife_mac(info.getWIFIMAC());			
+			MachineBox box = service.findMachine(info.getMAC(), info.getMAC(), info.getWIFIMAC());
+			if(box == null) {
+				header.setCode(TBoxCodeMsg.EX_002);
+			}
+			else {
+				header.setAuthorizedEnd(String.valueOf(box.getAuthorizedEndDate().getTime()));
+				String beanName = String.format(BEAN_ENTITY, category, command);
+				Dispatcher d = context.getBean(beanName, Dispatcher.class);
+				if(d != null){
+					log.trace("Folder : {}, Found : Dispatcher {}.", category, d.getClass());
+					d.handler(view, request);
+					header.setCode("00-000");
+				} else {
+					log.trace("No Dispatcher found for folder: {}. Call JSP: {}.", category, view.getViewName());
+				}	
+			}
 		} 		
 		catch (Exception e) {
 			log.warn("doRequest() ERROR! MSG : {}", e.getMessage(), e);
 			header.setExt(e.getMessage());
-			//e.printStackTrace();
 		}
 		return new ServiceResponse(header, view.getModel().get(Constant.JSON_RESPONSE));
 	}
