@@ -37,6 +37,18 @@ public class TBoxCodeMsg {
 	 */
 	public static final String CORE_004 = "CO-004";
 	
+	/**
+	 * EX_001 = "EX-001"
+	 * 序號、mac、wifi mac對應到多組機器
+	 */
+	public static final String EX_001 = "EX-001";
+	
+	/**
+	 * EX_002 = "EX-002"
+	 * 未註冊的機器
+	 */
+	public static final String EX_002 = "EX-002";
+	
 	private static final Map<String, String> map = new HashMap<String, String>();
 	
 	static {
@@ -45,6 +57,8 @@ public class TBoxCodeMsg {
 		map.put(CORE_002, "Request JSON裡缺少MAC資訊.");
 		map.put(CORE_003, "Request JSON裡缺少WIFI MAC資訊.");
 		map.put(CORE_004, "Request JSON裡缺少action資訊.");
+		map.put(EX_001, "序號、mac、wifi mac對應到多組機器");
+		map.put(EX_002, "未註冊的機器");
 	}
 
 	public static final String getCodeMessage(String code) {
