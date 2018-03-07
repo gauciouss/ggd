@@ -102,31 +102,36 @@ public class JSONController extends CommonController{
 			TBoxInfo info = data.getTBoxInfo();
 			header.setSn(info.getMachineSN());
 			header.setMac(info.getMAC());
-			header.setWife_mac(info.getWIFIMAC());
-			MachineBox box = service.findMachine(info.getMachineSN(), info.getMAC(), info.getWIFIMAC());
-			log.debug("box: {}", box);
-			if(box == null) {
-				header.setCode(TBoxCodeMsg.EX_002);
+			header.setWife_mac(info.getWIFIMAC());			
+			String beanName = String.format(BEAN_ENTITY, category, command);
+			Dispatcher d = context.getBean(beanName, Dispatcher.class);
+			if(d != null){
+				log.trace("Folder : {}, Found : Dispatcher {}.", category, d.getClass());
+				d.handler(view, request);
+				header.setCode("00-000");
+			} else {
+				log.trace("No Dispatcher found for folder: {}. Call JSP: {}.", category, view.getViewName());
 			}
-			else {
-				
-				
-				String beanName = String.format(BEAN_ENTITY, category, command);
-				Dispatcher d = context.getBean(beanName, Dispatcher.class);
-				if(d != null){
-					log.trace("Folder : {}, Found : Dispatcher {}.", category, d.getClass());
-					d.handler(view, request);
-					if("register".equals(info.getAction()) && box.getAuthorizedEndDate() == null) {
-						log.debug("******* do register ********");
-						box = service.findMachine(info.getMachineSN(), info.getMAC(), info.getWIFIMAC());
-					}
-					header.setAuthorizedEnd(String.valueOf(box.getAuthorizedEndDate().getTime()));
-					
-					header.setCode("00-000");
-				} else {
-					log.trace("No Dispatcher found for folder: {}. Call JSP: {}.", category, view.getViewName());
-				}	
-			}
+//			if(box == null) {
+//				header.setCode(TBoxCodeMsg.EX_002);
+//			}
+//			else {
+//				String beanName = String.format(BEAN_ENTITY, category, command);
+//				Dispatcher d = context.getBean(beanName, Dispatcher.class);
+//				if(d != null){
+//					log.trace("Folder : {}, Found : Dispatcher {}.", category, d.getClass());
+//					d.handler(view, request);
+//					if("register".equals(info.getAction()) && box.getAuthorizedEndDate() == null) {
+//						log.debug("******* do register ********");
+//						box = service.findMachine(info.getMachineSN(), info.getMAC(), info.getWIFIMAC());
+//					}
+//					header.setAuthorizedEnd(String.valueOf(box.getAuthorizedEndDate().getTime()));
+//					
+//					header.setCode("00-000");
+//				} else {
+//					log.trace("No Dispatcher found for folder: {}. Call JSP: {}.", category, view.getViewName());
+//				}	
+//			}
 		} 		
 		catch (Exception e) {
 			log.warn("doRequest() ERROR! MSG : {}", e.getMessage(), e);

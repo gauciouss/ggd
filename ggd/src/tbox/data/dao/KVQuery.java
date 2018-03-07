@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import baytony.util.Profiler;
 import ggd.core.db.HibernateQuery;
+import tbox.data.vo.KV;
 import tbox.data.vo.KVEntity;
 
 @Repository("KVQuery")
@@ -32,6 +33,32 @@ public class KVQuery extends HibernateQuery {
 	private static final String SQL_ADD_NEW_KV = "insert into kv (kind, img_path, click_link, msg, create_date, create_user) values (?, ?, ?, ?, ?, ?)"; 
 	
 	private static final String SQL_UPDATE_KV = "update kv set img_path = ?, click_link = ?, msg = ?, kind = ?, updaet_date = ?, update_user = ? where kv_serial_no = ?";
+	
+	private static final String SQL_FIND_KV_BY_MACHINE = 
+			"select kv.kv_serial_no, kv.kind, kv.img_path, kv.click_link, kv.msg, kcm.start_date, kcm.end_date, kcm.isEnabled " + 
+			"	from kv kv  " + 
+			"    inner join kv_comp_mapping kcm on kv.kv_serial_no = kcm.kv_serial_no " + 
+			"    inner join machine_box box on box.EIN = kcm.EIN " + 
+			"    where kv.kind = ? "
+			+ "    box.machine_sn = ? " + 
+			"      and box.ethernet_mac = ? " + 
+			"      and box.wifi_mac = ? ";
+	
+	/**
+	 * 查詢所有訊息
+	 * @param sn
+	 * @param mac
+	 * @param wifi
+	 * @param kind
+	 * @return
+	 */
+	public List<KVEntity> findAllByMachine(String sn, String mac, String wifi, int kind) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getKVByMachine(), sn: {}, mac: {}, wifi: {}, kind: {}", this.getClass(), sn, mac, wifi, kind);
+		List<KVEntity> kvs = super.findBySql(SQL_FIND_KV_BY_MACHINE, KVEntity.class, kind, sn, mac, wifi);
+		log.info("END: {}.getKVByMachine(), sn: {}, mac: {}, wifi: {}, kind: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, kind, p.executeTime());
+		return kvs;
+	}
 	
 	/**
 	 * 更新廣告資訊

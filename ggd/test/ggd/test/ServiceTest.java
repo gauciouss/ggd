@@ -26,6 +26,7 @@ import tbox.config.SpringWebInitializer;
 import tbox.config.XML_DEV_UNIT_Config;
 import tbox.data.vo.Company;
 import tbox.data.vo.CompanyEntity;
+import tbox.proxy.cwb.gov.tw.OpendataAPI.Entity;
 import tbox.service.TBoxService;
 
 @WebAppConfiguration
@@ -44,6 +45,18 @@ public class ServiceTest {
 	@Autowired
 	@Qualifier("TBoxService")
 	private TBoxService tboxService;
+	
+	@Test
+	public void testGetWeather() {
+		log.trace("******* START: {}.testGetWeather() *******", this.getClass());
+		try {
+			Entity entity = tboxService.getWeatherReport("54789963", "1A-2V-3S-FV-AS-FX", "");
+			log.debug("{}", entity);
+			log.info("******* END: {}.testGetWeather()", this.getClass());
+		} catch (TBoxException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	@Test
 	public void testFindAllCompany() {

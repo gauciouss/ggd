@@ -1,5 +1,6 @@
 package tbox.service.impl;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
@@ -15,6 +16,7 @@ import baytony.util.Util;
 import tbox.TBoxException;
 import tbox.core.TBoxCodeMsg;
 import tbox.data.dao.AreaDao;
+import tbox.data.dao.AreaQuery;
 import tbox.data.dao.CompanyDao;
 import tbox.data.dao.KVDao;
 import tbox.data.dao.KVKindDao;
@@ -27,6 +29,8 @@ import tbox.data.vo.KV;
 import tbox.data.vo.KVEntity;
 import tbox.data.vo.KVKind;
 import tbox.data.vo.MachineBox;
+import tbox.proxy.cwb.gov.tw.OpendataAPI;
+import tbox.proxy.cwb.gov.tw.OpendataAPI.Entity;
 import tbox.service.TBoxService;
 
 @Service("TBoxService")
@@ -59,8 +63,51 @@ public class TBoxServiceImpl implements TBoxService {
 	@Qualifier("MachineDao")
 	private MachineDao machineDao;
 	
+	@Autowired
+	@Qualifier("CWBOpendataAPI")
+	private OpendataAPI cwbAPI;
 	
+	@Autowired
+	@Qualifier("AreaQuery")
+	private AreaQuery areaQuery;
 	
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#getWeatherReport(java.lang.String)
+	 */
+	@Override
+	public Entity getWeatherReport(String sn, String mac, String wifi) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getWeatherReport(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
+		Entity entity = null;
+		try {
+			String code = areaQuery.findCWBCode(sn, mac, wifi);
+			entity = cwbAPI.call(code);
+		} catch (IOException e) {
+			throw new TBoxException(TBoxCodeMsg.EX_003, e.getMessage());
+		} catch (Exception e) {
+			throw new TBoxException(TBoxCodeMsg.EX_004, e.getMessage());
+		}
+		log.info("END: {}.getWeatherReport(),  sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
+		return entity;
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#isLegitimateMachine(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean isLegitimateMachine(String sn, String mac, String wifi) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.isLegitimateMachine(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
+		boolean isLegitimate = machineDao.isLegitimateMachine(sn, mac, wifi);
+		log.debug("isLegitimate: {}", isLegitimate);
+		log.info("END: {}.isLegitimateMachine(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
+		return isLegitimate;
+	}
+
+
+
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#activeMachine(java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -183,6 +230,20 @@ public class TBoxServiceImpl implements TBoxService {
 		List<KVEntity> list = kvQuery.findAllByComp(EIN, kind);
 		log.debug("EIN: {} owns kvs: {}", EIN, list);
 		log.info("END: {}.findKVsByComp(), EIN: {}, kind; {}, exec TIME: {} ms.", this.getClass(), EIN, kind, p.executeTime());
+		return list;
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#findKVsByComp(java.lang.String, java.lang.String, java.lang.String, int)
+	 */
+	@Override
+	public List<KVEntity> findKVsByMachine(String sn, String mac, String wifi, int kind) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.findKVsByMachine(), sn: {}, mac: {}, wifi: {}, kind: {}", this.getClass(), sn, mac, wifi, kind);
+		List<KVEntity> list = kvQuery.findAllByMachine(sn, mac, wifi, kind);
+		log.debug("sn: {}, mac: {}, wifi: {}, kind: {}, list: {}", sn, mac, wifi, kind, list);
+		log.info("END: {}.findKVsByMachine(), sn: {}, mac: {}, wifi: {}, kind: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, kind, p.executeTime());
 		return list;
 	}
 

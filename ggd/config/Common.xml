@@ -22,6 +22,7 @@
 		value-type="java.lang.String">
 		<description>這裡的設定都是跟系統參數有關的資訊</description>
 		<entry key="MAIN_PATH_HOST" value-ref="MAIN_PATH"/>
+		<entry key="CWB_AUTH_KEY" value-ref = "CWB_AUTH_KEY"/>
 	</util:map>
 	
 
@@ -36,8 +37,8 @@
 	</util:list>
 	
 	<bean id="MAIN_PATH" class="java.lang.String">
-   		<description>根目錄</description>   		
-   		<constructor-arg value="http://60.248.131.18/ggd/"/>
+   		<description>根目錄</description>
+   		<constructor-arg value="http://127.0.0.1:8080/ggd/"/>
    	</bean>
    	
    	<bean id="IMG_PHYSICAL_PATH" class="java.lang.String">
@@ -47,6 +48,11 @@
    	
    	<bean id="DEFAULT_PAGE_SIZE" class="java.lang.Integer">
    		<constructor-arg value="10"/>
+   	</bean>
+   	
+   	<bean id="CWB_AUTH_KEY" class="java.lang.String">
+   		<description>中央氣象局API授權碼</description>
+   		<constructor-arg value="CWB-38B9E773-0C53-4688-9789-90AFF00C8A5F"/>
    	</bean>
    	
    	

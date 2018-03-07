@@ -17,6 +17,26 @@ import tbox.data.vo.MachineBox;
 public interface TBoxService {
 	
 	/**
+	 * 取得天氣預報
+	 * @param sn
+	 * @param mac
+	 * @param wifi
+	 * @return
+	 * @throws TBoxException
+	 */
+	public tbox.proxy.cwb.gov.tw.OpendataAPI.Entity getWeatherReport(String sn, String mac, String wifi) throws TBoxException;
+	
+	/**
+	 * 判斷是否為合法的機器
+	 * @param sn
+	 * @param mac
+	 * @param wifi
+	 * @return
+	 * @throws TBoxException
+	 */
+	public boolean isLegitimateMachine(String sn, String mac, String wifi) throws TBoxException;	
+	
+	/**
 	 * 啟動機上盒並記錄最後登入時間&IP，若已經啟動機上盒，則只記錄最後登入時間&IP
 	 * @param sn
 	 * @param mac
@@ -69,20 +89,31 @@ public interface TBoxService {
 	/**
 	 * 查詢所有訊息
 	 * @param account
-	 * @param type
+	 * @param kind
 	 * @return
 	 * @throws TBoxException
 	 */
-	public List<KVEntity> findKVsByAccount(String account, int type) throws TBoxException;
+	public List<KVEntity> findKVsByAccount(String account, int kind) throws TBoxException;
 	
 	/**
 	 * 查詢所有訊息
 	 * @param EIN
-	 * @param type
+	 * @param kind
 	 * @return
 	 * @throws TBoxException
 	 */
-	public List<KVEntity> findKVsByComp(String EIN, int type) throws TBoxException;
+	public List<KVEntity> findKVsByComp(String EIN, int kind) throws TBoxException;
+	
+	/**
+	 * 查詢所有訊息
+	 * @param sn
+	 * @param mac
+	 * @param wifi
+	 * @param kind
+	 * @return
+	 * @throws TBoxException
+	 */
+	public List<KVEntity> findKVsByMachine(String sn, String mac, String wifi, int kind) throws TBoxException;
 	
 	/**
 	 * 查詢統一編號
