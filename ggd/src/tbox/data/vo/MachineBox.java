@@ -39,7 +39,7 @@ public class MachineBox implements Serializable {
 	private Area area;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "company_id", insertable = false, updatable = false)
+	@JoinColumn(name = "EIN", insertable = false, updatable = false)
 	private Company company;
 
 	@Column(name = "last_login_time")

@@ -20,11 +20,15 @@
     
     <util:map id="URL_HOST_MAP" key-type="java.lang.String" value-type="java.lang.String">
     	<description>這裡的設定都是跟外部URL HOST連結有關的資訊</description>
-    </util:map>
+    	<entry key="CWB" value="http://opendata.cwb.gov.tw/"></entry>
+    </util:map>      
     
     <util:map id="URL_PATH_MAP" key-type="java.lang.String" value-type="java.lang.String">
         <description>這裡的設定都是跟外部URL PATH連結有關的資訊</description>
+        <entry key="opendataapi" value="opendataapi">
+        	<description>中央氣象局API</description>        	
+        </entry>
     </util:map>
-    
+       
     
 </beans>

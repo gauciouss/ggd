@@ -3,6 +3,7 @@
  */
 package tbox.dispatcher.action.service.command;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,11 +16,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import baytony.util.Profiler;
+import ggd.core.common.Constant;
 import tbox.TBoxException;
 import tbox.core.TBoxData;
 import tbox.core.TBoxInfo;
 import tbox.data.vo.KVEntity;
-import tbox.data.vo.MachineBox;
+import tbox.dispatcher.action.service.command.entity.IndexInfoEntity;
+import tbox.dispatcher.action.service.command.entity.IndexInfoEntity.KVS;
+import tbox.dispatcher.action.service.command.entity.IndexInfoEntity.KVS.KV;
+import tbox.dispatcher.action.service.command.entity.IndexInfoEntity.Msg;
+import tbox.dispatcher.action.service.command.entity.IndexInfoEntity.Weather;
 import tbox.service.TBoxService;
 
 /**
@@ -42,22 +48,58 @@ public class IndexInfoCommand implements Command {
 	public void execute(ModelAndView view, HttpServletRequest request, TBoxData tbox) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.execute(), tbox: {}", this.getClass(), tbox);
-		TBoxInfo info = tbox.getTBoxInfo();
-		
-		
+		TBoxInfo box = tbox.getTBoxInfo();
+		KVS kvs = new KVS(getKV1(box), getKV2(box));
+		IndexInfoEntity adapter = new IndexInfoEntity(null, getMsg(box), kvs, getWeather(box));
+		view.addObject(Constant.JSON_RESPONSE, adapter);
 		log.info("END: {}.execute(), tbox: {}, exec TIME: {}", this.getClass(), tbox, p.executeTime());
 	}
 	
-	private List<KVEntity> getKV2(TBoxInfo box) throws TBoxException {
-		return service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 2);
+	
+	
+	
+	private List<Msg> getMsg(TBoxInfo box) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getMsg(), box: {}", this.getClass(), box);
+		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 4);
+		List<Msg> list = new ArrayList<Msg>();
+		for(KVEntity entity : entities) {
+			list.add(new Msg(entity));
+		}
+		log.info("END: {}.getMsg(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
+		return list;
 	}
 	
-	private List<KVEntity> getKV1(TBoxInfo box) throws TBoxException {
-		return service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 1);
+	private List<KV> getKV2(TBoxInfo box) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getKV2(), box: {}", this.getClass(), box);
+		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 2);
+		List<KV> list = new ArrayList<KV>();
+		for(KVEntity entity : entities) {
+			list.add(new KV(entity));
+		}
+		log.info("END: {}.getKV2(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
+		return list;
 	}
 	
-	private tbox.proxy.cwb.gov.tw.OpendataAPI.Entity getWeather(TBoxInfo box) throws TBoxException {
-		return service.getWeatherReport(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());
+	private List<KV> getKV1(TBoxInfo box) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getKV1(), box: {}", this.getClass(), box);
+		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 1);
+		List<KV> list = new ArrayList<KV>();
+		for(KVEntity entity : entities) {
+			list.add(new KV(entity));
+		}
+		log.info("END: {}.getKV1(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
+		return list;
+	}
+	
+	private Weather getWeather(TBoxInfo box) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getWeather(), box: {}", this.getClass(), box);
+		tbox.proxy.cwb.gov.tw.OpendataAPI.Entity entity = service.getWeatherReport(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());
+		log.info("END: {}.getWeather(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
+		return new Weather(entity);		
 	}
 	
 }
