@@ -2,6 +2,7 @@ package tbox.service.impl;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import baytony.util.Profiler;
 import baytony.util.Util;
 import tbox.TBoxException;
 import tbox.core.TBoxCodeMsg;
+import tbox.data.dao.AppQuery;
 import tbox.data.dao.AreaDao;
 import tbox.data.dao.AreaQuery;
 import tbox.data.dao.CompanyDao;
@@ -22,6 +24,7 @@ import tbox.data.dao.KVDao;
 import tbox.data.dao.KVKindDao;
 import tbox.data.dao.KVQuery;
 import tbox.data.dao.MachineDao;
+import tbox.data.vo.AppEntity;
 import tbox.data.vo.Area;
 import tbox.data.vo.Company;
 import tbox.data.vo.CompanyEntity;
@@ -71,6 +74,58 @@ public class TBoxServiceImpl implements TBoxService {
 	@Qualifier("AreaQuery")
 	private AreaQuery areaQuery;
 	
+	@Autowired
+	@Qualifier("AppQuery")
+	private AppQuery appQuery;
+	
+	
+	
+	
+	
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#getControlPanelAppByEIN(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<AppEntity> getControlPanelApp(String sn, String mac, String wifi) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getControlPanelApp(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
+		MachineBox box = this.findMachine(sn, mac, wifi);
+		List<AppEntity> list = this.getControlPanelApp(box.getCompany().getEIN());
+		log.info("END: {}.getControlPanelApp(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
+		return list;
+	}
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#getControlPanelAppByEIN(java.lang.String)
+	 */
+	@Override
+	public List<AppEntity> getControlPanelApp(String EIN) throws TBoxException {
+		Profiler p = new Profiler();			
+		log.trace("START: {}.getControlPanelAppByEIN(), EIN: {}", this.getClass(), EIN);
+		List<AppEntity> list = new ArrayList<AppEntity>();
+		Company comp = compDao.findById(EIN);
+		if(!Util.isEmpty(comp.getFastKey1()))
+			list.add(this.getAppInfo(comp.getFastKey1()));
+		if(!Util.isEmpty(comp.getFastKey2()))
+			list.add(this.getAppInfo(comp.getFastKey2()));
+		if(!Util.isEmpty(comp.getFastKey3()))
+			list.add(this.getAppInfo(comp.getFastKey3()));
+		if(!Util.isEmpty(comp.getFastKey4()))
+			list.add(this.getAppInfo(comp.getFastKey4()));
+		log.info("END: {}.getControlPanelAppByEIN(), EIN: {}, exec TIME: {} ms.", this.getClass(), EIN, p.executeTime());
+		return list;
+	}
+	
+	private AppEntity getAppInfo(String appId) {
+		String maxVer = appQuery.getAppMaxVersion(appId);
+		return appQuery.getApp(appId, maxVer);
+	}
+
+
+
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#getWeatherReport(java.lang.String)
 	 */

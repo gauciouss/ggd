@@ -24,7 +24,7 @@ import tbox.TBoxException;
 import tbox.config.DispatcherConfig;
 import tbox.config.SpringWebInitializer;
 import tbox.config.XML_DEV_UNIT_Config;
-import tbox.data.vo.Company;
+import tbox.data.vo.AppEntity;
 import tbox.data.vo.CompanyEntity;
 import tbox.proxy.cwb.gov.tw.OpendataAPI.Entity;
 import tbox.service.TBoxService;
@@ -45,6 +45,22 @@ public class ServiceTest {
 	@Autowired
 	@Qualifier("TBoxService")
 	private TBoxService tboxService;
+	
+	
+	@Test
+	public void testGetPanelApp() {
+		log.trace("******* START: {}.testGetPanelApp() *******", this.getClass());
+		try {
+			List<AppEntity> list = tboxService.getControlPanelApp("89125266");
+			for(AppEntity obj : list) {
+				log.debug("{}", obj);
+			}
+			log.info("******* END: {}.testGetPanelApp()", this.getClass());
+		} catch (TBoxException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	@Test
 	public void testGetWeather() {

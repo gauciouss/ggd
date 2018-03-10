@@ -22,6 +22,7 @@ import ggd.core.util.JSONUtil;
 import tbox.config.DispatcherConfig;
 import tbox.config.SpringWebInitializer;
 import tbox.config.XML_DEV_UNIT_Config;
+import tbox.data.dao.AppQuery;
 import tbox.data.dao.AreaDao;
 import tbox.data.dao.CompanyDao;
 import tbox.data.dao.KVDao;
@@ -61,6 +62,20 @@ public class DaoTest {
 	@Autowired
 	@Qualifier("KVDao")
 	private KVDao kvDao;
+	
+	
+	@Autowired
+	@Qualifier("AppQuery")
+	private AppQuery appQuery;
+	
+	@Test
+	public void testGetMaxVersion() {
+		System.out.println("******* START testGetMaxVersion() *******");
+		String ver = appQuery.getAppMaxVersion("APP0000001");
+		System.out.println(ver);
+		System.out.println("******* END testGetMaxVersion() *******");
+	}
+	
 	
 	@Test
 	public void testFindKVById() {

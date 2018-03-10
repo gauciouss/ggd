@@ -20,8 +20,10 @@ import ggd.core.common.Constant;
 import tbox.TBoxException;
 import tbox.core.TBoxData;
 import tbox.core.TBoxInfo;
+import tbox.data.vo.AppEntity;
 import tbox.data.vo.KVEntity;
 import tbox.dispatcher.action.service.command.entity.IndexInfoEntity;
+import tbox.dispatcher.action.service.command.entity.IndexInfoEntity.App;
 import tbox.dispatcher.action.service.command.entity.IndexInfoEntity.KVS;
 import tbox.dispatcher.action.service.command.entity.IndexInfoEntity.KVS.KV;
 import tbox.dispatcher.action.service.command.entity.IndexInfoEntity.Msg;
@@ -50,12 +52,22 @@ public class IndexInfoCommand implements Command {
 		log.trace("START: {}.execute(), tbox: {}", this.getClass(), tbox);
 		TBoxInfo box = tbox.getTBoxInfo();
 		KVS kvs = new KVS(getKV1(box), getKV2(box));
-		IndexInfoEntity adapter = new IndexInfoEntity(null, getMsg(box), kvs, getWeather(box));
+		IndexInfoEntity adapter = new IndexInfoEntity(getControlApp(box), getMsg(box), kvs, getWeather(box));
 		view.addObject(Constant.JSON_RESPONSE, adapter);
 		log.info("END: {}.execute(), tbox: {}, exec TIME: {}", this.getClass(), tbox, p.executeTime());
 	}
 	
-	
+	private List<App> getControlApp(TBoxInfo box) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getControlApp(), box: {}", this.getClass(), box);
+		List<AppEntity> entities = service.getControlPanelApp(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());
+		List<App> apps = new ArrayList<App>();
+		for(AppEntity entity : entities) {
+			apps.add(new App(entity));
+		}
+		log.info("END: {}.getControlApp(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
+		return apps;
+	}
 	
 	
 	private List<Msg> getMsg(TBoxInfo box) throws TBoxException {

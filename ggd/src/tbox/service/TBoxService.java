@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import tbox.TBoxException;
+import tbox.data.vo.AppEntity;
 import tbox.data.vo.Area;
 import tbox.data.vo.Company;
 import tbox.data.vo.CompanyEntity;
@@ -15,6 +16,24 @@ import tbox.data.vo.MachineBox;
 
 @Transactional
 public interface TBoxService {
+	
+	/**
+	 * 查詢首頁快捷APP資訊
+	 * @param sn
+	 * @param mac
+	 * @param wifi
+	 * @return
+	 * @throws TBoxException
+	 */
+	public List<AppEntity> getControlPanelApp(String sn, String mac, String wifi) throws TBoxException;
+	
+	/**
+	 * 查詢首頁快捷APP資訊
+	 * @param EIN
+	 * @return
+	 * @throws TBoxException
+	 */
+	public List<AppEntity> getControlPanelApp(String EIN) throws TBoxException;
 	
 	/**
 	 * 取得天氣預報
