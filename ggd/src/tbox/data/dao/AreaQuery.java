@@ -12,9 +12,8 @@ public class AreaQuery extends HibernateQuery {
 
 	
 	private static final String SQL_QUERY_CWB_CODE = 
-			"select distinct a.cwb_code " + 
-			"	from area a  " + 
-			"    inner join area b on a.area_id = b.parent_id " + 
+			"select distinct b.cwb_code " + 
+			"	from area b  " + 
 			"    inner join machine_box m on m.area_id = b.area_id " + 
 			"    where m.machine_sn = ? " + 
 			"      and m.ethernet_mac = ? " + 

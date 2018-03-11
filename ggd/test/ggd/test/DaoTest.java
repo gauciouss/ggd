@@ -27,6 +27,7 @@ import tbox.data.dao.AreaDao;
 import tbox.data.dao.CompanyDao;
 import tbox.data.dao.KVDao;
 import tbox.data.dao.KVQuery;
+import tbox.data.vo.AppEntity;
 import tbox.data.vo.Area;
 import tbox.data.vo.Company;
 import tbox.data.vo.KV;
@@ -69,9 +70,18 @@ public class DaoTest {
 	private AppQuery appQuery;
 	
 	@Test
+	public void testGetAppsLastVersion() {
+		System.out.println("******* START testGetAppsLastVersion() *******");
+		List<AppEntity> list = appQuery.getAppsWithLastVersion("89125266");
+		System.out.println(list);
+		System.out.println("******* END testGetAppsLastVersion() *******");
+	}
+	
+	
+	@Test
 	public void testGetMaxVersion() {
 		System.out.println("******* START testGetMaxVersion() *******");
-		String ver = appQuery.getAppMaxVersion("APP0000001");
+		String ver = appQuery.getAppLastVersion("APP0000001");
 		System.out.println(ver);
 		System.out.println("******* END testGetMaxVersion() *******");
 	}

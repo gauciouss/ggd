@@ -64,25 +64,14 @@
 								<select id="area" name="area" class="form-control">
 									<option value="">請選擇</option>		
 									<%
-										List<Integer> temp = new ArrayList<Integer>();
 										for(Area area : areas) {
-											if(area.getParentId() == 0 && !temp.contains(area.getAreaId())) {
-												temp.add(area.getAreaId());
 									%>
 									<option value="<%=area.getAreaId()%>"><%=area.getAreaName() %></option>
 									<%											
-											}
 										}
 									%>					
-								</select>
-								
+								</select>								
 							</div>
-							<div class="col-md-6">
-								<label for="area">所在城市</label>
-								 <select id="city" name="city" class="form-control">
-									<option value="">請選擇</option>									
-								</select>
-							</div>							
 						</div>
 					</div>
 					<div class="form-group">

@@ -60,6 +60,11 @@ public class TBoxCodeMsg {
 	 */
 	public static final String EX_004 = "EX-004";
 	
+	/**
+	 * 無法反查註冊公司，非法的機器
+	 */
+	public static final String EX_005 = "EX-005";
+	
 	private static final Map<String, String> map = new HashMap<String, String>();
 	
 	static {
@@ -72,6 +77,7 @@ public class TBoxCodeMsg {
 		map.put(EX_002, "未註冊的機器");
 		map.put(EX_003, "未連接遠端機器發生錯誤的機器");
 		map.put(EX_004, "發生不明錯誤");
+		map.put(EX_005, "無法反查註冊公司，非法的機器");
 	}
 
 	public static final String getCodeMessage(String code) {

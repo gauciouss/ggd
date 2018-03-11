@@ -24,16 +24,11 @@ public class Area implements Serializable {
 	@Column(name = "area_name")
 	private String areaName;
 
-	@OneToMany(fetch = FetchType.EAGER)
-	@JoinColumn(name = "parent_id", insertable = false, updatable = false)
-	private Set<Area> citys;
-
 	@Column(name = "sort")
 	private Integer sort = 1;
-	
-	@Column(name = "parent_id")
-	private Integer parentId;
 
+	@Column(name = "cwb_code")
+	private String cwbCode;
 
 	/**
 	 * @return the areaId
@@ -66,21 +61,6 @@ public class Area implements Serializable {
 	}
 
 	/**
-	 * @return the citys
-	 */
-	public Set<Area> getCitys() {
-		return citys;
-	}
-
-	/**
-	 * @param citys
-	 *            the citys to set
-	 */
-	public void setCitys(Set<Area> citys) {
-		this.citys = citys;
-	}
-
-	/**
 	 * @return the sort
 	 */
 	public Integer getSort() {
@@ -96,21 +76,23 @@ public class Area implements Serializable {
 	}
 
 	/**
-	 * @return the serialversionuid
+	 * @return the cwbCode
 	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	
-	public Integer getParentId() {
-		return parentId;
-	}
-	
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
+	public String getCwbCode() {
+		return cwbCode;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * @param cwbCode
+	 *            the cwbCode to set
+	 */
+	public void setCwbCode(String cwbCode) {
+		this.cwbCode = cwbCode;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -120,14 +102,47 @@ public class Area implements Serializable {
 		builder.append(areaId);
 		builder.append(", areaName=");
 		builder.append(areaName);
-		builder.append(", citys=");
-		builder.append(citys);
 		builder.append(", sort=");
 		builder.append(sort);
-		builder.append(", parentId=");
-		builder.append(parentId);
+		builder.append(", cwbCode=");
+		builder.append(cwbCode);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((areaId == null) ? 0 : areaId.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Area other = (Area) obj;
+		if (areaId == null) {
+			if (other.areaId != null)
+				return false;
+		} else if (!areaId.equals(other.areaId))
+			return false;
+		return true;
 	}
 
 }

@@ -23,19 +23,14 @@ public class AppClz implements Serializable {
 	@Column(name = "clz_name")
 	private String clzName;
 
+	@Column(name = "icon_path")
+	private String iconPath;
+
 	/**
 	 * @return the clzId
 	 */
 	public Integer getClzId() {
 		return clzId;
-	}
-
-	/**
-	 * @param clzId
-	 *            the clzId to set
-	 */
-	public void setClzId(Integer clzId) {
-		this.clzId = clzId;
 	}
 
 	/**
@@ -46,11 +41,10 @@ public class AppClz implements Serializable {
 	}
 
 	/**
-	 * @param clzName
-	 *            the clzName to set
+	 * @return the iconPath
 	 */
-	public void setClzName(String clzName) {
-		this.clzName = clzName;
+	public String getIconPath() {
+		return iconPath;
 	}
 
 	/*
@@ -65,14 +59,45 @@ public class AppClz implements Serializable {
 		builder.append(clzId);
 		builder.append(", clzName=");
 		builder.append(clzName);
+		builder.append(", iconPath=");
+		builder.append(iconPath);
 		builder.append("]");
 		return builder.toString();
 	}
 
-	public AppClz(Integer clzId) {
-		super();
-		this.clzId = clzId;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((clzId == null) ? 0 : clzId.hashCode());
+		return result;
 	}
 
-	//
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AppClz other = (AppClz) obj;
+		if (clzId == null) {
+			if (other.clzId != null)
+				return false;
+		} else if (!clzId.equals(other.clzId))
+			return false;
+		return true;
+	}
+
 }

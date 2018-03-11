@@ -7,7 +7,7 @@ import tbox.data.vo.AppEntity;
 import tbox.data.vo.KVEntity;
 import tbox.proxy.cwb.gov.tw.OpendataAPI;
 
-public class IndexInfoEntity implements Serializable {
+public class IndexInfoAdapter implements Serializable {
 
 	private static final long serialVersionUID = 3021172280798396302L;
 
@@ -19,7 +19,7 @@ public class IndexInfoEntity implements Serializable {
 
 	private Weather weather;
 
-	public IndexInfoEntity(List<App> controlPanel, List<Msg> msg, KVS kv, Weather weather) {
+	public IndexInfoAdapter(List<App> controlPanel, List<Msg> msg, KVS kv, Weather weather) {
 		super();
 		this.controlPanel = controlPanel;
 		this.msg = msg;
@@ -357,6 +357,7 @@ public class IndexInfoEntity implements Serializable {
 		private String desc;
 		private String today;
 		private String future;
+		private String icon;
 
 		public Weather(OpendataAPI.Entity entity) {
 			super();
@@ -401,6 +402,11 @@ public class IndexInfoEntity implements Serializable {
 		public String getFuture() {
 			return future;
 		}
+		
+		public String getIcon() {
+			return icon;
+		}
+				
 
 		/*
 		 * (non-Javadoc)

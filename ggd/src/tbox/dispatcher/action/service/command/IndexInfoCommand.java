@@ -22,22 +22,22 @@ import tbox.core.TBoxData;
 import tbox.core.TBoxInfo;
 import tbox.data.vo.AppEntity;
 import tbox.data.vo.KVEntity;
-import tbox.dispatcher.action.service.command.entity.IndexInfoEntity;
-import tbox.dispatcher.action.service.command.entity.IndexInfoEntity.App;
-import tbox.dispatcher.action.service.command.entity.IndexInfoEntity.KVS;
-import tbox.dispatcher.action.service.command.entity.IndexInfoEntity.KVS.KV;
-import tbox.dispatcher.action.service.command.entity.IndexInfoEntity.Msg;
-import tbox.dispatcher.action.service.command.entity.IndexInfoEntity.Weather;
+import tbox.dispatcher.action.service.command.entity.IndexInfoAdapter;
+import tbox.dispatcher.action.service.command.entity.IndexInfoAdapter.App;
+import tbox.dispatcher.action.service.command.entity.IndexInfoAdapter.KVS;
+import tbox.dispatcher.action.service.command.entity.IndexInfoAdapter.KVS.KV;
+import tbox.dispatcher.action.service.command.entity.IndexInfoAdapter.Msg;
+import tbox.dispatcher.action.service.command.entity.IndexInfoAdapter.Weather;
 import tbox.service.TBoxService;
 
 /**
  * @author admin
  *
  */
-@Component("IndexInfoCommand")
+@Component("home.index")
 public class IndexInfoCommand implements Command {
 	
-	private final static Logger log = LoggerFactory.getLogger(RegisterCommand.class);
+	private final static Logger log = LoggerFactory.getLogger(IndexInfoCommand.class);
 	
 	@Autowired
 	@Qualifier("TBoxService")
@@ -52,7 +52,7 @@ public class IndexInfoCommand implements Command {
 		log.trace("START: {}.execute(), tbox: {}", this.getClass(), tbox);
 		TBoxInfo box = tbox.getTBoxInfo();
 		KVS kvs = new KVS(getKV1(box), getKV2(box));
-		IndexInfoEntity adapter = new IndexInfoEntity(getControlApp(box), getMsg(box), kvs, getWeather(box));
+		IndexInfoAdapter adapter = new IndexInfoAdapter(getControlApp(box), getMsg(box), kvs, getWeather(box));
 		view.addObject(Constant.JSON_RESPONSE, adapter);
 		log.info("END: {}.execute(), tbox: {}, exec TIME: {}", this.getClass(), tbox, p.executeTime());
 	}
@@ -60,7 +60,7 @@ public class IndexInfoCommand implements Command {
 	private List<App> getControlApp(TBoxInfo box) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getControlApp(), box: {}", this.getClass(), box);
-		List<AppEntity> entities = service.getControlPanelApp(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());
+		List<AppEntity> entities = service.findControlPanelApp(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());
 		List<App> apps = new ArrayList<App>();
 		for(AppEntity entity : entities) {
 			apps.add(new App(entity));
@@ -109,7 +109,7 @@ public class IndexInfoCommand implements Command {
 	private Weather getWeather(TBoxInfo box) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getWeather(), box: {}", this.getClass(), box);
-		tbox.proxy.cwb.gov.tw.OpendataAPI.Entity entity = service.getWeatherReport(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());
+		tbox.proxy.cwb.gov.tw.OpendataAPI.Entity entity = service.findWeatherReport(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());
 		log.info("END: {}.getWeather(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
 		return new Weather(entity);		
 	}

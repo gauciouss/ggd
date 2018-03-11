@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import tbox.TBoxException;
+import tbox.data.vo.AppClz;
 import tbox.data.vo.AppEntity;
 import tbox.data.vo.Area;
 import tbox.data.vo.Company;
@@ -17,6 +18,20 @@ import tbox.data.vo.MachineBox;
 @Transactional
 public interface TBoxService {
 	
+	/*8
+	 * 取得所有app類別
+	 */
+	public List<AppClz> findAllAppKind() throws TBoxException;
+	
+	/**
+	 * 取得商城APP
+	 * @param EIN
+	 * @return
+	 * @throws TBoxException
+	 */
+	public List<AppEntity> findAppsWithLastVersion(String EIN) throws TBoxException;	
+	
+	
 	/**
 	 * 查詢首頁快捷APP資訊
 	 * @param sn
@@ -25,7 +40,7 @@ public interface TBoxService {
 	 * @return
 	 * @throws TBoxException
 	 */
-	public List<AppEntity> getControlPanelApp(String sn, String mac, String wifi) throws TBoxException;
+	public List<AppEntity> findControlPanelApp(String sn, String mac, String wifi) throws TBoxException;
 	
 	/**
 	 * 查詢首頁快捷APP資訊
@@ -33,7 +48,7 @@ public interface TBoxService {
 	 * @return
 	 * @throws TBoxException
 	 */
-	public List<AppEntity> getControlPanelApp(String EIN) throws TBoxException;
+	public List<AppEntity> findControlPanelApp(String EIN) throws TBoxException;
 	
 	/**
 	 * 取得天氣預報
@@ -43,7 +58,7 @@ public interface TBoxService {
 	 * @return
 	 * @throws TBoxException
 	 */
-	public tbox.proxy.cwb.gov.tw.OpendataAPI.Entity getWeatherReport(String sn, String mac, String wifi) throws TBoxException;
+	public tbox.proxy.cwb.gov.tw.OpendataAPI.Entity findWeatherReport(String sn, String mac, String wifi) throws TBoxException;
 	
 	/**
 	 * 判斷是否為合法的機器
@@ -140,7 +155,19 @@ public interface TBoxService {
 	 * @return
 	 * @throws TBoxException
 	 */
-	public String getEINByAccount(String account) throws TBoxException;
+	public String findEINByAccount(String account) throws TBoxException;
+	
+	
+	/**
+	 * 查詢統一編號
+	 * @param sn
+	 * @param mac
+	 * @param wifi
+	 * @return
+	 * @throws TBoxException
+	 */
+	public String findEINByMachine(String sn, String mac, String wifi) throws TBoxException;	
+	
 	
 	/**
 	 * 查詢所有行政區域

@@ -11,17 +11,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import baytony.util.Profiler;
 import ggd.core.common.Constant;
-import ggd.core.util.StandardUtil;
 import ggd.core.util.WebUtil;
 import tbox.TBoxException;
-import tbox.core.TBoxCodeMsg;
-import tbox.core.TBoxConstant;
 import tbox.core.TBoxData;
 import tbox.core.TBoxInfo;
 import tbox.dispatcher.action.service.command.entity.RegisterInfoEntity;
 import tbox.service.TBoxService;
 
-@Component("RegisterCommand")
+@Component("register")
 public class RegisterCommand implements Command {
 	
 	private final static Logger log = LoggerFactory.getLogger(RegisterCommand.class);

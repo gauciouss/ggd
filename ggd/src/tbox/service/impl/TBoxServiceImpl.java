@@ -16,6 +16,7 @@ import baytony.util.Profiler;
 import baytony.util.Util;
 import tbox.TBoxException;
 import tbox.core.TBoxCodeMsg;
+import tbox.data.dao.AppClzDao;
 import tbox.data.dao.AppQuery;
 import tbox.data.dao.AreaDao;
 import tbox.data.dao.AreaQuery;
@@ -24,6 +25,7 @@ import tbox.data.dao.KVDao;
 import tbox.data.dao.KVKindDao;
 import tbox.data.dao.KVQuery;
 import tbox.data.dao.MachineDao;
+import tbox.data.vo.AppClz;
 import tbox.data.vo.AppEntity;
 import tbox.data.vo.Area;
 import tbox.data.vo.Company;
@@ -78,22 +80,62 @@ public class TBoxServiceImpl implements TBoxService {
 	@Qualifier("AppQuery")
 	private AppQuery appQuery;
 	
-	
-	
+	@Autowired
+	@Qualifier("AppClzDao")
+	private AppClzDao appClzDao;
 	
 	
 	
 	
 	
 	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#findAllAppKind()
+	 */
+	@Override
+	public List<AppClz> findAllAppKind() throws TBoxException {
+		return appClzDao.findAll();
+	}
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#findEINByMachine(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String findEINByMachine(String sn, String mac, String wifi) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.findEINByMachine(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
+		List<String> list = machineDao.findEINByMachine(sn, mac, wifi);
+		log.debug("sn: {}, mac: {}, wifi: {}, EIN size: {}", sn, mac, wifi, list.size());
+		log.info("END: {}.findEINByMachine(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
+		if(Util.isEmpty(list))
+			throw new TBoxException(TBoxCodeMsg.EX_005);
+		else if(!Util.isEmpty(list) && list.size() > 1) 
+			throw new TBoxException(TBoxCodeMsg.EX_001);
+		else 
+			return list.get(0);
+	}
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#getAppsWithLastVersion(java.lang.String)
+	 */
+	@Override
+	public List<AppEntity> findAppsWithLastVersion(String EIN) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getAppsWithLastVersion(), EIN: {}.", this.getClass(), EIN);
+		List<AppEntity> list = appQuery.getAppsWithLastVersion(EIN);
+		log.debug("EIN: {}, all publish apps: {}", this.getClass(), list);
+		log.info("END: {].getAppsWithLastVersion(), EIN: {}, exec TIME: {} ms.", this.getClass(), EIN, p.executeTime());
+		return list;
+	}
+
+	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#getControlPanelAppByEIN(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public List<AppEntity> getControlPanelApp(String sn, String mac, String wifi) throws TBoxException {
+	public List<AppEntity> findControlPanelApp(String sn, String mac, String wifi) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getControlPanelApp(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
 		MachineBox box = this.findMachine(sn, mac, wifi);
-		List<AppEntity> list = this.getControlPanelApp(box.getCompany().getEIN());
+		List<AppEntity> list = this.findControlPanelApp(box.getCompany().getEIN());
 		log.info("END: {}.getControlPanelApp(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
 		return list;
 	}
@@ -102,7 +144,7 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#getControlPanelAppByEIN(java.lang.String)
 	 */
 	@Override
-	public List<AppEntity> getControlPanelApp(String EIN) throws TBoxException {
+	public List<AppEntity> findControlPanelApp(String EIN) throws TBoxException {
 		Profiler p = new Profiler();			
 		log.trace("START: {}.getControlPanelAppByEIN(), EIN: {}", this.getClass(), EIN);
 		List<AppEntity> list = new ArrayList<AppEntity>();
@@ -120,7 +162,7 @@ public class TBoxServiceImpl implements TBoxService {
 	}
 	
 	private AppEntity getAppInfo(String appId) {
-		String maxVer = appQuery.getAppMaxVersion(appId);
+		String maxVer = appQuery.getAppLastVersion(appId);
 		return appQuery.getApp(appId, maxVer);
 	}
 
@@ -130,7 +172,7 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#getWeatherReport(java.lang.String)
 	 */
 	@Override
-	public Entity getWeatherReport(String sn, String mac, String wifi) throws TBoxException {
+	public Entity findWeatherReport(String sn, String mac, String wifi) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getWeatherReport(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
 		Entity entity = null;
@@ -206,13 +248,13 @@ public class TBoxServiceImpl implements TBoxService {
 		log.trace("START: {}.findMachine(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
 		List<MachineBox> list = machineDao.findBy(sn, mac, wifi);
 		log.debug("sn: {}, mac: {}, wifi: {}, machine size: {}", sn, mac, wifi, list.size());
-		if(!Util.isEmpty(list) && list.size() > 1) 
-			throw new TBoxException(TBoxCodeMsg.EX_001);
-		
-		if(!Util.isEmpty(list))
-			return list.get(0);
 		log.info("END: {}.findMachine(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
-		return null;
+		if(Util.isEmpty(list))
+			throw new TBoxException(TBoxCodeMsg.EX_005);
+		else if(!Util.isEmpty(list) && list.size() > 1) 
+			throw new TBoxException(TBoxCodeMsg.EX_001);		
+		else 
+			return list.get(0);
 	}
 
 
@@ -308,7 +350,7 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#getEIPByAccount(java.lang.String)
 	 */
 	@Override
-	public String getEINByAccount(String account) throws TBoxException {
+	public String findEINByAccount(String account) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getEINByAccount(), account: {}", this.getClass(), account);
 		String EIN = compDao.getEIN(account);

@@ -1,6 +1,5 @@
 package tbox.data.dao;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -16,6 +15,15 @@ import tbox.data.vo.MachineBox;
 public class MachineDao extends HibernateDao<MachineBox, Integer> {
 	
 	private final static Logger log = LoggerFactory.getLogger(MachineDao.class);
+	
+	
+	private static final String SQL_FIND_EIN_BY_MACHINE = 
+			"select EIN "
+			+ " from machine_box m "
+			+ " where m.machine_sn = ? "
+			+ "   and m.ethernet_mac = ? "
+			+ "   and m.wifi_mac = ?";
+	
 
 	private static final String HQL_FIND_BY_SN_MAC_WIFI =
 			"from MachineBox m "
@@ -30,6 +38,17 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 			"update machine_box set last_login_time = ?, login_ip = ? where machine_sn = ? and ethernet_mac = ? and wifi_mac = ?";
 	
 	private static final String SQL_COUNT_MACHINE = "select count(*) from machine_box where machine_sn = ? and ethernet_mac = ? and wifi_mac = ?";
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<String> findEINByMachine(String sn, String mac, String wifi) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.activeMachine(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
+		List<String> list = (List<String>) super.findBySql(SQL_FIND_EIN_BY_MACHINE, sn, mac, wifi);
+		log.info("END: {}.activeMachine(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
+		return list;
+	}
+	
 	
 	public long recordLastLoginInfo(String sn, String mac, String wifi, String ip) {
 		Profiler p = new Profiler();

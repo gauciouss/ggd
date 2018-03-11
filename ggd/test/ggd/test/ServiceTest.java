@@ -51,7 +51,7 @@ public class ServiceTest {
 	public void testGetPanelApp() {
 		log.trace("******* START: {}.testGetPanelApp() *******", this.getClass());
 		try {
-			List<AppEntity> list = tboxService.getControlPanelApp("89125266");
+			List<AppEntity> list = tboxService.findControlPanelApp("89125266");
 			for(AppEntity obj : list) {
 				log.debug("{}", obj);
 			}
@@ -66,7 +66,7 @@ public class ServiceTest {
 	public void testGetWeather() {
 		log.trace("******* START: {}.testGetWeather() *******", this.getClass());
 		try {
-			Entity entity = tboxService.getWeatherReport("54789963", "1A-2V-3S-FV-AS-FX", "");
+			Entity entity = tboxService.findWeatherReport("54789963", "1A-2V-3S-FV-AS-FX", "");
 			log.debug("{}", entity);
 			log.info("******* END: {}.testGetWeather()", this.getClass());
 		} catch (TBoxException e) {
