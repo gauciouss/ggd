@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ggd.auth.vo.AdmGroup;
 import tbox.TBoxException;
 import tbox.data.vo.AppClz;
 import tbox.data.vo.AppEntity;
@@ -18,7 +19,15 @@ import tbox.data.vo.MachineBox;
 @Transactional
 public interface TBoxService {
 	
-	/*8
+	/**
+	 * 取得所有APPs
+	 * @param grp
+	 * @return
+	 * @throws TBoxException
+	 */
+	public List<AppEntity> findAllApps(AdmGroup grp) throws TBoxException;	
+	
+	/**
 	 * 取得所有app類別
 	 */
 	public List<AppClz> findAllAppKind() throws TBoxException;
@@ -199,11 +208,24 @@ public interface TBoxService {
 	
 	/**
 	 * 更新廠商資訊
-	 * @param comp
-	 * @return
+	 * @param EIN
+	 * @param name
+	 * @param areaId
+	 * @param logo
+	 * @param bg
+	 * @param fastKey1
+	 * @param fastKey2
+	 * @param fastKey3
+	 * @param fastKey4
+	 * @param grpId
 	 * @throws TBoxException
 	 */
-	public void updateCompInfo(Company comp) throws TBoxException;
+	public void updateCompInfo(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) throws TBoxException;
 	
-	
+	/**
+	 * 取得地區
+	 * @param id
+	 * @return
+	 */
+	public Area findArea(String id) throws TBoxException;
 }

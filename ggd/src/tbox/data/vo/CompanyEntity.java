@@ -10,19 +10,16 @@ public class CompanyEntity {
 	@Id
 	@Column(name = "EIN")
 	private String EIN;
-	
+
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "area")
 	private String area;
-	
-	@Column(name = "city")
-	private String city;
-	
+
 	@Column(name = "isEnabled")
 	private boolean isEnabled;
-	
+
 	@Column(name = "isApproved")
 	private boolean isApproved;
 
@@ -34,7 +31,8 @@ public class CompanyEntity {
 	}
 
 	/**
-	 * @param eIN the eIN to set
+	 * @param eIN
+	 *            the eIN to set
 	 */
 	public void setEIN(String eIN) {
 		EIN = eIN;
@@ -48,7 +46,8 @@ public class CompanyEntity {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -62,7 +61,8 @@ public class CompanyEntity {
 	}
 
 	/**
-	 * @param area the area to set
+	 * @param area
+	 *            the area to set
 	 */
 	public void setArea(String area) {
 		this.area = area;
@@ -76,7 +76,8 @@ public class CompanyEntity {
 	}
 
 	/**
-	 * @param isEnabled the isEnabled to set
+	 * @param isEnabled
+	 *            the isEnabled to set
 	 */
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
@@ -90,21 +91,16 @@ public class CompanyEntity {
 	}
 
 	/**
-	 * @param isApproved the isApproved to set
+	 * @param isApproved
+	 *            the isApproved to set
 	 */
 	public void setApproved(boolean isApproved) {
 		this.isApproved = isApproved;
 	}
-	
-	public String getCity() {
-		return city;
-	}
-	
-	public void setCity(String city) {
-		this.city = city;
-	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -116,8 +112,6 @@ public class CompanyEntity {
 		builder.append(name);
 		builder.append(", area=");
 		builder.append(area);
-		builder.append(", city=");
-		builder.append(city);
 		builder.append(", isEnabled=");
 		builder.append(isEnabled);
 		builder.append(", isApproved=");
@@ -126,7 +120,9 @@ public class CompanyEntity {
 		return builder.toString();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -137,7 +133,9 @@ public class CompanyEntity {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -156,6 +154,5 @@ public class CompanyEntity {
 			return false;
 		return true;
 	}
-	
-	
+
 }

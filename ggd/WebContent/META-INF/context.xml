@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
 	
-	<!-- <Resource 
+	<Resource 
 		name="jdbc/ggd" 
 		type="javax.sql.DataSource"
 		auth="Container"
@@ -9,10 +9,10 @@
 		url="jdbc:mysql://192.168.191.128:3306/ggd"
 		username="ggd" 
 		password="12345678"
-		maxActive="20" maxIdle="10" />  -->
+		maxActive="20" maxIdle="10" />  
 	
 	<!--******* test env. ******* -->
-	<Resource 
+	<!-- <Resource 
 		name="jdbc/ggd" 
 		type="javax.sql.DataSource"
 		auth="Container"
@@ -20,5 +20,5 @@
 		url="jdbc:mysql://127.0.0.1:3306/ggd"
 		username="ggd" 
 		password="1qaz@WSX"
-		maxActive="20" maxIdle="10" /> 
+		maxActive="20" maxIdle="10" />  -->
 </Context>

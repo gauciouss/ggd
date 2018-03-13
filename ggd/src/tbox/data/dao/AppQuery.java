@@ -31,13 +31,18 @@ public class AppQuery extends HibernateQuery {
 			"where cam.EIN = ?    ";
 	
 	
-	
+	/**
+	 * 查詢APP last version
+	 */
 	private static final String SQL_APP_MAX_VERSION = 
 			"select max(version) " + 
 			"	from app_version " + 
 			"where app_id = ?";
 	
 	
+	/**
+	 * 查詢APP的資訊
+	 */
 	private static final String SQL_APP_INFO = 
 			"select app.app_id, app.icon_path, app.clz_id, clz.clz_name, app.app_name, ver.link, ver.version, ver.publish_time, app.pkg_name " + 
 			"	from app app " + 
@@ -45,6 +50,30 @@ public class AppQuery extends HibernateQuery {
 			"    inner join app_version ver on app.app_id = ver.app_id " + 
 			"    where app.app_id = ? " + 
 			"    and ver.version = ?";
+	
+	
+	/**
+	 * 查詢所有APP
+	 */
+	private static final String SQL_FIND_ALL_APP = 
+			"select a.app_id, a.app_name, a.icon_path, a.pkg_name, ver.version, ver.publish_time, ver.link, clz.clz_id, clz.clz_name  " + 
+			"	from (  " + 
+			"		select app.app_id, app_name, app.clz_id, app.icon_path, app.pkg_name, max(ver1.version) version  " + 
+			"			from app app  " + 
+			"			join app_version ver1 on app.app_id = ver1.app_id      " + 
+			"			group by app.app_id, app.app_name) a  " + 
+			"	inner join app_version ver on (a.app_id = ver.app_id and a.version = ver.version)  " + 
+			"	inner join app_clz clz on a.clz_id = clz.clz_id  "
+			+ " order by ver.publish_time desc, a.app_id desc";
+	
+	
+	public List<AppEntity> getAllApps() {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getAppsWithLastVersion()", this.getClass());
+		List<AppEntity> list = super.findBySql(SQL_FIND_ALL_APP, AppEntity.class);
+		log.info("END: {}.getAppsWithLastVersion(), exec TIME: {} ms.", this.getClass(), p.executeTime());
+		return list;
+	}
 	
 	
 	public List<AppEntity> getAppsWithLastVersion(String EIN) {

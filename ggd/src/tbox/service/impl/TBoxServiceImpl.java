@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import baytony.util.Profiler;
 import baytony.util.Util;
+import ggd.auth.vo.AdmGroup;
 import tbox.TBoxException;
 import tbox.core.TBoxCodeMsg;
 import tbox.data.dao.AppClzDao;
@@ -88,6 +89,20 @@ public class TBoxServiceImpl implements TBoxService {
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#findAllApps(ggd.auth.vo.AdmGroup)
+	 */
+	@Override
+	public List<AppEntity> findAllApps(AdmGroup grp) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("{}.findAllApps(), grp: {}", this.getClass(), grp.getGroupId());
+		List<AppEntity> list = null;
+		//TODO 要分出每個廠商可管的APP，admin就是全部抓
+		list = appQuery.getAllApps();		
+		log.info("{}.findAllApps(), grp: {}, exec TIME: {} ms.", this.getClass(), grp.getGroupId(), p.executeTime());
+		return list;
+	}
+
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#findAllAppKind()
 	 */
@@ -414,12 +429,25 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#updateCompInfo(tbox.data.vo.Company)
 	 */
 	@Override
-	public void updateCompInfo(Company comp) throws TBoxException {
+	public void updateCompInfo(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) throws TBoxException {
 		Profiler p = new Profiler();
-		log.trace("START: {}.updateCompInfo(), comp: {}", this.getClass(), comp);
-		compDao.update(comp);
-		log.info("END: {}.updateCompInfo(), comp: {}, exec TIME: {} ms.", this.getClass(), comp, p.executeTime());
+		log.trace("START: {}.updateCompInfo(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
+		compDao.update(EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
+		log.info("END: {}.updateCompInfo(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId, p.executeTime());
 	}
 
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#getArea(java.lang.String)
+	 */
+	@Override
+	public Area findArea(String id) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getArea(), areaId: {}", this.getClass(), id);
+		Area area = areaDao.findById(Integer.parseInt(id));
+		log.info("END: {}.getArea(), areaId: {}, exec TIME: {} ms.", this.getClass(), id, p.executeTime());
+		return area;
+	}
+
+	
 	
 }

@@ -17,6 +17,20 @@ public class CompanyDao extends HibernateDao<Company, String> {
 	
 	private final static Logger log = LoggerFactory.getLogger(CompanyDao.class);
 	
+	
+	private static final String SQL_UPDATE_COMP_INFO = 
+			"update company set "
+			+ " name = ?, "
+			+ " area_id = ?, "
+			+ " logo_url = ?, "
+			+ " background_url = ?, "
+			+ " fast_key1 = ?, "
+			+ " fast_key2 = ?, "
+			+ " fast_key3 = ?, "
+			+ " fast_key4 = ?, "
+			+ " group_id = ?"
+			+ " where EIN = ?";
+	
 	private static final String SQL_FIND_EIN_BY_ACCOUNT = 
 			"select distinct c.EIN " + 
 			"	from company  "+ 
@@ -25,16 +39,17 @@ public class CompanyDao extends HibernateDao<Company, String> {
 			"    where au.account = ?";
 	
 	private static final String SQL_FIND_ALL = 
-			"select m.*, n.isEnabled, n.isApproved " + 
-			"from (" + 
-			"select c.EIN, c.name name, a.aan area, a.can city, c.group_id gid " + 
+			"select EIN, name, a.area_name area, n.isEnabled, n.isApproved " + 
 			"	from company c " + 
-			"    inner join (select a.area_name aan , a.area_id aad, c.area_id cad, c.area_name can " + 
-			"					from area a " + 
-			"                    inner join area c on a.area_id = c.parent_id) a" + 
-			"	where c.area_id = a.cad " + 
-			") m " + 
-			"inner join adm_group n on m.gid = n.group_id  ";
+			"    inner join area a on  c.area_id = a.area_id " + 
+			"    inner join adm_group n on c.group_id = n.group_id";
+	
+	public void update(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.update(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
+		super.executeUpateQuery(SQL_UPDATE_COMP_INFO, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId, EIN);
+		log.info("END: {}.update(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId, p.executeTime());
+	}
 	
 	public String getEIN(String account) {
 		Profiler p = new Profiler();

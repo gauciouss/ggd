@@ -15,9 +15,22 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import baytony.org.apache.commons.codec.binary.Base64;
+import ggd.core.util.StandardUtil;
 
 
 public class SimpleTest {
+	
+	@Test
+	public void testWriteBase64ToFile() {
+		try {
+			String b64 = StandardUtil.readFileToBase64("C:/Users/admin/Desktop/logo/heart.jpg");
+			String str = StandardUtil.writeBase64ToFile(b64, "C:/Users/admin/Desktop/logo/test", "heart2.jpg");
+			System.out.println(str);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	
 	

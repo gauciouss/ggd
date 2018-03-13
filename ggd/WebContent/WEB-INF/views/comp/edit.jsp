@@ -19,12 +19,17 @@
 	List<Area> areas = (List<Area>) request.getAttribute(CompanyDispatcher.ALL_AREA);
 	List<AdmGroup> groups = (List<AdmGroup>) request.getAttribute(CompanyDispatcher.ALL_APPROVED_GROUPS);
 	String json = JSONUtil.toJsonString(areas);
+	
+	String logo = (String) request.getAttribute(CompanyDispatcher.LOGO_BASE64);
+	String bg = (String) request.getAttribute(CompanyDispatcher.BG_BASE64);
+	
+	
 %>
 <!DOCTYPE>
 <html>
 <head>
 <jsp:include page="/WEB-INF/views/include/header.jsp">
-	<jsp:param value="首頁" name="title" />
+	<jsp:param value="廠商編輯" name="title" />
 	<jsp:param value="<%=common.getValue(Constant.MAIN_PATH_HOST)%>"
 		name="main" />
 </jsp:include>
@@ -38,7 +43,7 @@
 		<div class="card card-register mx-auto mt-5">
 			<div class="card-header">廠商編輯</div>
 			<div class="card-body">
-				<form name="form" method="post" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/comp" enctype="multipart/form-data">
+				<form name="form" method="post" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/comp">
 					<input type="hidden" name="<%=Constant.ACTION_TYPE%>" id="<%=Constant.ACTION_TYPE%>" value="confirm" />
 					<div class="form-group">
 						<div class="form-row">
@@ -72,10 +77,6 @@
 									%>					
 								</select>								
 							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="form-row">
 							<div class="col-md-6">
 								<label for="group">所屬群組</label> 
 								<select id="group" name="group" class="form-control">
@@ -90,37 +91,53 @@
 							</div>
 						</div>
 					</div>
-					<!-- <div class="form-group">
+					
+					<!-- 快捷APP -->
+					<div class="form-group">
 						<div class="form-row">
-							<div class="col-md-6">
-								<label for="group">logo</label> 
-								<input type="file" name="logo" id="logo" class="form-control"/>
-								<% if(!Util.isEmpty(comp.getLogoURL())) { %>
-								<a href="#" class="img" type="logo">預覽</a>
-								<% } %>
+							<div class="col-md-3">
+								<label for="fastKey1">快捷APP1</label>
+								<input type="text" name="fastKey1" id="fastKey1" class="form-control"/>
 							</div>
-							<div class="col-md-6">
-								<label for="group">背景圖</label> 
-								<input type="file" name="bgimg" id="bgimg" class="form-control"/>
-								<% if(!Util.isEmpty(comp.getBackgroundURL())) { %>
-								<a href="#" class="img" type="bg">預覽</a>
-								<% } %>
+							<div class="col-md-3">
+								<label for="fastKey2">快捷APP2</label>
+								<input type="text" name="fastKey2" id="fastKey2" class="form-control"/>
+							</div>
+							<div class="col-md-3">
+								<label for="fastKey3">快捷APP3</label>
+								<input type="text" name="fastKey3" id="fastKey3" class="form-control"/>
+							</div>
+							<div class="col-md-3">
+								<label for="fastKey4">快捷APP4</label>
+								<input type="text" name="fastKey4" id="fastKey4" class="form-control"/>
 							</div>
 						</div>
-					</div> -->
-					<div class="form-group" id="imgTag">
-						<div class="form-row">
-							<input type="file" id="logoFile" name="logoFile" class="form-control"/>
-							<input type="hidden" is="logoB64" name="logoB64"/>
-							<img id="logo" name="logo" class="form-control"/>
+					</div>
+					
+					
+					
+					
+					
+					<!-- 圖檔 -->
+					<div class="form-group" id="imgTag">	
+						<div class="form-row">					
+							<div class="col-md-6">
+								<label for="logoFile">logo</label> 
+								<input type="file" id="logoFile" name="logoFile" class="form-control"/>
+								<input type="hidden" name="logoB64" id="logoB64" value="<%=logo %>"/>
+								<img id="logo" name="logo" class="form-control"/>
+							</div>
+							<div class="col-md-6">
+								<label for="bgFile">background-image</label> 
+								<input type="file" id="bgFile" name="kvFile" class="form-control"/>
+								<input type="hidden" name="bgB64" id="bgB64" value="<%=bg %>"/>
+								<img id="bg" name="bg" class="form-control"/>
+							</div>
 						</div>
 					</div>
 					
 					<div class="form-group" id="imgTag">
-						<div class="form-row">
-							<input type="file" id="kv" class="form-control"/>
-							<img id="kvimg" class="form-control"/>
-						</div>
+						
 					</div>
 
 					<jsp:include page="/WEB-INF/views/include/confirm.jsp">
@@ -139,60 +156,53 @@
 <script>
 	
 	var areas = <%=json %>;
-	
-	var showIMG = function(type) {
-		window.open("<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/comp?<%=Constant.ACTION_TYPE%>=showIMG&EIN=<%=comp.getEIN()%>&type=" + type, "img", "width=200,height=100,top=200");
-	};
-	
-	var createCityOption = function(aid) {
-		var city = $("#city");
-		city.empty();
-		if(!ggd.util.isEmpty(aid)) {
-			$.each(areas, function(i, v) {
-				if(v.parentId == aid) {
-					city.append("<option value='" + v.areaId + "'>" + v.areaName + "</option>");
-				}
-			});
-		}
-		else {
-			city.append("<option value=''>請選擇</option>");
-		}
-	};
+	var logoB64 = "<%=logo %>";
+	var bgB64 = "<%=bg %>";
 	
 	var setDefaultValue = function() {
 		var group = "<%=comp.getGroup() == null ? "" : comp.getGroup().getGroupId()%>";
 		$("#group").val(group);
 		
-		var cid = <%=comp.getArea() != null ? comp.getArea().getAreaId() : "undefined"%>;
-		if(!ggd.util.isEmpty(cid)) {
-			var aid = "";
-			$.each(areas, function(i, area) {
-				$.each(area.citys, function(i, city) {
-					if(cid == city.areaId) {
-						aid = area.areaId;
-						return false;
-					}
-				});
-				if(!ggd.util.isEmpty(aid))
-					return false;
-			});
-			$("#area").val(aid).trigger("change");
-			$("#city").val(cid);
+		var aid = <%=comp.getArea() != null ? comp.getArea().getAreaId() : "undefined"%>;
+		$("#area").val(aid).trigger("change");
+		
+		
+		if(!ggd.util.isEmpty(logoB64)) {
+			logoB64 = "data:image/png;base64," + logoB64;
+		}
+		
+		if(!ggd.util.isEmpty(bgB64)) {
+			bgB64 = "data:image/png;base64," + bgB64;
 		}
 		
 	};
 	
 	$(document).ready(function() {
-		$("#area").on("change", function(i, v) {
-			var aid = $(this).val();
-			createCityOption(aid);
-		});
-		
-		$(".img").on("click", function() {
-			showIMG($(this).attr("type"));
-		});
 		
 		setDefaultValue();
+		
+		ggd.util.previewFileUploadIMG({
+			targetFile: $("#logoFile"),
+    		targetImg: $("#logo"),
+    		imgSrc: logoB64,
+    		callback: function(b64) {
+    			var sp = b64.split(",");    			
+    			console.log(sp[1]);
+    			$("#logoB64").val(sp[1]);
+    		}
+		});
+		
+		ggd.util.previewFileUploadIMG({
+			targetFile: $("#bgFile"),
+    		targetImg: $("#bg"),
+    		imgSrc: bgB64,
+    		callback: function(b64) {
+    			var sp = b64.split(",");    			
+    			console.log(sp[1]);
+    			$("#bgB64").val(sp[1]);
+    		}
+		});
+		
 		
 		
 	});

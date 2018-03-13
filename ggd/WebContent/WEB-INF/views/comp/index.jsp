@@ -48,7 +48,7 @@
 					<tr class="data" EIN="<%=comp.getEIN() %>">
 						<td><%=comp.getEIN() %></td>
 						<td><%=comp.getName() %></td>
-						<td><%=comp.getArea() %><%=comp.getCity() %></td>
+						<td><%=comp.getArea() %><%=comp.getArea() %></td>
 						<td><%=comp.isEnabled() %></td>
 						<td><%=comp.isApproved() %></td>
 					</tr>

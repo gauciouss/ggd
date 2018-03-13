@@ -46,6 +46,21 @@ public class ServiceTest {
 	@Qualifier("TBoxService")
 	private TBoxService tboxService;
 	
+	@Test
+	public void testGetAllAps() {
+		log.trace("******* START: {}.testGetAllAps() *******", this.getClass());
+		try {
+			AdmUser user = service.findUserById("admin");
+			List<AppEntity> list = tboxService.findAllApps(user.getGroup());
+			for(AppEntity obj : list) {
+				log.debug("------- *** ------- {}", obj);
+			}
+			log.info("******* END: {}.testGetAllAps()", this.getClass());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 	@Test
 	public void testGetPanelApp() {

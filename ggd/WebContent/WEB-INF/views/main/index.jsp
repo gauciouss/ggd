@@ -249,7 +249,16 @@
 		});		
 	};
 	
-	createMenuTree();
+	$(document).ready(function() {
+		menuJson.sort(function(o, d) {
+			var oid = o.id.replace("FUN", "");
+			var did = d.id.replace("FUN", "");
+			return oid > did
+		});
+		createMenuTree();	
+	});
+	
+	
 
 </script>
 </html>
