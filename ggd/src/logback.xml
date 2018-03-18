@@ -16,13 +16,13 @@
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<!-- 設定log檔路徑及名稱 -->
 		<!-- <file>../logs/futures.log</file> -->
-		<file>/usr/local/tomcat/apache-tomcat-8.5.20/logs/tbox.log</file>
+		<file>G:/90-software/apache-tomcat-8.5.20/logs/tbox.log</file>
 		<!-- 如果要讓多個JVM寫到同一個log檔 file就不能設定而要改設定prudent -->
 		<!-- <prudent>true</prudent> -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- 設定log檔備份出去的路徑及名稱 -->
 			<!-- <fileNamePattern>../logs/all/futures.%d{yyyy-MM-dd}.log</fileNamePattern> -->
-			<fileNamePattern>/usr/local/tomcat/apache-tomcat-8.5.20/logs/all/tbox.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>G:/90-software/apache-tomcat-8.5.20/logs/all/tbox.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<!-- 設定log檔備最多保留的天數 -->
 			<maxHistory>30</maxHistory>
 		</rollingPolicy>

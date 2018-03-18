@@ -43,7 +43,7 @@
 		<div class="card card-register mx-auto mt-5">
 			<div class="card-header">廠商編輯</div>
 			<div class="card-body">
-				<form name="form" method="post" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/comp">
+				<form name="form" method="post" class="form-control" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/comp">
 					<input type="hidden" name="<%=Constant.ACTION_TYPE%>" id="<%=Constant.ACTION_TYPE%>" value="confirm" />
 					<div class="form-group">
 						<div class="form-row">

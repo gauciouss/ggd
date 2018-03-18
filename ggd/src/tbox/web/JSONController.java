@@ -25,6 +25,7 @@ import ggd.core.controller.CommonController;
 import ggd.core.dispatcher.Dispatcher;
 import ggd.core.entity.ServiceResponse;
 import ggd.core.util.WebUtil;
+import tbox.TBoxException;
 import tbox.core.TBoxCodeMsg;
 import tbox.core.TBoxData;
 import tbox.core.TBoxDataImpl;
@@ -112,27 +113,12 @@ public class JSONController extends CommonController{
 			} else {
 				log.trace("No Dispatcher found for folder: {}. Call JSP: {}.", category, view.getViewName());
 			}
-//			if(box == null) {
-//				header.setCode(TBoxCodeMsg.EX_002);
-//			}
-//			else {
-//				String beanName = String.format(BEAN_ENTITY, category, command);
-//				Dispatcher d = context.getBean(beanName, Dispatcher.class);
-//				if(d != null){
-//					log.trace("Folder : {}, Found : Dispatcher {}.", category, d.getClass());
-//					d.handler(view, request);
-//					if("register".equals(info.getAction()) && box.getAuthorizedEndDate() == null) {
-//						log.debug("******* do register ********");
-//						box = service.findMachine(info.getMachineSN(), info.getMAC(), info.getWIFIMAC());
-//					}
-//					header.setAuthorizedEnd(String.valueOf(box.getAuthorizedEndDate().getTime()));
-//					
-//					header.setCode("00-000");
-//				} else {
-//					log.trace("No Dispatcher found for folder: {}. Call JSP: {}.", category, view.getViewName());
-//				}	
-//			}
-		} 		
+		}
+		catch(TBoxException e) {
+			log.warn("doRequest() ERROR! MSG : {}", e.getMessage(), e);
+			header.setCode(e.getCode());
+			header.setMsg(e.getMessage());
+		}
 		catch (Exception e) {
 			log.warn("doRequest() ERROR! MSG : {}", e.getMessage(), e);
 			header.setExt(e.getMessage());

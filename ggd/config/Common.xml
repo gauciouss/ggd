@@ -38,12 +38,12 @@
 	
 	<bean id="MAIN_PATH" class="java.lang.String">
    		<description>根目錄</description>
-   		<constructor-arg value="http://127.0.0.1:8080/ggd/"/>
+   		<constructor-arg value="http://60.248.131.18/ggd/"/>
    	</bean>
    	
-   	<bean id="IMG_PHYSICAL_PATH" class="java.lang.String">
-   		<description>圖檔存放實體路徑</description>
-   		<constructor-arg value="G:/外包/tbox/"/>
+   	<bean id="FILE_PHYSICAL_PATH" class="java.lang.String">
+   		<description>檔案存放實體路徑</description>
+   		<constructor-arg value="G:/外包/GGD/fileserver/WebContent"/>
    	</bean>
    	
    	<bean id="DEFAULT_PAGE_SIZE" class="java.lang.Integer">

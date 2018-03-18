@@ -1,5 +1,6 @@
 package tbox.service.impl;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -13,11 +14,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import baytony.util.Profiler;
+import baytony.util.StringUtil;
 import baytony.util.Util;
 import ggd.auth.vo.AdmGroup;
+import ggd.core.util.StandardUtil;
+import net.dongliu.apk.parser.ApkFile;
+import net.dongliu.apk.parser.bean.ApkMeta;
+import net.dongliu.apk.parser.bean.Icon;
 import tbox.TBoxException;
 import tbox.core.TBoxCodeMsg;
 import tbox.data.dao.AppClzDao;
+import tbox.data.dao.AppDao;
 import tbox.data.dao.AppQuery;
 import tbox.data.dao.AreaDao;
 import tbox.data.dao.AreaQuery;
@@ -26,6 +33,7 @@ import tbox.data.dao.KVDao;
 import tbox.data.dao.KVKindDao;
 import tbox.data.dao.KVQuery;
 import tbox.data.dao.MachineDao;
+import tbox.data.vo.App;
 import tbox.data.vo.AppClz;
 import tbox.data.vo.AppEntity;
 import tbox.data.vo.Area;
@@ -38,6 +46,7 @@ import tbox.data.vo.MachineBox;
 import tbox.proxy.cwb.gov.tw.OpendataAPI;
 import tbox.proxy.cwb.gov.tw.OpendataAPI.Entity;
 import tbox.service.TBoxService;
+import tbox.service.entity.ApkInfoEntity;
 
 @Service("TBoxService")
 public class TBoxServiceImpl implements TBoxService {
@@ -85,10 +94,100 @@ public class TBoxServiceImpl implements TBoxService {
 	@Qualifier("AppClzDao")
 	private AppClzDao appClzDao;
 	
+	@Autowired
+	@Qualifier("AppDao")
+	private AppDao appDao;
+	
+	@Autowired
+	@Qualifier("FILE_PHYSICAL_PATH")
+	private String physicalPath;
 	
 	
-	
-	
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#getApkInfo(java.lang.String)
+	 */
+	@Override
+	public ApkInfoEntity getApkInfo(String apkB64, String appId) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getApkInfo(), appId: {}", this.getClass(), appId);
+		ApkFile apk = null;
+		try {
+			String absPath = physicalPath + "/app/" + appId + "/";
+			String apkPath = StandardUtil.writeBase64ToFile(apkB64, absPath, appId + ".apk");
+			apk = new ApkFile(apkPath);
+			ApkMeta meta = apk.getApkMeta();
+			ApkInfoEntity entity = new ApkInfoEntity(meta);
+			List<Icon> icons = apk.getIconFiles();
+			List<String> paths = new ArrayList<String>();
+			for(Icon icon : icons) {
+				String path = icon.getPath();
+				if(path.contains("png")) {
+					String n = "";
+        			if(path.contains("mdpi")) {
+        				n = "mdpi";
+        			}
+        			else if(path.contains("xxxhdpi")) {
+						n = "xxxhdpi";
+					}
+        			else if(path.contains("xxhdpi")) {
+						n = "xxhdpi";
+					}
+        			else if(path.contains("xhdpi")) {
+						n = "xhdpi";
+					}
+        			else if(path.contains("hdpi")) {
+        				n = "hdpi";
+        			}
+        			
+        			byte[] data = icon.getData();
+        			String pp = "app/" + appId + "/icon_" + n + ".png";
+        			paths.add(pp);
+        			FileOutputStream fos = new FileOutputStream(absPath + "/icon_" + n + ".png");
+        			fos.write(data);
+        			fos.flush();
+        			fos.close();
+				}
+			}
+			entity.setIconPath(paths);
+			apk.close();
+			log.info("END: {}.getApkInfo(), appId: {}, exec TIME: {} ms.", this.getClass(), appId, p.executeTime());
+			return entity;
+		} 
+		catch (IOException e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_006);
+		}
+		catch(Exception e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_004);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#getNextAppId()
+	 */
+	@Override
+	public String getNextAppId() throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getNextAppId()", this.getClass());
+		String nextId = appQuery.getNextAppId();
+		log.info("END: {}.getNextAppId(), exec TIME: {} ms.", this.getClass(), p.executeTime());
+		return nextId;
+	}
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#findAppById(java.lang.String)
+	 */
+	@Override
+	public App findAppById(String id) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.findAppById(), id: {}", this.getClass(), id);
+		App app = appDao.findById(id);
+		log.debug("id: {}, app: {}", id, app);
+		log.info("END: {}.findAppById(), id: {}, exec TIME: {} ms.", this.getClass(), id, p.executeTime());
+		return app;
+	}
+
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#findAllApps(ggd.auth.vo.AdmGroup)
 	 */
@@ -265,7 +364,7 @@ public class TBoxServiceImpl implements TBoxService {
 		log.debug("sn: {}, mac: {}, wifi: {}, machine size: {}", sn, mac, wifi, list.size());
 		log.info("END: {}.findMachine(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
 		if(Util.isEmpty(list))
-			throw new TBoxException(TBoxCodeMsg.EX_005);
+			throw new TBoxException(TBoxCodeMsg.EX_002);
 		else if(!Util.isEmpty(list) && list.size() > 1) 
 			throw new TBoxException(TBoxCodeMsg.EX_001);		
 		else 

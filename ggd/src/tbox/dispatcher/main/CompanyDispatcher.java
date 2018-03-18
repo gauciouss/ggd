@@ -1,8 +1,5 @@
 package tbox.dispatcher.main;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,16 +11,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
-import baytony.org.apache.commons.codec.binary.Base64;
 import baytony.util.Profiler;
 import baytony.util.StringUtil;
 import baytony.util.Util;
 import ggd.auth.AuthService;
 import ggd.auth.vo.AdmGroup;
 import ggd.core.CoreException;
-import ggd.core.common.Config;
 import ggd.core.common.Constant;
-import ggd.core.config.XML_Config;
 import ggd.core.dispatcher.Dispatcher;
 import ggd.core.util.StandardUtil;
 import tbox.TBoxException;
@@ -53,7 +47,7 @@ public class CompanyDispatcher implements Dispatcher {
 	private AuthService authService;
 	
 	@Autowired
-	@Qualifier("IMG_PHYSICAL_PATH")
+	@Qualifier("FILE_PHYSICAL_PATH")
 	private String physicalPath;
 	
 
@@ -103,8 +97,12 @@ public class CompanyDispatcher implements Dispatcher {
 		}
 		
 		try {
-			String imgAbsPath = physicalPath;
-			imgAbsPath += (EIN + "/");						
+			String imgPath = "images/" + EIN + "/";
+			
+			//硬碟實體路徑
+			String imgAbsPath = physicalPath + "/images/";
+			imgAbsPath += imgPath;
+			
 			Area areaObj = service.findArea(area);
 			AdmGroup groupObj = authService.findGroup(group);			
 			Company comp = service.findCompanyByEIN(EIN);
@@ -115,7 +113,7 @@ public class CompanyDispatcher implements Dispatcher {
 					StandardUtil.writeBase64ToFile(logo, imgAbsPath, "logo.png");
 				if(!Util.isEmpty(bg))
 					StandardUtil.writeBase64ToFile(bg, imgAbsPath, "bg.png");
-				comp = new Company(EIN, compName, areaObj, imgAbsPath + "logo.png", imgAbsPath + "bg.png", fk1, fk2, fk3, fk4, groupObj);
+				comp = new Company(EIN, compName, areaObj, imgPath + "logo.png", imgPath + "bg.png", fk1, fk2, fk3, fk4, groupObj);
 				service.addCompany(comp);
 			}
 			else {
@@ -124,13 +122,11 @@ public class CompanyDispatcher implements Dispatcher {
 					StandardUtil.writeBase64ToFile(logo, imgAbsPath, "logo.png");
 				if(!Util.isEmpty(bg))
 					StandardUtil.writeBase64ToFile(bg, imgAbsPath, "bg.png");
-				service.updateCompInfo(EIN, compName, area, imgAbsPath + "logo.png", imgAbsPath + "bg.png", fk1, fk2, fk3, fk4, group);
+				service.updateCompInfo(EIN, compName, area, imgPath + "logo.png", imgPath + "bg.png", fk1, fk2, fk3, fk4, group);
 			}
 			
-			
-			
-			
 			view.addObject(Constant.ACTION_RESULT, "1");
+			log.info("END: {}.doConfirm(), EIN: {}, compName: {}, area: {}, group: {}, fk1: {}, fk2: {}, fk3: {}, fk4: {}, exec TIME: {} ms.", this.getClass(), EIN, compName, area, group, fk1, fk2, fk3, fk4, p.executeTime());
 		}
 		catch(TBoxException e) {
 			view.addObject(Constant.ACTION_RESULT, "0");
@@ -158,12 +154,12 @@ public class CompanyDispatcher implements Dispatcher {
 			String logoB64 = Constant.EMPTY;
 			String logoPath = comp.getLogoURL();
 			if(!Util.isEmpty(logoPath))
-				logoB64 = StandardUtil.readFileToBase64(logoPath);
+				logoB64 = StandardUtil.readFileToBase64(physicalPath + "/" + logoPath);
 			
 			String bgB64 = Constant.EMPTY;
 			String bgPath = comp.getBackgroundURL();
 			if(!Util.isEmpty(bgPath))
-				bgB64 = StandardUtil.readFileToBase64(bgPath);
+				bgB64 = StandardUtil.readFileToBase64(physicalPath + "/" + bgPath);
 			
 			view.addObject(LOGO_BASE64, logoB64);
 			view.addObject(BG_BASE64, bgB64);

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import baytony.util.Profiler;
+import baytony.util.Util;
 import ggd.core.db.HibernateQuery;
 import tbox.data.vo.AppEntity;
 
@@ -14,6 +15,9 @@ import tbox.data.vo.AppEntity;
 public class AppQuery extends HibernateQuery {
 	
 	private final static Logger log = LoggerFactory.getLogger(AppQuery.class);
+	
+	private static final String SQL_MAX_APP_ID =
+			"select max(app_id) from app";
 	
 	/**
 	 * 查詢商城首頁APP
@@ -65,6 +69,24 @@ public class AppQuery extends HibernateQuery {
 			"	inner join app_version ver on (a.app_id = ver.app_id and a.version = ver.version)  " + 
 			"	inner join app_clz clz on a.clz_id = clz.clz_id  "
 			+ " order by ver.publish_time desc, a.app_id desc";
+	
+	
+	public String getNextAppId() {
+		List<String> list = (List<String>) super.findBySql(SQL_MAX_APP_ID);
+		if(Util.isEmpty(list)) {
+			return "APP0000001";			
+		}
+		else {
+			String max = list.get(0);
+			int nid = Integer.parseInt(max.substring(3)) + 1;
+			String str = String.valueOf(nid);
+			while(str.length() < 7) {
+				str = "0" + str;
+			}
+			str = "APP" + str;
+			return str;
+		}
+	}
 	
 	
 	public List<AppEntity> getAllApps() {

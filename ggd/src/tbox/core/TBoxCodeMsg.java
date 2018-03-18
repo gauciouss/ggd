@@ -65,6 +65,8 @@ public class TBoxCodeMsg {
 	 */
 	public static final String EX_005 = "EX-005";
 	
+	public static final String EX_006 = "EX-006";
+	
 	private static final Map<String, String> map = new HashMap<String, String>();
 	
 	static {
@@ -74,10 +76,11 @@ public class TBoxCodeMsg {
 		map.put(CORE_003, "Request JSON裡缺少WIFI MAC資訊.");
 		map.put(CORE_004, "Request JSON裡缺少action資訊.");
 		map.put(EX_001, "序號、mac、wifi mac對應到多組機器");
-		map.put(EX_002, "未註冊的機器");
+		map.put(EX_002, "非法的機器");
 		map.put(EX_003, "未連接遠端機器發生錯誤的機器");
 		map.put(EX_004, "發生不明錯誤");
 		map.put(EX_005, "無法反查註冊公司，非法的機器");
+		map.put(EX_006, "檔案上傳失敗");
 	}
 
 	public static final String getCodeMessage(String code) {

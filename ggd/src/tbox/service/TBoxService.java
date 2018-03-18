@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ggd.auth.vo.AdmGroup;
 import tbox.TBoxException;
+import tbox.data.vo.App;
 import tbox.data.vo.AppClz;
 import tbox.data.vo.AppEntity;
 import tbox.data.vo.Area;
@@ -15,9 +16,35 @@ import tbox.data.vo.KV;
 import tbox.data.vo.KVEntity;
 import tbox.data.vo.KVKind;
 import tbox.data.vo.MachineBox;
+import tbox.service.entity.ApkInfoEntity;
 
 @Transactional
 public interface TBoxService {
+	
+	/**
+	 * 取得apk相關資訊
+	 * @param apkB64
+	 * @param appId
+	 * @return
+	 * @throws TBoxException
+	 */
+	public ApkInfoEntity getApkInfo(String apkB64, String appId) throws TBoxException;
+	
+	
+	/**
+	 * 取得下一個APP id
+	 * @return
+	 * @throws TBoxException
+	 */
+	public String getNextAppId() throws TBoxException;
+	
+	/**
+	 * 查詢APP
+	 * @param id
+	 * @return
+	 * @throws TBoxException
+	 */
+	public App findAppById(String id) throws TBoxException;
 	
 	/**
 	 * 取得所有APPs

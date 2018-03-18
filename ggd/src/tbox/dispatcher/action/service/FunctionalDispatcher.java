@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,10 +15,7 @@ import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
 import tbox.core.TBoxData;
 import tbox.core.TBoxInfo;
-import tbox.dispatcher.action.service.command.AreaCommand;
 import tbox.dispatcher.action.service.command.Command;
-import tbox.dispatcher.action.service.command.IndexInfoCommand;
-import tbox.dispatcher.action.service.command.RegisterCommand;
 
 @Component("service.Functional")
 public class FunctionalDispatcher implements Dispatcher {

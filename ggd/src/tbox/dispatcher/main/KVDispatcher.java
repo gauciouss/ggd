@@ -42,7 +42,7 @@ public class KVDispatcher implements Dispatcher {
 	private AuthService authService;
 	
 	@Autowired
-	@Qualifier("IMG_PHYSICAL_PATH")
+	@Qualifier("FILE_PHYSICAL_PATH")
 	private String physicalPath;
 
 	@Override

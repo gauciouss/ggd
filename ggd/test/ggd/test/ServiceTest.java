@@ -1,5 +1,6 @@
 package ggd.test;
 
+import java.io.FileReader;
 import java.util.List;
 import java.util.Set;
 
@@ -24,10 +25,12 @@ import tbox.TBoxException;
 import tbox.config.DispatcherConfig;
 import tbox.config.SpringWebInitializer;
 import tbox.config.XML_DEV_UNIT_Config;
+import tbox.data.vo.App;
 import tbox.data.vo.AppEntity;
 import tbox.data.vo.CompanyEntity;
 import tbox.proxy.cwb.gov.tw.OpendataAPI.Entity;
 import tbox.service.TBoxService;
+import tbox.service.entity.ApkInfoEntity;
 
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -45,6 +48,38 @@ public class ServiceTest {
 	@Autowired
 	@Qualifier("TBoxService")
 	private TBoxService tboxService;
+	
+	@Test
+	public void testGetApkInfo() {
+		System.out.println("******* START: testGetApkInfo() *******");
+		try {
+			FileReader fr = new FileReader("C:\\Users\\admin\\Desktop\\base64.txt");
+			StringBuilder sb = new StringBuilder();
+			int k = -1;
+			while((k=fr.read()) != -1)
+				sb.append((char)k );
+			ApkInfoEntity entity = tboxService.getApkInfo(sb.toString(), "test");
+			System.out.println(entity);
+			fr.close();			
+		}
+		catch(Exception e) {
+			
+		}
+	}
+	
+	
+	@Test
+	public void testGetApp() {
+		log.trace("******* START: {}.testGetApp() *******", this.getClass());
+		try {
+			App app = tboxService.findAppById("APP0000001");
+			System.out.println("***********");
+			System.out.println(app);
+			log.info("******* END: {}.testGetApp()", this.getClass());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	@Test
 	public void testGetAllAps() {

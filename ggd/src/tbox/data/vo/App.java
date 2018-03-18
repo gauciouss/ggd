@@ -1,6 +1,7 @@
 package tbox.data.vo;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -37,6 +39,10 @@ public class App implements Serializable {
 
 	@Column(name = "app_desc")
 	private String appDesc;
+	
+	@OneToMany
+	@JoinColumn(name = "app_id", insertable = false, updatable = false)
+	private Set<AppVersion> versions;
 
 	/**
 	 * @return the appId
@@ -127,10 +133,16 @@ public class App implements Serializable {
 	public void setAppDesc(String appDesc) {
 		this.appDesc = appDesc;
 	}
+	
+	public Set<AppVersion> getVersions() {
+		return versions;
+	}
+	
+	public void setVersions(Set<AppVersion> versions) {
+		this.versions = versions;
+	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -148,6 +160,8 @@ public class App implements Serializable {
 		builder.append(iconPath);
 		builder.append(", appDesc=");
 		builder.append(appDesc);
+		builder.append(", versions=");
+		builder.append(versions);
 		builder.append("]");
 		return builder.toString();
 	}
