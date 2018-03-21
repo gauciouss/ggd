@@ -358,21 +358,24 @@ public class IndexInfoAdapter implements Serializable {
 		private String today;
 		private String future;
 		private String icon;
+		private String fileServerPath;
 
-		public Weather(OpendataAPI.Entity entity) {
+		public Weather(OpendataAPI.Entity entity, String fileServerPath) {
 			super();
 			this.location = entity.getLocationName();
 			this.desc = entity.getDesc();
 			this.today = entity.getToday();
 			this.future = entity.getFuture();
+			this.fileServerPath = fileServerPath;
 		}
 
-		public Weather(String location, String desc, String today, String future) {
+		public Weather(String location, String desc, String today, String future, String fileServerPath) {
 			super();
 			this.location = location;
 			this.desc = desc;
 			this.today = today;
 			this.future = future;
+			this.fileServerPath = fileServerPath;
 		}
 
 		/**
@@ -404,13 +407,14 @@ public class IndexInfoAdapter implements Serializable {
 		}
 		
 		public String getIcon() {
+			if(desc.contains("晴")) icon = fileServerPath + "/weather/sunny.png";
+			else if(desc.contains("陰")) icon = fileServerPath + "/weather/cloudy.png";
+			else if(desc.contains("雨")) icon = fileServerPath + "/weather/rain.png";
 			return icon;
 		}
 				
 
-		/*
-		 * (non-Javadoc)
-		 * 
+		/* (non-Javadoc)
 		 * @see java.lang.Object#toString()
 		 */
 		@Override
@@ -424,6 +428,8 @@ public class IndexInfoAdapter implements Serializable {
 			builder.append(today);
 			builder.append(", future=");
 			builder.append(future);
+			builder.append(", icon=");
+			builder.append(getIcon());
 			builder.append("]");
 			return builder.toString();
 		}

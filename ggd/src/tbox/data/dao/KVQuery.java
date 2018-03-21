@@ -40,7 +40,7 @@ public class KVQuery extends HibernateQuery {
 			"    inner join kv_comp_mapping kcm on kv.kv_serial_no = kcm.kv_serial_no " + 
 			"    inner join machine_box box on box.EIN = kcm.EIN " + 
 			"    where kcm.isEnabled = true " +
-			"      and kcm.isApprove = true " +
+			"      and kcm.isApproved = true " +
 			"      and kv.kind = ? " +
 			"      and box.machine_sn = ? " + 
 			"      and box.ethernet_mac = ? " + 

@@ -186,6 +186,8 @@ public class OpendataAPI extends HttpProxy {
 
 	public static class Entity implements Serializable {
 		
+		private static final long serialVersionUID = 3406969887442081442L;
+
 		/**
 		 * 地區名稱
 		 */

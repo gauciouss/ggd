@@ -42,6 +42,10 @@ public class IndexInfoCommand implements Command {
 	@Autowired
 	@Qualifier("TBoxService")
 	private TBoxService service;
+	
+	@Autowired
+	@Qualifier("FILE_SERVER_PATH")
+	private String fileServerPath;
 
 	/* (non-Javadoc)
 	 * @see tbox.dispatcher.action.service.command.Command#execute(org.springframework.web.servlet.ModelAndView, javax.servlet.http.HttpServletRequest, tbox.core.TBoxData)
@@ -110,8 +114,9 @@ public class IndexInfoCommand implements Command {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getWeather(), box: {}", this.getClass(), box);
 		tbox.proxy.cwb.gov.tw.OpendataAPI.Entity entity = service.findWeatherReport(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());
+		Weather weather = new Weather(entity, fileServerPath);		
 		log.info("END: {}.getWeather(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
-		return new Weather(entity);		
+		return weather;
 	}
 	
 }
