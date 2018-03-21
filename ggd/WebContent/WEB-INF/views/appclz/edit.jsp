@@ -26,7 +26,7 @@
 <html>
 <head>
 <jsp:include page="/WEB-INF/views/include/header.jsp">
-	<jsp:param value="APP編輯" name="title" />
+	<jsp:param value="APP類別編輯" name="title" />
 	<jsp:param value="<%=common.getValue(Constant.MAIN_PATH_HOST)%>"
 		name="main" />
 </jsp:include>
@@ -38,18 +38,19 @@
 <body>
 	<div class="container">
 		<div class="card card-register mx-auto mt-5">
-			<div class="card-header">APP編輯</div>
+			<div class="card-header">APP類別編輯</div>
 			<div class="card-body">
-				<form name="form" method="post" class="form-control" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/app" enctype="multipart/form-data">
-					<input type="hidden" name="<%=Constant.ACTION_TYPE%>" id="<%=Constant.ACTION_TYPE%>" value="uploadApk" />
+				<form name="form" method="post" class="form-control" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/appclz">
+					<input type="hidden" name="<%=Constant.ACTION_TYPE%>" id="<%=Constant.ACTION_TYPE%>" value="edit" />
+					<input type="hidden" name="serial", id="serial" value="<%=appClz.getClzId() == null ? "" : appClz.getClzId()  %>"/>
 					<div class="form-group">
 						<div class="form-row">
 							<div class="col-md-6">
-								<label for="account">類別編號</label> 
-								<input type="text" id="serial" class="form-control" name="serial" disabled="disabled" value="<%=appClz.getClzId() == null ? "" : appClz.getClzId()  %>" />
+								<label for="serial">類別編號</label> 
+								<input type="text" class="form-control" disabled="disabled" value="<%=appClz.getClzId() == null ? "" : appClz.getClzId()  %>" />
 							</div>
 							<div class="col-md-6">
-								<label for="kind">類別名稱</label> 
+								<label for="name">類別名稱</label> 
 								<input type="text" id="name" class="form-control" name="name" value="<%=appClz.getClzName() == null ? "" : appClz.getClzName()  %>" />
 							</div>
 						</div>
@@ -57,7 +58,7 @@
 					<div class="form-group">
 						<div class="form-row">
 							<div class="col-md-6">
-								<label for="kv">類別圖檔</label>
+								<label for="icon">類別圖檔</label>
 								<input type="file" id="icon" class="form-control"/>
 								<img id="iconImg" class="form-control"/>
 								<input type="hidden" name="iconB64" id="iconB64"/>
@@ -68,8 +69,7 @@
 					<jsp:include page="/WEB-INF/views/include/confirm.jsp">
 						<jsp:param value="true" name="isEnabled" />
 						<jsp:param value="true" name="isApproved" />
-						<jsp:param value="true" name="showPanel"/>
-						<jsp:param value="uploadApk" name="action"/>
+						<jsp:param value="true" name="showPanel"/>						
 						<jsp:param value="<%=loginUser.getGroup().isManager()%>" name="isManager" />
 					</jsp:include>
 				</form>
@@ -81,10 +81,10 @@
 
 <script>
 
-	var iconB64 = <%=iconB64 %>;
+	var iconB64 = "<%=iconB64 %>";
 	
 	var setDefaultValue = function() {
-		if(!ggd.util.isEmpty(kvB64)) {
+		if(!ggd.util.isEmpty(iconB64)) {
 			$("#iconB64").val(iconB64);
 			iconB64 = "data:image/png;base64," + iconB64;			
 		}

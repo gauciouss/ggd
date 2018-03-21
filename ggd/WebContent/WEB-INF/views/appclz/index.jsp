@@ -79,11 +79,6 @@
 				document.form.submit();
 			});
 			
-			$("#searchBtn").on("click", function() {
-				$("#<%=Constant.ACTION_TYPE%>").val("search");
-				document.form.submit();
-			});
-			
 			$("#saveBtn").on("click", function() {
 				$("#<%=Constant.ACTION_TYPE%>").val("save");
 				document.form.submit();

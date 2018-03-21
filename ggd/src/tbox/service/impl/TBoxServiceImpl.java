@@ -322,6 +322,60 @@ public class TBoxServiceImpl implements TBoxService {
 	public List<AppClz> findAllAppKind() throws TBoxException {
 		return appClzDao.findAll();
 	}
+	
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#findAppKindById(int)
+	 */
+	@Override
+	public AppClz findAppKindById(int serialNo) throws TBoxException {
+		return appClzDao.findById(serialNo);
+	}
+	
+	
+
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#addNewAppClz(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void addNewAppClz(String name, String base64) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.addNewAppClz(), name: {}", this.getClass(), name);
+		String iconName = System.currentTimeMillis() + ".png";
+		try {
+			StandardUtil.writeBase64ToFile(base64, physicalPath + "/appclz/", iconName);
+			AppClz clz = new AppClz(name, "appclz/" + iconName);
+			appClzDao.save(clz);
+		} 
+		catch (IOException e) {			
+			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_007, e);
+		}
+		log.info("END: {}.addNewAppClz(), name: {}, exec TIME: {} ms.", this.getClass(), name, p.executeTime());
+	}
+
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#updateAppClz(int, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void updateAppClz(int serialNo, String name, String base64) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.updateAppClz(), name: {}", this.getClass(), name);
+		String iconName = System.currentTimeMillis() + ".png";
+		try {
+			StandardUtil.writeBase64ToFile(base64, physicalPath + "/appclz/", iconName);
+			AppClz clz = new AppClz(serialNo, name, "appclz/" + iconName);
+			appClzDao.update(clz);
+		} 
+		catch (IOException e) {			
+			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_007, e);
+		}
+		log.info("END: {}.updateAppClz(), name: {}, exec TIME: {} ms.", this.getClass(), name, p.executeTime());
+	}
+
 
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#findEINByMachine(java.lang.String, java.lang.String, java.lang.String)

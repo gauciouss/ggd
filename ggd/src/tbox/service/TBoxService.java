@@ -71,6 +71,31 @@ public interface TBoxService {
 	 */
 	public List<AppClz> findAllAppKind() throws TBoxException;
 	
+	
+	/**
+	 * 取得app類別
+	 */
+	public AppClz findAppKindById(int serialNo) throws TBoxException;
+	
+	
+	/**
+	 * 新增APP類別
+	 * @param name
+	 * @param base64
+	 * @throws TBoxException
+	 */
+	public void addNewAppClz(String name, String base64) throws TBoxException;
+	
+	/**
+	 * 更新APP類別資訊
+	 * @param serialNo
+	 * @param name
+	 * @param base64
+	 * @throws TBoxException
+	 */
+	public void updateAppClz(int serialNo, String name, String base64) throws TBoxException;
+	
+	
 	/**
 	 * 取得商城APP
 	 * @param EIN

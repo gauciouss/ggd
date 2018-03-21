@@ -25,6 +25,24 @@ public class AppClz implements Serializable {
 
 	@Column(name = "icon_path")
 	private String iconPath;
+	
+	public AppClz() {}
+	
+
+	public AppClz(String clzName, String iconPath) {
+		super();
+		this.clzName = clzName;
+		this.iconPath = iconPath;
+	}
+
+
+	public AppClz(Integer clzId, String clzName, String iconPath) {
+		super();
+		this.clzId = clzId;
+		this.clzName = clzName;
+		this.iconPath = iconPath;
+	}
+
 
 	/**
 	 * @return the clzId

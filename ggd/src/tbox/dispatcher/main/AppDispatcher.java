@@ -34,7 +34,7 @@ import tbox.data.vo.AppClz;
 import tbox.data.vo.AppEntity;
 import tbox.service.TBoxService;
 
-@Component("main.appclz")
+@Component("main.app")
 public class AppDispatcher implements Dispatcher {
 	
 	private final static Logger log = LoggerFactory.getLogger(AppDispatcher.class);
@@ -162,9 +162,10 @@ public class AppDispatcher implements Dispatcher {
 		Profiler p = new Profiler();
 		log.trace("START: {}.doIndex()", this.getClass());
 		try {
-			List<AppClz> list = service.findAllAppKind();
+			AdmUser loginUser = (AdmUser) request.getSession().getAttribute(Constant.USER);
+			List<AppEntity> list = service.findAllApps(loginUser.getGroup());
 			view.addObject(Constant.DATA_LIST, list);
-			view.setViewName("appclz/index");
+			view.setViewName("app/index");
 		}
 		catch(Exception e) {
 			log.error(StringUtil.getStackTraceAsString(e));

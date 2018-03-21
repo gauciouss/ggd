@@ -1,5 +1,6 @@
 package tbox.dispatcher.main;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
@@ -7,9 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.FileItemFactory;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +23,14 @@ import ggd.auth.vo.AdmUser;
 import ggd.core.CoreException;
 import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
+import ggd.core.util.StandardUtil;
+import net.dongliu.apk.parser.bean.IconPath;
 import tbox.TBoxException;
 import tbox.data.vo.AppClz;
 import tbox.data.vo.AppEntity;
 import tbox.service.TBoxService;
 
-@Component("main.app")
+@Component("main.appclz")
 public class AppClzDispatcher implements Dispatcher {
 	
 	private final static Logger log = LoggerFactory.getLogger(CompanyDispatcher.class);
@@ -56,18 +56,7 @@ public class AppClzDispatcher implements Dispatcher {
 		//String action = request.getParameter(Constant.ACTION_TYPE);	
 		//action = StringUtil.isEmptyString(action) ? "index" : action;
 		
-		String action = Constant.EMPTY;
-		FileItemFactory factory = new DiskFileItemFactory();
-		ServletFileUpload upload = new ServletFileUpload(factory);
-		Map<String, List<FileItem>> multiparts = null;
-		try {
-			multiparts = upload.parseParameterMap(request);
-			action = this.getParameterValue(Constant.ACTION_TYPE, multiparts);
-			
-		} 
-		catch (Exception e) {
-			action = request.getParameter(Constant.ACTION_TYPE);
-		}
+		String action = request.getParameter(Constant.ACTION_TYPE);		
 		action = Util.isEmpty(action) ? "index" : action;
 		log.trace("START: {}.handler(), action: {}", this.getClass(), action);
 		switch(action) {
@@ -78,7 +67,7 @@ public class AppClzDispatcher implements Dispatcher {
 				doEdit(view, request);
 				break;
 			case "confirm":
-				//doConfirm(view, request);
+				doConfirm(view, request);
 				break;
 			case "index":
 				doIndex(view, request);
@@ -90,7 +79,34 @@ public class AppClzDispatcher implements Dispatcher {
 		log.info("END: {}.handler(), action: {}, exec TIME: {} ms.", this.getClass(), action, p.executeTime());
 	}
 	
-	
+	private void doConfirm(ModelAndView view, HttpServletRequest request) {
+		Profiler p = new Profiler();
+		String name = request.getParameter("name");
+		String serial = request.getParameter("serial");
+		String iconB64 = request.getParameter("iconB64");
+		log.trace("START: {}.doConfirm(), serial: {}, name: {}", this.getClass(), serial, name);
+		try {
+			if(Util.isEmpty(serial)) {
+				//新增
+				service.addNewAppClz(name, iconB64);
+			}
+			else {
+				//更新			
+				service.updateAppClz(Integer.parseInt(serial), name, iconB64);
+			}
+			view.addObject(Constant.ACTION_RESULT, "1");
+		}
+		catch(TBoxException e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
+		catch(Exception e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
+		log.info("END: {}.doConfirm(), serial: {}, name: {}, exec TIME: {} ms.", this.getClass(), serial, name, p.executeTime());
+		this.doIndex(view, request);
+	}
 	
 	
 	private void doEdit(ModelAndView view, HttpServletRequest request) {
@@ -98,10 +114,20 @@ public class AppClzDispatcher implements Dispatcher {
 		String serialNo = request.getParameter("serialNo"); 
 		log.trace("START: {}.deEdit(), serialNo: {}", this.getClass(), serialNo);
 		try {
-			AppClz clz = service.findAppKindById(Integer.parseInt(serialNo));
+			AppClz clz = Util.isEmpty(serialNo) ? new AppClz() : service.findAppKindById(Integer.parseInt(serialNo));
 			String iconB64 = Constant.EMPTY;
+			if(!Util.isEmpty(serialNo)) {
+				String iconPath = physicalPath + "/" + clz.getIconPath();
+				File f = new File(iconPath);
+				log.debug("icon path: {}", iconPath);
+				if(!Util.isEmpty(iconPath) && f.exists()) {
+					iconB64 = StandardUtil.readFileToBase64(iconPath);
+				}
+			}
+			
 			view.addObject(ICON_BASE64, iconB64);
 			view.addObject(Constant.DATA_LIST, clz);
+			view.setViewName("appclz/edit");
 		}
 		catch(TBoxException e) {
 			log.error(StringUtil.getStackTraceAsString(e));
@@ -117,15 +143,15 @@ public class AppClzDispatcher implements Dispatcher {
 		Profiler p = new Profiler();
 		log.trace("START: {}.doIndex()", this.getClass());
 		try {
-			AdmUser loginUser = (AdmUser) request.getSession().getAttribute(Constant.USER);
-			List<AppEntity> list = service.findAllApps(loginUser.getGroup());
+			List<AppClz> list = service.findAllAppKind();
 			view.addObject(Constant.DATA_LIST, list);
-			view.setViewName("app/index");
+			view.setViewName("appclz/index");
 		}
 		catch(Exception e) {
 			log.error(StringUtil.getStackTraceAsString(e));
 		}
 		log.info("END: {}.doIndex(), exec TIME: {} ms.", this.getClass(), p.executeTime());
+		
 	}
 	
 	private String getParameterValue(String par, Map<String, List<FileItem>> multiparts) throws UnsupportedEncodingException {
