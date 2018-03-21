@@ -30,18 +30,18 @@ public class SimpleTest {
 	public void testGetApkInfo() {		
 		try {
 			//ApkFile apkFile = new ApkFile("G:/AndroidStudioProjects/MyApplication/app/debug/app-debug.apk");
-			FileReader fr = new FileReader("C:\\Users\\admin\\Desktop\\base64.txt");
-			StringBuilder sb = new StringBuilder();
-			int k = -1;
-			while((k=fr.read()) != -1)
-				sb.append((char)k );
-			
-			byte[] bbs = Base64.decodeBase64(sb.toString());
-			File f = new File("C:/Users/admin/Desktop/base64.apk");
-			FileOutputStream foss = new FileOutputStream(f);
-			foss.write(bbs);
-			foss.flush();
-			foss.close();
+//			FileReader fr = new FileReader("C:\\Users\\admin\\Desktop\\base64.txt");
+//			StringBuilder sb = new StringBuilder();
+//			int k = -1;
+//			while((k=fr.read()) != -1)
+//				sb.append((char)k );
+//			
+//			byte[] bbs = Base64.decodeBase64(sb.toString());
+			File f = new File("G:\\AndroidStudioProjects\\MyApplication\\app\\debug\\app-debug.apk");
+//			FileOutputStream foss = new FileOutputStream(f);
+//			foss.write(bbs);
+//			foss.flush();
+//			foss.close();
 			
 			
 			ApkFile apkFile = new ApkFile(f);

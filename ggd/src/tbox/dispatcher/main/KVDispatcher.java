@@ -1,5 +1,7 @@
 package tbox.dispatcher.main;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,13 +13,19 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import baytony.util.Profiler;
 import baytony.util.StringUtil;
+import baytony.util.Util;
+import baytony.util.date.DateUtil;
 import ggd.auth.AuthService;
 import ggd.auth.vo.AdmUser;
 import ggd.core.CoreException;
 import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
+import ggd.core.util.JSONUtil;
+import ggd.core.util.StandardUtil;
 import tbox.TBoxException;
 import tbox.data.vo.CompanyEntity;
 import tbox.data.vo.KV;
@@ -32,6 +40,10 @@ public class KVDispatcher implements Dispatcher {
 	
 	public static final String ALL_KV_KIND = KVDispatcher.class + "_KINDS";
 	public static final String ALL_KV_COMP = KVDispatcher.class + "_COMPS";
+	public static final String KV_BASE64 = KVDispatcher.class + "_BASE64";
+	public static final String KV_ENTITY = KVDispatcher.class + "_ENTITY";
+	
+	
 	
 	@Autowired
 	@Qualifier("TBoxService")
@@ -59,11 +71,8 @@ public class KVDispatcher implements Dispatcher {
 				doEdit(view, request);
 				break;
 			case "confirm":
-				//doConfirm(view, request);
-				break;
-			case "showIMG":
-				//doShowIMG(view, request);
-				break;
+				doConfirm(view, request);
+				break;			
 			case "index":
 			default:
 				doIndex(view, request);
@@ -72,15 +81,84 @@ public class KVDispatcher implements Dispatcher {
 		log.info("END: {}.handler(), action: {}, exec TIME: {} ms.", this.getClass(), action, p.executeTime());
 	}
 	
+	private void doConfirm(ModelAndView view, HttpServletRequest request) {
+		Profiler p = new Profiler();
+		String name = request.getParameter("name");
+		String kind = request.getParameter("kind");
+		String publish = request.getParameter("publish");
+		String clickLink = request.getParameter("clickLink");
+		String isEnabled = request.getParameter("isEnabled");
+		String isApproved = request.getParameter("isApproved");
+		String serial = request.getParameter("serial");
+		String start = request.getParameter("start");
+		String end = request.getParameter("end");
+		String kvB64 = request.getParameter("kvB64");
+		String msg = request.getParameter("msg");
+		log.trace("START: {}.doConfirm(), serial: {}, name: {}, kind: {}, clickLink: {}, publish: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}", this.getClass(), serial, name, kind, clickLink, publish, start, end, isEnabled, isApproved);
+		try {
+			JsonNode node = JSONUtil.parser(publish);
+			List<String> EINs = new ArrayList<String>();
+			
+			node.forEach(n -> {
+				EINs.add(n.get("id").asText());
+			});
+			
+			AdmUser loginUser = (AdmUser) request.getSession().getAttribute(Constant.USER);
+			Date d1 = new Date(start);
+			Date d2 = new Date(end);
+			if(Util.isEmpty(serial)) {
+				//新增
+				service.addKV(Integer.parseInt(kind), name, kvB64, clickLink, msg, loginUser.getAccount(), DateUtil.changeToTimestamp(d1), DateUtil.changeToTimestamp(d2), Integer.parseInt(isEnabled) == 1, Integer.parseInt(isApproved) == 1, EINs);
+			}
+			else {
+				//更新			
+				service.updateKV(Integer.parseInt(serial), Integer.parseInt(kind), name, kvB64, clickLink, msg, loginUser.getAccount(), DateUtil.changeToTimestamp(d1), DateUtil.changeToTimestamp(d2), Integer.parseInt(isEnabled) == 1, Integer.parseInt(isApproved) == 1, EINs);
+			}
+			view.addObject(Constant.ACTION_RESULT, "1");
+		}
+		catch(TBoxException e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
+		catch(Exception e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
+		log.info("END: {}.doConfirm(), serial: {}, name: {}, kind: {}, clickLink: {}, publish: {}, isEnabled: {}, isApproved: {}, exec TIME: {} ms.", this.getClass(), serial, name, kind, clickLink, publish, isEnabled, isApproved, p.executeTime());
+		this.doIndex(view, request);
+	}
+	
 	private void doEdit(ModelAndView view, HttpServletRequest request) {
 		Profiler p = new Profiler();		
 		String serialNo = request.getParameter("serialNo"); 
-		log.trace("START: {}.deEdit(), serialNo: {}", this.getClass(), serialNo);
+		log.trace("START: {}.deEdit(), serialNo: {}", this.getClass(), serialNo);		
 		try {
-			KV kv = service.findKVBySerialNo(Integer.parseInt(serialNo));
+			
+			KV kv = null;
+			KVEntity entity = null;
+			if(Util.isEmpty(serialNo)) {
+				kv = new KV();
+			}
+			else {
+				int sNo = Integer.parseInt(serialNo);
+				kv = service.findKVBySerialNo(sNo);
+				entity = service.findKVById(sNo);
+			}
+			
 			List<KVKind> kinds = service.findAllKVKind();
 			List<CompanyEntity> comps = service.findAllComp();
+			
+			String kvB64 = Constant.EMPTY;
+			String kvPath = kv.getImgPath();
+			log.debug("kvPath: {}", kvPath);
+			if(!Util.isEmpty(kvPath)) {
+				log.debug("kv physical path: {}", physicalPath + "/" + kvPath);
+				kvB64 = StandardUtil.readFileToBase64(physicalPath + "/" + kvPath);
+			}
+			log.debug("kvB64: {}", kvB64);
 			view.addObject(Constant.DATA_LIST, kv);
+			view.addObject(KV_ENTITY, entity);
+			view.addObject(KV_BASE64, kvB64);
 			view.addObject(ALL_KV_KIND, kinds);
 			view.addObject(ALL_KV_COMP, comps);
 			view.setViewName("kv/edit");

@@ -1,5 +1,6 @@
 package tbox.service.impl;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +105,117 @@ public class TBoxServiceImpl implements TBoxService {
 	private String physicalPath;
 	
 	
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#addKV(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List)
+	 */
+	@Override
+	public void addKV(int kind, String name, String imgB64, String clickLink, String msg, String createUser, Timestamp start, Timestamp end, boolean isEnabled, boolean isApproved, List<String> EINs) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.addKV(), name: {}, kind: {}, clickLink: {}, msg: {}, createUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}", this.getClass(), name, kind, clickLink, msg, createUser, start, end, isEnabled, isApproved, EINs);
+		try {
+			int kvSerial = 0;
+			if(kind != 4) {
+				String fileName = System.currentTimeMillis() + ".jpg";	
+				StandardUtil.writeBase64ToFile(imgB64, physicalPath + "/kv/", fileName);
+				kvSerial = kvQuery.addNewKV(kind, "kv/" + fileName, clickLink, msg, createUser, name);
+			}
+			else {
+				kvSerial = kvQuery.addNewKV(kind, "", clickLink, msg, createUser, name);
+			}
+			for(String EIN : EINs) {
+				kvQuery.addKVPublisher(EIN, kvSerial, start, end, isEnabled, isApproved);
+			}
+		}
+		catch (IOException e) {	
+			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_007, e.getMessage());
+		} 
+		catch (Exception e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_004, e.getMessage());
+		}
+		finally {
+			log.info("END: {}.addKV(), name: {}, kind: {}, clickLink: {}, msg: {}, createUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}, exec TIME: {} ms.", this.getClass(), name, kind, clickLink, msg, createUser, start, end, isEnabled, isApproved, EINs, p.executeTime());
+		}
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#updateKV(int, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.sql.Timestamp, java.sql.Timestamp, boolean, boolean, java.util.List)
+	 */
+	@Override
+	public void updateKV(int serialNo, int kind, String name, String imgB64, String clickLink, String msg, String updateUser, Timestamp start, Timestamp end, boolean isEnabled, boolean isApproved, List<String> EINs) throws TBoxException {	
+		Profiler p = new Profiler();
+		log.trace("START: {}.updateKV(), serialNo: {}, kind: {}, name: {}, clickLink: {}, msg: {}, updateUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}", this.getClass(), serialNo, kind, name, clickLink, msg, updateUser, start, end, isEnabled, isApproved, EINs);
+		try {
+			if(kind != 4) {
+				String fileName = System.currentTimeMillis() + ".jpg";	
+				StandardUtil.writeBase64ToFile(imgB64, physicalPath + "/kv/", fileName);
+				kvQuery.updateKV(serialNo, kind, "kv/" + fileName, clickLink, msg, updateUser, name);;
+			}
+			else {
+				kvQuery.updateKV(serialNo, kind, "", clickLink, msg, updateUser, name);;
+			}
+		}
+		catch (IOException e) {	
+			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_007, e.getMessage());
+		} 
+		catch (Exception e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_004, e.getMessage());
+		}
+		finally {
+			log.info("END: {}.updateKV(), serialNo: {}, kind: {}, name: {}, clickLink: {}, msg: {}, updateUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}, exec TIME: {} ms.", this.getClass(), serialNo, kind, name, clickLink, msg, updateUser, start, end, isEnabled, isApproved, EINs, p.executeTime());
+		}
+		
+	}
+
+
+
+
+
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#writeApk(org.apache.tomcat.util.http.fileupload.FileItem, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public ApkInfoEntity saveApk2Disk(FileItem item, String appId, String apkName) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.saveApk2Disk(), appId: {}, apkName: {}", this.getClass(), appId, apkName);
+		ApkInfoEntity entity = null;
+		File dir = new File(physicalPath + "/app/" + appId + "/");
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
+		
+		File file = new File(physicalPath + "/app/" + appId + "/" + apkName);
+		try {
+			item.write(file);
+			log.debug("apk file is exist ? {}", file.exists());
+			ApkFile apkFile = new ApkFile(file);
+			ApkMeta meta = apkFile.getApkMeta();
+			log.debug("pkg name: {}", meta.getPackageName());
+			entity = new ApkInfoEntity(meta);
+			apkFile.close();
+			return entity;
+		} 
+		catch (IOException e) {	
+			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_007, e.getMessage());
+		} 
+		catch (Exception e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_004, e.getMessage());
+		}
+		finally {
+			log.info("END: {}.saveApk2Disk(), appId: {}, apkName: {}, exec TIME: {} ms.", this.getClass(), appId, apkName, p.executeTime());
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#getApkInfo(java.lang.String)
 	 */
@@ -413,8 +526,21 @@ public class TBoxServiceImpl implements TBoxService {
 		log.info("END: {}.findKVBySerialNo(), serialNo: {}, exec TIME: {} ms.", this.getClass(), serial, p.executeTime());
 		return kv;
 	}
+	
+	
 
 
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#findKVById(int)
+	 */
+	@Override
+	public KVEntity findKVById(int serialNo) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.findKVById(), serialNo: {}", this.getClass(), serialNo);
+		KVEntity kv = kvQuery.findKVById(serialNo);
+		log.info("END: {}.findKVById(), serialNo: {}, exec TIME: {} ms.", this.getClass(), serialNo, p.executeTime());
+		return kv;
+	}
 
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#findKVsByAccount(java.lang.String, tbox.service.MsgEnum)

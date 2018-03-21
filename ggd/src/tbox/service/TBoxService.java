@@ -1,7 +1,9 @@
 package tbox.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
+import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.springframework.transaction.annotation.Transactional;
 
 import ggd.auth.vo.AdmGroup;
@@ -20,6 +22,16 @@ import tbox.service.entity.ApkInfoEntity;
 
 @Transactional
 public interface TBoxService {
+	
+	/**
+	 * 儲存.apk 檔
+	 * @param item
+	 * @param appId
+	 * @param apkName
+	 * @return
+	 * @throws TBoxException
+	 */
+	public ApkInfoEntity saveApk2Disk(FileItem item, String appId, String apkName) throws TBoxException;	
 	
 	/**
 	 * 取得apk相關資訊
@@ -157,6 +169,14 @@ public interface TBoxService {
 	public KV findKVBySerialNo(int serial) throws TBoxException;
 	
 	/**
+	 * 查詢訊息
+	 * @param serialNo
+	 * @return
+	 * @throws TBoxException
+	 */
+	public KVEntity findKVById(int serialNo) throws TBoxException;
+	
+	/**
 	 * 查詢所有訊息
 	 * @param account
 	 * @param kind
@@ -184,6 +204,43 @@ public interface TBoxService {
 	 * @throws TBoxException
 	 */
 	public List<KVEntity> findKVsByMachine(String sn, String mac, String wifi, int kind) throws TBoxException;
+	
+	
+	/**
+	 * 新增廣告/跑馬燈訊息
+	 * @param kind
+	 * @param name
+	 * @param imgB64
+	 * @param clickLink
+	 * @param msg
+	 * @param createUser
+	 * @param start
+	 * @param end
+	 * @param isEnabled
+	 * @param isApproved
+	 * @param EINs
+	 * @throws TBoxException
+	 */
+	public void addKV(int kind, String name, String imgB64, String clickLink, String msg, String createUser, Timestamp start, Timestamp end, boolean isEnabled, boolean isApproved, List<String> EINs) throws TBoxException;
+	
+	/**
+	 * 更新廣告/跑馬燈訊息
+	 * @param serialNo
+	 * @param kind
+	 * @param name
+	 * @param imgB64
+	 * @param clickLink
+	 * @param msg
+	 * @param updateUser
+	 * @param start
+	 * @param end
+	 * @param isEnabled
+	 * @param isApproved
+	 * @param EINs
+	 * @throws TBoxException
+	 */
+	public void updateKV(int serialNo, int kind, String name, String imgB64, String clickLink, String msg, String updateUser, Timestamp start, Timestamp end, boolean isEnabled, boolean isApproved, List<String> EINs) throws TBoxException;
+	
 	
 	/**
 	 * 查詢統一編號

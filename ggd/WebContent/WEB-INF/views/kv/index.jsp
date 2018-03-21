@@ -35,6 +35,7 @@
 					<tr>
 						<th>序號</th>
 						<th>種類</th>
+						<th>名稱</th>
 						<th>上架日期</th>
 						<th>下架日期</th>
 						<th>上/下架</th>
@@ -48,6 +49,7 @@
 					<tr class="data" serialNo="<%=kv.getSerialNo() %>">
 						<td><%=kv.getSerialNo() %></td>
 						<td><%=kv.getKind() %></td>
+						<td><%=kv.getName() %></td>
 						<td><%=kv.getStartDate() %></td>
 						<td><%=kv.getEndDate() %></td>
 						<td><%=kv.isEnabled() %></td>

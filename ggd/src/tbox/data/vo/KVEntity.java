@@ -22,6 +22,9 @@ public class KVEntity implements Serializable {
 	@Column(name = "kind")
 	private String kind;
 
+	@Column(name = "name")
+	private String name;
+	
 	@Column(name = "img_path")
 	private String imgPath;
 
@@ -153,6 +156,14 @@ public class KVEntity implements Serializable {
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -195,10 +206,12 @@ public class KVEntity implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("KV [serialNo=");
+		builder.append("KVEntity [serialNo=");
 		builder.append(serialNo);
 		builder.append(", kind=");
 		builder.append(kind);
+		builder.append(", name=");
+		builder.append(name);
 		builder.append(", imgPath=");
 		builder.append(imgPath);
 		builder.append(", clickLink=");

@@ -24,6 +24,9 @@ public class KV implements Serializable {
 
 	@Column(name = "kind")
 	private Integer kind;
+	
+	@Column(name = "name")
+	private String name;
 
 	@Column(name = "img_path")
 	private String imgPath;
@@ -212,10 +215,16 @@ public class KV implements Serializable {
 	public void setClickCount(Integer clickCount) {
 		this.clickCount = clickCount;
 	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -225,6 +234,8 @@ public class KV implements Serializable {
 		builder.append(serialNo);
 		builder.append(", kind=");
 		builder.append(kind);
+		builder.append(", name=");
+		builder.append(name);
 		builder.append(", imgPath=");
 		builder.append(imgPath);
 		builder.append(", clickLink=");
@@ -239,6 +250,8 @@ public class KV implements Serializable {
 		builder.append(createUser);
 		builder.append(", updateUser=");
 		builder.append(updateUser);
+		builder.append(", clickCount=");
+		builder.append(clickCount);
 		builder.append(", companies=");
 		builder.append(companies);
 		builder.append("]");

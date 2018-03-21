@@ -65,7 +65,15 @@ public class TBoxCodeMsg {
 	 */
 	public static final String EX_005 = "EX-005";
 	
+	/**
+	 * 檔案上傳失敗
+	 */
 	public static final String EX_006 = "EX-006";
+	
+	/**
+	 * 檔案寫入硬碟失敗
+	 */
+	public static final String EX_007 = "EX-007";
 	
 	private static final Map<String, String> map = new HashMap<String, String>();
 	
@@ -81,6 +89,7 @@ public class TBoxCodeMsg {
 		map.put(EX_004, "發生不明錯誤");
 		map.put(EX_005, "無法反查註冊公司，非法的機器");
 		map.put(EX_006, "檔案上傳失敗");
+		map.put(EX_007, "檔案寫入硬碟失敗");
 	}
 
 	public static final String getCodeMessage(String code) {
