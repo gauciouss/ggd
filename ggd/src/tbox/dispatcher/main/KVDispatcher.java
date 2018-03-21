@@ -1,5 +1,6 @@
 package tbox.dispatcher.main;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -98,7 +99,6 @@ public class KVDispatcher implements Dispatcher {
 		try {
 			JsonNode node = JSONUtil.parser(publish);
 			List<String> EINs = new ArrayList<String>();
-			
 			node.forEach(n -> {
 				EINs.add(n.get("id").asText());
 			});
@@ -151,7 +151,9 @@ public class KVDispatcher implements Dispatcher {
 			String kvB64 = Constant.EMPTY;
 			String kvPath = kv.getImgPath();
 			log.debug("kvPath: {}", kvPath);
-			if(!Util.isEmpty(kvPath)) {
+			File file = new File(physicalPath + "/" + kvPath);
+			log.debug("kv file exist? {}", file.exists());
+			if(!Util.isEmpty(kvPath) && file.exists()) {
 				log.debug("kv physical path: {}", physicalPath + "/" + kvPath);
 				kvB64 = StandardUtil.readFileToBase64(physicalPath + "/" + kvPath);
 			}

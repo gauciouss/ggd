@@ -201,7 +201,8 @@
 		
 		
 		if(!ggd.util.isEmpty(kvB64)) {
-			kvB64 = "data:image/png;base64," + kvB64;
+			$("#kvB64").val(kvB64);
+			kvB64 = "data:image/png;base64," + kvB64;			
 		}
 	};
 	
@@ -255,8 +256,7 @@
 	    	targetImg: $("#kvimg"),
 	    	imgSrc: kvB64,
 	    	callback: function(b64) {
-	    		var sp = b64.split(",");    			
-	    		console.log(sp[1]);
+	    		var sp = b64.split(",");	    		
 	    		$("#kvB64").val(sp[1]);
 	    	}
 		});

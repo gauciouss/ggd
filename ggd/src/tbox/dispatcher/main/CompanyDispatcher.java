@@ -1,5 +1,6 @@
 package tbox.dispatcher.main;
 
+import java.io.File;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -100,8 +101,7 @@ public class CompanyDispatcher implements Dispatcher {
 			String imgPath = "images/" + EIN + "/";
 			
 			//硬碟實體路徑
-			String imgAbsPath = physicalPath + "/images/";
-			imgAbsPath += imgPath;
+			String imgAbsPath = physicalPath + "/" + imgPath;
 			
 			Area areaObj = service.findArea(area);
 			AdmGroup groupObj = authService.findGroup(group);			
@@ -153,12 +153,14 @@ public class CompanyDispatcher implements Dispatcher {
 			
 			String logoB64 = Constant.EMPTY;
 			String logoPath = comp.getLogoURL();
-			if(!Util.isEmpty(logoPath))
+			File logoFile = new File(physicalPath + "/" + logoPath);
+			if(!Util.isEmpty(logoPath) && logoFile.exists())
 				logoB64 = StandardUtil.readFileToBase64(physicalPath + "/" + logoPath);
 			
 			String bgB64 = Constant.EMPTY;
 			String bgPath = comp.getBackgroundURL();
-			if(!Util.isEmpty(bgPath))
+			File bgFile = new File(physicalPath + "/" + bgPath);
+			if(!Util.isEmpty(bgPath) && bgFile.exists())
 				bgB64 = StandardUtil.readFileToBase64(physicalPath + "/" + bgPath);
 			
 			view.addObject(LOGO_BASE64, logoB64);
