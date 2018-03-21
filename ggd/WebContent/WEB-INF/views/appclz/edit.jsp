@@ -69,7 +69,7 @@
 					<jsp:include page="/WEB-INF/views/include/confirm.jsp">
 						<jsp:param value="true" name="isEnabled" />
 						<jsp:param value="true" name="isApproved" />
-						<jsp:param value="true" name="showPanel"/>						
+						<jsp:param value="false" name="showPanel"/>						
 						<jsp:param value="<%=loginUser.getGroup().isManager()%>" name="isManager" />
 					</jsp:include>
 				</form>
