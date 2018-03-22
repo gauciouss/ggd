@@ -1,13 +1,10 @@
 package tbox.dispatcher.main;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +15,12 @@ import org.springframework.web.servlet.ModelAndView;
 import baytony.util.Profiler;
 import baytony.util.StringUtil;
 import baytony.util.Util;
-import ggd.auth.AuthService;
-import ggd.auth.vo.AdmUser;
 import ggd.core.CoreException;
 import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
 import ggd.core.util.StandardUtil;
-import net.dongliu.apk.parser.bean.IconPath;
 import tbox.TBoxException;
 import tbox.data.vo.AppClz;
-import tbox.data.vo.AppEntity;
 import tbox.service.TBoxService;
 
 @Component("main.appclz")
@@ -42,9 +35,6 @@ public class AppClzDispatcher implements Dispatcher {
 	@Qualifier("TBoxService")
 	private TBoxService service;
 	
-	@Autowired
-	@Qualifier("AuthService")
-	private AuthService authService;
 	
 	@Autowired
 	@Qualifier("FILE_PHYSICAL_PATH")
@@ -152,16 +142,6 @@ public class AppClzDispatcher implements Dispatcher {
 		}
 		log.info("END: {}.doIndex(), exec TIME: {} ms.", this.getClass(), p.executeTime());
 		
-	}
-	
-	private String getParameterValue(String par, Map<String, List<FileItem>> multiparts) throws UnsupportedEncodingException {
-		String result = Constant.EMPTY;
-		List<FileItem> items = multiparts.get(par);
-		if(!Util.isEmpty(items)) {
-			FileItem item = items.get(0);
-			result = item.isFormField() ? new String(item.getString().getBytes(Constant.ISO88591), Constant.UTF8) : new String(item.getName().getBytes(Constant.ISO88591), Constant.UTF8);
-		}
-		return result;
 	}
 	
 }

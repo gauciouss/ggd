@@ -35,6 +35,7 @@ import tbox.data.dao.KVDao;
 import tbox.data.dao.KVKindDao;
 import tbox.data.dao.KVQuery;
 import tbox.data.dao.MachineDao;
+import tbox.data.dao.MachineQuery;
 import tbox.data.vo.App;
 import tbox.data.vo.AppClz;
 import tbox.data.vo.AppEntity;
@@ -45,6 +46,7 @@ import tbox.data.vo.KV;
 import tbox.data.vo.KVEntity;
 import tbox.data.vo.KVKind;
 import tbox.data.vo.MachineBox;
+import tbox.data.vo.MachineEntity;
 import tbox.proxy.cwb.gov.tw.OpendataAPI;
 import tbox.proxy.cwb.gov.tw.OpendataAPI.Entity;
 import tbox.service.TBoxService;
@@ -103,6 +105,10 @@ public class TBoxServiceImpl implements TBoxService {
 	@Autowired
 	@Qualifier("FILE_PHYSICAL_PATH")
 	private String physicalPath;
+	
+	@Autowired
+	@Qualifier("MachineQuery")
+	private MachineQuery machineQuery;
 	
 	
 	
@@ -513,9 +519,15 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#importMachineBoxData(java.util.List)
 	 */
 	@Override
-	public int importMachineBoxData(List<MachineBox> boxes) throws TBoxException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int importMachineBoxData(List<MachineEntity> boxes) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.importMachineBoxData(), boxes: {}", this.getClass(), boxes);
+		int count = 0;
+		for(MachineEntity box : boxes) {
+			count += machineDao.addNewMachine(box.getMachineSN(), box.getWifiMac(), box.getMac(), box.getAreaId(), box.getEIN(), box.getAuthStartDate(), box.getAuthEndDate()); 
+		}
+		log.info("END: {}.importMachineBoxData(), boxes: {}, exec TIME: {} ms.", this.getClass(), boxes, p.executeTime());
+		return count;
 	}
 
 
@@ -552,7 +564,21 @@ public class TBoxServiceImpl implements TBoxService {
 		log.info("END: {}.findMachine(), serialNo: {}, exec TIME: {} ms.", this.getClass(), serialNo, p.executeTime());
 		return box;
 	}
+	
+	
 
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#findAllMachine()
+	 */
+	@Override
+	public List<MachineEntity> findAllMachine() throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.findAllMachine().", this.getClass());
+		List<MachineEntity> list = machineQuery.findAllMachine();
+		log.info("END: {}.findAllMachine(), exec TIME: {} ms.", this.getClass(), p.executeTime());
+		return list;		
+	}
 
 
 	/* (non-Javadoc)
@@ -697,11 +723,11 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#addCompany(tbox.data.vo.Company)
 	 */
 	@Override
-	public void addCompany(Company comp) throws TBoxException {
+	public void addCompany(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) throws TBoxException {
 		Profiler p = new Profiler();
-		log.trace("START: {}.addCompany(), comp: {}", this.getClass(), comp);
-		compDao.save(comp);
-		log.info("END: {}.addCompany(), comp: {}, exec TIME: {} ms.", this.getClass(), comp, p.executeTime());
+		log.trace("START: {}.addCompany(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
+		compDao.save(EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
+		log.info("END: {}.addCompany(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId, p.executeTime());
 	}
 
 	/* (non-Javadoc)

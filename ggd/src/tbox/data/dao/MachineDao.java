@@ -40,6 +40,29 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 	private static final String SQL_COUNT_MACHINE = "select count(*) from machine_box where machine_sn = ? and ethernet_mac = ? and wifi_mac = ?";
 	
 	
+	private static final String SQL_ADD_NEW_MACHINE = 
+			"insert into machine_box (machine_sn, wifi_mac, ethernet_mac, area_id, EIN, start_date, authorized_start_date, authorized_end_date) values (?, ?, ?, ?, ?, ?, ?, ?)";
+	
+	/**
+	 * 新增新的機上盒
+	 * @param machineSN
+	 * @param wifiMac
+	 * @param mac
+	 * @param areaId
+	 * @param EIN
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public int addNewMachine(String machineSN, String wifiMac, String mac, int areaId, String EIN, Timestamp start, Timestamp end) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.addNewMachine(), machineSN: {}, wifiMac: {}, mac: {}, areaId: {}, EIN: {}, start: {}, end: {}", this.getClass(), machineSN, wifiMac, mac, areaId, EIN, start, end);
+		int i = super.executeUpateQuery(SQL_ADD_NEW_MACHINE, machineSN, wifiMac, mac, areaId, EIN, start, start, end);
+		log.info("END: {}.addNewMachine(), machineSN: {}, wifiMac: {}, mac: {}, areaId: {}, EIN: {}, start: {}, end: {}, exec TIME: {} ms.", this.getClass(), machineSN, wifiMac, mac, areaId, EIN, start, end, p.executeTime());
+		return i;
+	}
+	
+	
 	@SuppressWarnings("unchecked")
 	public List<String> findEINByMachine(String sn, String mac, String wifi) {
 		Profiler p = new Profiler();

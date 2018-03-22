@@ -18,6 +18,7 @@ import tbox.data.vo.KV;
 import tbox.data.vo.KVEntity;
 import tbox.data.vo.KVKind;
 import tbox.data.vo.MachineBox;
+import tbox.data.vo.MachineEntity;
 import tbox.service.entity.ApkInfoEntity;
 
 @Transactional
@@ -158,7 +159,7 @@ public interface TBoxService {
 	 * @return
 	 * @throws TBoxException
 	 */
-	public int importMachineBoxData(List<MachineBox> boxes) throws TBoxException;
+	public int importMachineBoxData(List<MachineEntity> boxes) throws TBoxException;
 	
 	/**
 	 * 查詢機上盒資料
@@ -177,6 +178,13 @@ public interface TBoxService {
 	 * @throws TBoxException
 	 */
 	public MachineBox findMachine(Integer serialNo) throws TBoxException;
+	
+	/**
+	 * 查詢機上盒資料
+	 * @return
+	 * @throws TBoxException
+	 */
+	public List<MachineEntity> findAllMachine() throws TBoxException;
 	
 	/**
 	 * 查詢所有訊息種類
@@ -310,10 +318,19 @@ public interface TBoxService {
 	
 	/**
 	 * 新增廠商
-	 * @param comp
-	 * @return
+	 * @param EIN
+	 * @param name
+	 * @param areaId
+	 * @param logo
+	 * @param bg
+	 * @param fastKey1
+	 * @param fastKey2
+	 * @param fastKey3
+	 * @param fastKey4
+	 * @param grpId
+	 * @throws TBoxException
 	 */
-	public void addCompany(Company comp) throws TBoxException;
+	public void addCompany(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) throws TBoxException;
 	
 	/**
 	 * 更新廠商資訊
