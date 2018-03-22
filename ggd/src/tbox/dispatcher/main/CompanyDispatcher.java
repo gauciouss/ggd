@@ -103,8 +103,6 @@ public class CompanyDispatcher implements Dispatcher {
 			//硬碟實體路徑
 			String imgAbsPath = physicalPath + "/" + imgPath;
 			
-			Area areaObj = service.findArea(area);
-			AdmGroup groupObj = authService.findGroup(group);			
 			Company comp = service.findCompanyByEIN(EIN);
 			log.debug("EIN: {}, comp is null ? {}", EIN, comp == null);
 			if(comp == null) {
@@ -113,8 +111,7 @@ public class CompanyDispatcher implements Dispatcher {
 					StandardUtil.writeBase64ToFile(logo, imgAbsPath, "logo.png");
 				if(!Util.isEmpty(bg))
 					StandardUtil.writeBase64ToFile(bg, imgAbsPath, "bg.png");
-				comp = new Company(EIN, compName, areaObj, imgPath + "logo.png", imgPath + "bg.png", fk1, fk2, fk3, fk4, groupObj);
-				service.addCompany(comp);
+				service.addCompany(EIN, compName, area, imgPath + "logo.png", imgPath + "bg.png", fk1, fk2, fk3, fk4, group);
 			}
 			else {
 				log.debug("EIN: {}, do action: update.", EIN);

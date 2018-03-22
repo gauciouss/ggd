@@ -44,6 +44,18 @@ public class CompanyDao extends HibernateDao<Company, String> {
 			"    inner join area a on  c.area_id = a.area_id " + 
 			"    inner join adm_group n on c.group_id = n.group_id";
 	
+	
+	private static final String SQL_ADD_NEW_COMPANY =
+			"insert into company(EIN, name, area_id, logo_url, background_url, fast_key1, fast_key2, fast_key3, fast_key4, group_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
+	public void save(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.save(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
+		super.executeUpateQuery(SQL_ADD_NEW_COMPANY, EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
+		log.info("END: {}.save(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId, p.executeTime());
+	}
+	
+	
 	public void update(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) {
 		Profiler p = new Profiler();
 		log.trace("START: {}.update(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
