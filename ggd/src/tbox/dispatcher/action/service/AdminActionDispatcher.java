@@ -1,58 +1,68 @@
 package tbox.dispatcher.action.service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-
 import baytony.util.Profiler;
 import baytony.util.StringUtil;
+import baytony.util.Util;
 import ggd.core.CoreException;
 import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
-import ggd.core.util.JSONUtil;
-import tbox.dispatcher.action.service.ms.command.AdminCommand;
+import tbox.dispatcher.action.service.ms.command.UploadApkCommand;
 
-@Component("service.adminAction")
+@Component("service.admin")
 public class AdminActionDispatcher implements Dispatcher {
 	
 	private final static Logger log = LoggerFactory.getLogger(AdminActionDispatcher.class);
 	
 	@Autowired
-	private ApplicationContext context;
+	@Qualifier("UploadApkCommand")
+	private UploadApkCommand uploadApkCmd;
 
 	/* (non-Javadoc)
 	 * @see ggd.core.dispatcher.Dispatcher#handler(org.springframework.web.servlet.ModelAndView, javax.servlet.http.HttpServletRequest)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void handler(ModelAndView view, HttpServletRequest request) throws CoreException {
 		Profiler p = new Profiler();
-		String arg = (String) view.getModel().get(Constant.ARG);
-		log.trace("START: {}.handler(), arg: {}", this.getClass(), arg);
+		Map<String, List<FileItem>> multiparts = (Map<String, List<FileItem>>) view.getModel().get(Constant.ARG);
 		try {
-			JsonNode node = JSONUtil.parser(arg);
-			JsonNode header = node.get("header");
-			String action = header.get("action").asText();
-			log.debug("action: {}", action);
-			//AdminCommand cmd = context.getBean(action, AdminCommand.class);
-			//cmd.execute(view, request);
-		}
-		catch (JsonProcessingException e) {
-			log.error(StringUtil.getStackTraceAsString(e));
+			String action = this.getParameterValue(Constant.ACTION_TYPE, multiparts);
+			log.trace("START: {}.handler(), action: {}", this.getClass(), action);
+			switch(action) {
+				case "uploadApk":
+					uploadApkCmd.execute(view, multiparts);
+					break;
+			}
 		}
 		catch (IOException e) {
 			log.error(StringUtil.getStackTraceAsString(e));
 		}
-		log.info("END: {}.handler(), arg: {}, exec TIME: {} ms.", this.getClass(), arg, p.executeTime());
+		log.info("END: {}.handler(), exec TIME: {} ms.", this.getClass(), p.executeTime());
+	}
+	
+	private String getParameterValue(String par, Map<String, List<FileItem>> multiparts) throws UnsupportedEncodingException {
+		String result = Constant.EMPTY;
+		List<FileItem> items = multiparts.get(par);
+		if(!Util.isEmpty(items)) {
+			FileItem item = items.get(0);
+			result = item.isFormField() ? new String(item.getString().getBytes(Constant.ISO88591), Constant.UTF8) : new String(item.getName().getBytes(Constant.ISO88591), Constant.UTF8);
+		}
+		return result;
 	}
 
 }

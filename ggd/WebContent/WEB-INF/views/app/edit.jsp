@@ -30,7 +30,8 @@
 		name="main" />
 </jsp:include>
 <jsp:include page="/WEB-INF/views/include/script.jsp">
-	<jsp:param value="<%=common.getValue(Constant.MAIN_PATH_HOST)%>" name="main" />
+	<jsp:param value="<%=common.getValue(Constant.MAIN_PATH_HOST)%>"
+		name="main" />
 </jsp:include>
 
 </head>
@@ -39,8 +40,9 @@
 		<div class="card card-register mx-auto mt-5">
 			<div class="card-header">APP編輯</div>
 			<div class="card-body">
-				<form name="form" method="post" class="form-control" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/app" enctype="multipart/form-data">
-					<input type="hidden" name="<%=Constant.ACTION_TYPE%>" id="<%=Constant.ACTION_TYPE%>" value="uploadApk" />
+				<form name="form" method="post" class="form-control"
+					action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/app">
+					<input type="hidden" name="<%=Constant.ACTION_TYPE%>" id="<%=Constant.ACTION_TYPE%>" value="confirm" />
 					<div class="form-group">
 						<div class="form-row">
 							<div class="col-md-6">
@@ -48,17 +50,33 @@
 								<input type="text" id="serial" class="form-control" name="serial" disabled="disabled" value="<%=app.getAppId() == null ? "" : app.getAppId()  %>" />
 							</div>
 							<div class="col-md-6">
-								<label for="kind">上傳APK</label> 
-								<input type="file" id="apk" name="apk">
+								<label for="kind">類別</label> 
+								<select id="kind" name="kind" class="form-control">
+									<option value="">請選擇</option>
+									<%
+										for(AppClz kind : kinds) {
+									%>
+									<option value="<%=kind.getClzId() %>"><%=kind.getClzName() %></option>
+									<%
+										}
+									%>
+								</select>
 							</div>
 						</div>
 					</div>
 					
+					<div class="form-group">
+						<input type="file" id="apk" name="apk">
+						<a href="#" id="upload">上傳</a>						
+					</div>
+					
+					
+					
+
 					<jsp:include page="/WEB-INF/views/include/confirm.jsp">
 						<jsp:param value="true" name="isEnabled" />
 						<jsp:param value="true" name="isApproved" />
 						<jsp:param value="true" name="showPanel"/>
-						<jsp:param value="uploadApk" name="action"/>
 						<jsp:param value="<%=loginUser.getGroup().isManager()%>" name="isManager" />
 					</jsp:include>
 				</form>
@@ -84,41 +102,21 @@
 		});
 	};
 	
-	var registerUploadFileChangeEvent = function() {
-		$("#apk").on("change", function() {
-			var file = this.files[0];
-			console.log(file.type);
-			//if (file.type.indexOf("android") < 0) {
-			if(false) {	
-    			alert("上傳檔案類型有誤");
-    		}
-			else {
-				var fd = new FormData();				
-				/*var reader = new FileReader();            			
-				reader.onload = function() {
-					var result = this.result;						
-					var jsonObj = {
-					    "header": {					       
-					        "action": "uploadApk"     
-					    },
-					    "body": {
-					        "appId": "<%=app.getAppId() %>",
-					        "apkB64": result
-					    }
-					};					
-					$.ajax({
-						url: "<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/action/admin/service/adminAction",
-						method: "POST",
-						contentType: "application/json",
-						data: jsonObj,
-						success: function(res) {
-							console.log("**********");
-							console.log(res);
-						}
-					});
-				};
-				reader.readAsDataURL(file);*/
-				
+	var registerUploadBtnEnvent = function() {
+		var fd = new FormData();
+		fd.append("apk", $("#apk")[0].files[0]);
+		fd.append("serial", "<%=app.getAppId() %>")
+		fd.append("<%=Constant.ACTION_TYPE %>", "uploadApk");
+		$.ajax({
+			//url: "<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/app",
+			url: "<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/multipart/service/admin",
+			data: fd,
+			contentType: false,
+			processData: false,
+			type: "POST",
+			success: function(res) {
+				console.log("******* do success *******");
+				console.log(res);
 			}
 		});
 	};
@@ -131,7 +129,8 @@
 		
 		registerKindChangeEvent();
 		
-		//registerUploadFileChangeEvent();
+		$("#upload").on("click", registerUploadBtnEnvent);
+		
 	});
 	
 </script>

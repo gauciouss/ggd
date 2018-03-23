@@ -193,20 +193,42 @@ public class TBoxServiceImpl implements TBoxService {
 		Profiler p = new Profiler();
 		log.trace("START: {}.saveApk2Disk(), appId: {}, apkName: {}", this.getClass(), appId, apkName);
 		ApkInfoEntity entity = null;
-		File dir = new File(physicalPath + "/app/" + appId + "/");
+		String path = physicalPath + "/app/" + appId + "/";
+		File dir = new File(path);
 		if(!dir.exists()) {
 			dir.mkdirs();
 		}
 		
-		File file = new File(physicalPath + "/app/" + appId + "/" + apkName);
+		File file = new File(path + apkName);
 		try {
 			item.write(file);
 			log.debug("apk file is exist ? {}", file.exists());
-			ApkFile apkFile = new ApkFile(file);
+			log.debug("apk path: {}", path + apkName);
+			ApkFile apkFile = new ApkFile(path + apkName);
 			ApkMeta meta = apkFile.getApkMeta();
 			log.debug("pkg name: {}", meta.getPackageName());
-			entity = new ApkInfoEntity(meta);
+			
+			List<Icon> icons = apkFile.getIconFiles();
+			List<String> list = new ArrayList<String>();
+			for(Icon icon : icons) {
+        		String iconPath = icon.getPath();
+        		if(!iconPath.contains(".png"))
+        			continue;
+        		byte[] bs = icon.getData();
+        		File f = new File(path + iconPath);
+        		if(!f.getParentFile().exists()) {
+        			f.getParentFile().mkdirs();
+        		}
+    			FileOutputStream fos = new FileOutputStream(path + iconPath);
+    			fos.write(bs);
+    			fos.flush();
+    			fos.close();
+    			list.add(iconPath);
+        	}
 			apkFile.close();
+			entity = new ApkInfoEntity(meta);
+			entity.setIconPath(list);
+			log.debug("ApkInfoEntity: {}", entity);
 			return entity;
 		} 
 		catch (IOException e) {	

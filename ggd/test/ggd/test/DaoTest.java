@@ -95,12 +95,7 @@ public class DaoTest {
 		System.out.println("******* END testAddNewKV() *******");
 	}
 	
-	@Test
-	public void testAddNewKV() {
-		System.out.println("******* START testAddNewKV() *******");
-		kvQuery.addNewKV(1, "G:/外包/tbox/kv/002.jpg", "http://www.pchome.com.tw", "", "admin");
-		System.out.println("******* END testAddNewKV() *******");
-	}
+	
 	
 	@Test
 	public void testGetKVByEIN() {

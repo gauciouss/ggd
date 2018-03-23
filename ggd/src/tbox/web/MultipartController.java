@@ -6,9 +6,16 @@ package tbox.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.FileItemFactory;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +43,11 @@ import tbox.service.TBoxService;
  *
  */
 @RestController
-@RequestMapping(value = "/action/admin")
+@RequestMapping(value = "/multipart")
 @CrossOrigin(methods = {RequestMethod.POST, RequestMethod.GET})
-public class AdminJSONController extends CommonController{
+public class MultipartController extends CommonController{
 	
-	private final static Logger log = LoggerFactory.getLogger(AdminJSONController.class);
+	private final static Logger log = LoggerFactory.getLogger(MultipartController.class);
 	
 	private static final String BEAN_ENTITY = "%1$s.%2$s";
 	
@@ -56,59 +63,20 @@ public class AdminJSONController extends CommonController{
 		return TYPE.JSON;
 	}
 	
-	private String readArgFromInputStream(HttpServletRequest request) {
-		InputStream is = null;
-		try {
-			is = request.getInputStream();
-			StringBuilder sb = new StringBuilder();
-			int i = -1;
-			while((i = is.read()) != -1) {
-				sb.append((char) i);
-			}
-			String str = sb.toString();
-			str = URLDecoder.decode(sb.toString(), Constant.UTF8);
-			return str;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		finally {
-			if(is != null)
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-		}
-		return "";
-	}
-	
-	@RequestMapping(path = PATH, method = RequestMethod.GET)
-	public ServiceResponse get(@PathVariable(CATAGORY) String category, @PathVariable(COMMAND) String command, HttpServletRequest request){
-		log.trace("Get() exec start.");
-		Profiler p = new Profiler();
-		String arg = Constant.EMPTY;
-		try{
-			arg = readArgFromInputStream(request);
-			if(Constant.TEST_MODE){
-				ServiceResponse res = doRequest(category, command, arg, request);
-				setServiceResponse(res, p);
-				return res;
-			}else{
-				return null;
-			}
-		}finally{
-			log.info("Get() exec complete. arg: {}. exec time: {} ms.", p.executeTime());
-		}
-		
+	private Map<String, List<FileItem>> readValueFromMultipart(HttpServletRequest request) throws FileUploadException {
+		FileItemFactory factory = new DiskFileItemFactory();
+		ServletFileUpload upload = new ServletFileUpload(factory);
+		Map<String, List<FileItem>> multiparts = upload.parseParameterMap(request);
+		return multiparts;
 	}
 	
 	@RequestMapping(path = PATH, method = RequestMethod.POST)
-	public ServiceResponse post(@PathVariable(CATAGORY) String category, @PathVariable(COMMAND) String command, HttpServletRequest request){
+	public ServiceResponse post(@PathVariable(CATAGORY) String category, @PathVariable(COMMAND) String command, HttpServletRequest request) throws FileUploadException{
 		log.trace("Post() exec start.");
 		Profiler p = new Profiler();
-		String arg = Constant.EMPTY;
+		Map<String, List<FileItem>> arg = null;
 		try{
-			arg = readArgFromInputStream(request);
+			arg = readValueFromMultipart(request);
 			ServiceResponse res = doRequest(category, command, arg, request);
 			setServiceResponse(res, p);
 			return res;
@@ -119,7 +87,7 @@ public class AdminJSONController extends CommonController{
 	
 	
 	
-	private ServiceResponse doRequest(String category, String command, String arg, HttpServletRequest request){
+	private ServiceResponse doRequest(String category, String command, Map<String, List<FileItem>> arg, HttpServletRequest request){
 		Header header = new Header();
 		ModelAndView view = null;
 		try {
@@ -147,7 +115,7 @@ public class AdminJSONController extends CommonController{
 	}
 	
 	
-	private ModelAndView createModelAndView(String folder, String jsp, String arg, HttpServletRequest request) {
+	private ModelAndView createModelAndView(String folder, String jsp, Map<String, List<FileItem>> arg, HttpServletRequest request) {
 		ModelAndView view = new ModelAndView(StringUtil.concat(Constant.SLASH, folder, jsp));		
 		view.addObject(Constant.ARG, arg);
 		return view;

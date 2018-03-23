@@ -137,11 +137,9 @@ public class AppDispatcher implements Dispatcher {
 				app = new App();
 				String nextId = service.getNextAppId();
 				app.setAppId(nextId);
-				view.setViewName("app/upload");
+				//view.setViewName("app/upload");
 			}
-			else {
-				view.setViewName("app/edit");
-			}
+			view.setViewName("app/edit");
 				
 			List<AppClz> kinds = service.findAllAppKind();
 			view.addObject(ALL_APP_KIND, kinds);

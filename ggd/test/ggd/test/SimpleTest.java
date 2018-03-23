@@ -3,8 +3,6 @@ package ggd.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,7 +35,7 @@ public class SimpleTest {
 //				sb.append((char)k );
 //			
 //			byte[] bbs = Base64.decodeBase64(sb.toString());
-			File f = new File("G:\\AndroidStudioProjects\\MyApplication\\app\\debug\\app-debug.apk");
+			File f = new File("G:/外包/GGD/fileserver/WebContent/app/APP0000008/YouTube_v13.09.57_apkpure.com.apk");
 //			FileOutputStream foss = new FileOutputStream(f);
 //			foss.write(bbs);
 //			foss.flush();
