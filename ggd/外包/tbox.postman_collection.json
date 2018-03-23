@@ -1,0 +1,162 @@
+{
+	"info": {
+		"_postman_id": "32bdcf38-1ad8-4c18-ac58-a34c67e18894",
+		"name": "tbox",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "啟動電文",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "arg",
+							"value": "{\n    \"header\": {\n        \"sn\": \"54789963\",\n        \"mac\": \"1A-2V-3S-FV-AS-FX\",\n        \"wifi_mac\": \"\",\n        \"action\": \"register\"     \n    },\n    \"body\": {\n        \n    }\n}",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{url}}/ggd/ui/action/service/Functional",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"ggd",
+						"ui",
+						"action",
+						"service",
+						"Functional"
+					]
+				},
+				"description": "啟動電文"
+			},
+			"response": []
+		},
+		{
+			"name": "首頁電文",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "arg",
+							"value": "{\n    \"header\": {\n        \"sn\": \"54789963\",\n        \"mac\": \"1A-2V-3S-FV-AS-FX\",\n        \"wifi_mac\": \"\",\n        \"action\": \"home.index\"     \n    },\n    \"body\": {\n        \n    }\n}",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{url}}/ggd/ui/action/service/Functional",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"ggd",
+						"ui",
+						"action",
+						"service",
+						"Functional"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "取得地區碼",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "arg",
+							"value": "{\n    \"header\": {\n        \"sn\": \"54789963\",\n        \"mac\": \"1A-2V-3S-FV-AS-FX\",\n        \"wifi_mac\": \"\",\n        \"action\": \"home.area\"     \n    },\n    \"body\": {\n        \n    }\n}",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{url}}/ggd/ui/action/service/Functional",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"ggd",
+						"ui",
+						"action",
+						"service",
+						"Functional"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "取得商城首頁資訊",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "arg",
+							"value": "{\n    \"header\": {\n        \"sn\": \"54789963\",\n        \"mac\": \"1A-2V-3S-FV-AS-FX\",\n        \"wifi_mac\": \"\",\n        \"action\": \"apps.index\"     \n    },\n    \"body\": {\n        \n    }\n}",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{url}}/ggd/ui/action/service/Functional",
+					"protocol": "http",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"ggd",
+						"ui",
+						"action",
+						"service",
+						"Functional"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
