@@ -38,6 +38,7 @@ public class LoginDispatcher implements Dispatcher {
 	public void handler(ModelAndView view, HttpServletRequest request) throws CoreException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.handler()", this.getClass());
+		request.getSession().invalidate();
 		String account = request.getParameter(ACCOUNT);
 		String pwd = request.getParameter(PASSWORD);
 		log.debug("account: {}, pwd: {}", account, pwd);
