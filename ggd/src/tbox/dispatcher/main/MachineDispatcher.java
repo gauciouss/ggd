@@ -28,6 +28,8 @@ import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
 import ggd.core.util.JSONUtil;
 import tbox.TBoxException;
+import tbox.data.vo.CompanyEntity;
+import tbox.data.vo.MachineBox;
 import tbox.data.vo.MachineEntity;
 import tbox.service.TBoxService;
 
@@ -41,6 +43,8 @@ public class MachineDispatcher implements Dispatcher {
 	private final static Logger log = LoggerFactory.getLogger(MachineDispatcher.class);
 	
 	public static final String IMPORT_COUNT = MachineDispatcher.class + "_COUNT";
+	public static final String ALL_COMPANY = MachineDispatcher.class + "_ALL_COMPANY";
+	
 	
 	@Autowired
 	@Qualifier("TBoxService")
@@ -120,7 +124,23 @@ public class MachineDispatcher implements Dispatcher {
 	}
 	
 	private void doEdit(ModelAndView view, HttpServletRequest request) {
-		//TODO
+		Profiler p = new Profiler();		
+		String serialNo = request.getParameter("serialNo"); 
+		log.trace("START: {}.deEdit(), serialNo: {}", this.getClass(), serialNo);
+		try {
+			MachineBox box = Util.isEmpty(serialNo) ? new MachineBox() : service.findMachine(Integer.parseInt(serialNo));
+			view.setViewName("machine/edit");
+			List<CompanyEntity> list = service.findAllComp();
+			view.addObject(ALL_COMPANY, list);
+			view.addObject(Constant.DATA_LIST, box);
+		}
+		catch(TBoxException e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
+		catch(Exception e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
+		log.info("END: {}.doEdit(), serialNo: {}, exec TIME: {} ms.", this.getClass(), serialNo, p.executeTime());
 	}
 	
 	private void doIndex(ModelAndView view, HttpServletRequest request) {

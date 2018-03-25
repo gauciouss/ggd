@@ -24,8 +24,8 @@
 
 	
 <div class="form-group confirmArea">
-	<input type="button" class="btn btn-default" id="confirm" value="儲存" />
-	<input type="button" class="btn btn-default" id="cancel" value="取消"/>	
+	<input type="button" class="btn btn-success" id="confirm" value="儲存" />
+	<input type="button" class="btn btn-danger" id="cancel" value="取消"/>	
 </div>
 
 <script>

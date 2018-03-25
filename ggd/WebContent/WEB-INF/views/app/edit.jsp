@@ -1,3 +1,4 @@
+<%@page import="tbox.data.vo.AppEntity"%>
 <%@page import="tbox.data.vo.App"%>
 <%@page import="tbox.data.vo.AppClz"%>
 <%@page import="tbox.dispatcher.main.AppDispatcher"%>
@@ -19,7 +20,7 @@
 	Config common = (Config) request.getAttribute(Constant.COMMON_CONFIG);
 	AdmUser loginUser = (AdmUser) session.getAttribute(Constant.USER);
 	List<AppClz> kinds = (List<AppClz>) request.getAttribute(AppDispatcher.ALL_APP_KIND);
-	App app = (App) request.getAttribute(Constant.DATA_LIST);
+	AppEntity app = (AppEntity) request.getAttribute(Constant.DATA_LIST);
 %>
 <!DOCTYPE>
 <html>
@@ -42,13 +43,14 @@
 			<div class="card-body">
 				<form name="form" method="post" class="form-control"
 					action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/app">
-					<input type="hidden" name="<%=Constant.ACTION_TYPE%>" id="<%=Constant.ACTION_TYPE%>" value="confirm" />
+					<input type="hidden" name="<%=Constant.ACTION_TYPE%>" id="<%=Constant.ACTION_TYPE%>" value="confirm" />					
 					<div class="form-group">
 						<div class="form-row">
 							<div class="col-md-6">
-								<label for="account">APP編號</label> 
-								<input type="text" id="serial" class="form-control" name="serial" disabled="disabled" value="<%=app.getAppId() == null ? "" : app.getAppId()  %>" />
-							</div>
+								<label for="serial">APP編號</label> 
+								<input type="text" class="form-control serial" disabled="disabled" value="<%=app.getAppId() == null ? "" : app.getAppId()  %>" />
+								<input type="hidden" id="serial" name="serial" class="serial" value="<%=app.getAppId() == null ? "" : app.getAppId()  %>"/>
+							</div>							
 							<div class="col-md-6">
 								<label for="kind">類別</label> 
 								<select id="kind" name="kind" class="form-control">
@@ -64,10 +66,57 @@
 							</div>
 						</div>
 					</div>
+					<div class="form-group">
+						<div class="form-row">
+							<div class="col-md-6">
+								<label for="appName">APP名稱</label>
+								<input type="text" id="appName" name="appName" class="form-control" value="<%=app.getName() == null ? "" : app.getName() %>"/>
+							</div>
+							<div class="col-md-6">
+								<label for="appEngName">APP英文名稱</label>
+								<input type="text" id="appEngName" name="appEngName" class="form-control" value="<%=app.getEngName() == null ? "" : app.getEngName() %>"/>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="form-row">
+							<div class="col-md-6">
+								<label for="appDesc">版本</label>
+								<input type="text" id="versionStr" class="form-control version" disabled="disabled" value="<%=app.getVersion() == null ? "" : app.getVersion() %>"/>
+								<input type="hidden" id="version" name="version" class="version" value="<%=app.getVersion() == null ? "" : app.getVersion() %>"/>
+							</div>
+							<div class="col-md-6">
+								<label for="pkgName">pkg名稱</label>
+								<input type="text" class="form-control pkgName" disabled="disabled" value="<%=app.getPkgName() == null ? "" : app.getPkgName() %>"/>
+								<input type="hidden" id="pkgName" name="pkgName" class="pkgName" value="<%=app.getPkgName() == null ? "" : app.getPkgName() %>"/>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="form-row">
+							<label for="appDesc">APP說明</label>
+							<textarea id="appDesc" name="appDesc" class="form-control">
+								<%=app.getDesc() == null ? "" : app.getDesc() %>
+							</textarea>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<div class="form-row">
+							<div class="col-md-6">
+								<label for="hdpi">hdpi</label>
+								<img id="hdpi" class="form-control"/>
+							</div>
+							<div class="col-md-6">
+								<label for="mdpi">mdpi</label>
+								<img id="mdpi" class="form-control"/>
+							</div>
+						</div>
+					</div>					
 					
 					<div class="form-group">
 						<input type="file" id="apk" name="apk">
-						<a href="#" id="upload">上傳</a>						
+						<a href="#" id="upload" class="btn btn-primary">上傳</a>						
 					</div>
 					
 					
@@ -76,7 +125,7 @@
 					<jsp:include page="/WEB-INF/views/include/confirm.jsp">
 						<jsp:param value="true" name="isEnabled" />
 						<jsp:param value="true" name="isApproved" />
-						<jsp:param value="true" name="showPanel"/>
+						<jsp:param value="false" name="showPanel"/>
 						<jsp:param value="<%=loginUser.getGroup().isManager()%>" name="isManager" />
 					</jsp:include>
 				</form>
@@ -88,21 +137,11 @@
 
 <script>
 
-	var kind = <%=app.getClz() != null ? app.getClz().getClzId() : "undefined" %>;
-
+	var kind = <%=app.getClzId() != null ? app.getClzId() : "undefined" %>;
 	
-	var registerKindChangeEvent = function() {
-		$("#kvimg").on("change", function() {
-			if($(this).val() == 4) {
-				$("#imgTag").hide();
-			}
-			else {
-				$("#imgTag").show();
-			}
-		});
-	};
 	
 	var registerUploadBtnEnvent = function() {
+		$.blockUI({ message: "上傳中..." }); 
 		var fd = new FormData();
 		fd.append("apk", $("#apk")[0].files[0]);
 		fd.append("serial", "<%=app.getAppId() %>")
@@ -117,18 +156,45 @@
 			success: function(res) {
 				console.log("******* do success *******");
 				console.log(res);
-			}
+				if(res.header.code == "00-000") {
+					var body = res.body;
+					$("#appName").val(body.appName);
+					$("#appEngName").val(body.appName);
+					$(".pkgName").val(body.pkgName);
+					$("#appDesc").text(body.desc);
+					$(".version").val(body.versionName);
+					var icons = body.iconPath;
+					$.each(icons, function(i, p) {
+						p = "/fileserver/app/" + $("#serial").val() + "/temp/" + p
+						if(p.indexOf("-mdpi-") > 0) {
+							$("#mdpi").attr("src", p);
+						}
+						else if(p.indexOf("-hdpi-") > 0) {
+							$("#hdpi").attr("src", p);
+						}						
+					});
+				}
+				else {
+					alert(res.header.msg);
+				}
+			},
+			complete: $.unblockUI()
 		});
 	};
 	
+	
+	
+	
+	
+	var setDefaultValue = function() {
+		var iconPath = "<%=app.getIconPath() == null ? "" : app.getIconPath() %>";
+		if(!ggd.util.isEmpty(iconPath)) {
+			$("#icon-path").attr("src", "/fileserver/app/" + iconPath)
+		}
+	};
+	
 	$(document).ready(function() {		
-		ggd.util.previewFileUploadIMG({
-			targetFile: $("#kv"),
-    		targetImg: $("#kvimg")
-		});
-		
-		registerKindChangeEvent();
-		
+		setDefaultValue();
 		$("#upload").on("click", registerUploadBtnEnvent);
 		
 	});

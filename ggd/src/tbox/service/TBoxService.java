@@ -25,6 +25,22 @@ import tbox.service.entity.ApkInfoEntity;
 public interface TBoxService {
 	
 	/**
+	 * 新增/更新APP資訊 
+	 * @param serial
+	 * @param clzId
+	 * @param appName
+	 * @param appEngName
+	 * @param version
+	 * @param pkgName
+	 * @param appDesc
+	 * @throws TBoxException
+	 */
+	public void saveOrUpdateAppInfo(String serial, int clzId, String appName, String appEngName, String version, String pkgName, String appDesc) throws TBoxException;
+		
+	
+	
+	
+	/**
 	 * 儲存.apk 檔
 	 * @param item
 	 * @param appId
@@ -32,7 +48,7 @@ public interface TBoxService {
 	 * @return
 	 * @throws TBoxException
 	 */
-	public ApkInfoEntity saveApk2Disk(FileItem item, String appId, String apkName) throws TBoxException;	
+	public ApkInfoEntity saveApk2Disk(FileItem item, String appId, String apkName, boolean isTemp) throws TBoxException;	
 	
 	/**
 	 * 取得apk相關資訊
@@ -58,6 +74,15 @@ public interface TBoxService {
 	 * @throws TBoxException
 	 */
 	public App findAppById(String id) throws TBoxException;
+	
+	/**
+	 * 查詢APP
+	 * @param id appId -> MAPP0000001
+	 * @return
+	 * @throws TBoxException
+	 */
+	public AppEntity findLastVersionApp(String id) throws TBoxException;
+	
 	
 	/**
 	 * 取得所有APPs

@@ -27,6 +27,9 @@ public class AppEntity implements Serializable {
 
 	@Column(name = "app_name")
 	private String name;
+	
+	@Column(name = "app_eng_name")
+	private String engName;
 
 	@Column(name = "link")
 	private String link;
@@ -39,6 +42,9 @@ public class AppEntity implements Serializable {
 	
 	@Column(name = "pkg_name")
 	private String pkgName;
+	
+	@Column(name = "app_desc")
+	private String desc;
 
 	/**
 	 * @return the appId
@@ -175,12 +181,23 @@ public class AppEntity implements Serializable {
 	public void setPkgName(String pkgName) {
 		this.pkgName = pkgName;
 	}
+	
+	public String getEngName() {
+		return engName;
+	}
+	
+	public void setEngName(String engName) {
+		this.engName = engName;
+	}
+	
+	public String getDesc() {
+		return desc;
+	}
+	
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -194,6 +211,8 @@ public class AppEntity implements Serializable {
 		builder.append(clzName);
 		builder.append(", name=");
 		builder.append(name);
+		builder.append(", engName=");
+		builder.append(engName);
 		builder.append(", link=");
 		builder.append(link);
 		builder.append(", version=");
@@ -202,6 +221,8 @@ public class AppEntity implements Serializable {
 		builder.append(publishTime);
 		builder.append(", pkgName=");
 		builder.append(pkgName);
+		builder.append(", desc=");
+		builder.append(desc);
 		builder.append("]");
 		return builder.toString();
 	}

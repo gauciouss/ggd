@@ -40,6 +40,9 @@ public class App implements Serializable {
 	@Column(name = "app_desc")
 	private String appDesc;
 	
+	@Column(name = "pkg_name")
+	private String pkgName;
+	
 	@OneToMany
 	@JoinColumn(name = "app_id", insertable = false, updatable = false)
 	private Set<AppVersion> versions;
@@ -141,10 +144,15 @@ public class App implements Serializable {
 	public void setVersions(Set<AppVersion> versions) {
 		this.versions = versions;
 	}
+	
+	public String getPkgName() {
+		return pkgName;
+	}
+	
+	public void setPkgName(String pkgName) {
+		this.pkgName = pkgName;
+	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -160,6 +168,8 @@ public class App implements Serializable {
 		builder.append(iconPath);
 		builder.append(", appDesc=");
 		builder.append(appDesc);
+		builder.append(", pkgName=");
+		builder.append(pkgName);
 		builder.append(", versions=");
 		builder.append(versions);
 		builder.append("]");

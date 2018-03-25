@@ -36,7 +36,7 @@ public class UploadApkCommand {
 		List<FileItem> fileList = multiparts.get("apk");
 		if(!Util.isEmpty(fileList)) {
 			FileItem item = fileList.get(0);
-			ApkInfoEntity apk = service.saveApk2Disk(item, appId, item.getName());
+			ApkInfoEntity apk = service.saveApk2Disk(item, appId, item.getName(), true);
 			view.addObject(Constant.JSON_RESPONSE, apk);
 		}	
 		

@@ -19,6 +19,7 @@ import baytony.util.Profiler;
 import baytony.util.StringUtil;
 import baytony.util.Util;
 import ggd.auth.vo.AdmGroup;
+import ggd.core.common.Constant;
 import ggd.core.util.StandardUtil;
 import net.dongliu.apk.parser.ApkFile;
 import net.dongliu.apk.parser.bean.ApkMeta;
@@ -114,6 +115,15 @@ public class TBoxServiceImpl implements TBoxService {
 	
 	
 	
+	@Override
+	public void saveOrUpdateAppInfo(String serial, int clzId, String appName, String appEngName, String version, String pkgName, String appDesc) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.saveOrUpdateAppInfo(), serial: {}, clzId: {}, appName: {}, appEngName: {}, version: {}, pkgName: {}, appDesc: {}", this.getClass(), serial, clzId, appName, appEngName, version, pkgName , appDesc);
+		
+		log.info("END: {}.saveOrUpdateAppInfo(), serial: {}, clzId: {}, appName: {}, appEngName: {}, version: {}, pkgName: {}, appDesc: {}, exec TIME: {} ms.", this.getClass(), serial, clzId, appName, appEngName, version, pkgName , appDesc, p.executeTime());
+	}
+
+
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#addKV(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List)
 	 */
@@ -189,11 +199,17 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#writeApk(org.apache.tomcat.util.http.fileupload.FileItem, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public ApkInfoEntity saveApk2Disk(FileItem item, String appId, String apkName) throws TBoxException {
+	public ApkInfoEntity saveApk2Disk(FileItem item, String appId, String apkName, boolean isTemp) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.saveApk2Disk(), appId: {}, apkName: {}", this.getClass(), appId, apkName);
 		ApkInfoEntity entity = null;
-		String path = physicalPath + "/app/" + appId + "/";
+		//先搬到temp區，等確定儲存時再搬到正式區
+		String path = Constant.EMPTY;
+		if(isTemp)
+			path = physicalPath + "/app/" + appId + "/temp/";
+		else 
+			path = physicalPath + "/app/" + appId + "/";
+		
 		File dir = new File(path);
 		if(!dir.exists()) {
 			dir.mkdirs();
@@ -211,20 +227,20 @@ public class TBoxServiceImpl implements TBoxService {
 			List<Icon> icons = apkFile.getIconFiles();
 			List<String> list = new ArrayList<String>();
 			for(Icon icon : icons) {
-        		String iconPath = icon.getPath();
-        		if(!iconPath.contains(".png"))
-        			continue;
-        		byte[] bs = icon.getData();
-        		File f = new File(path + iconPath);
-        		if(!f.getParentFile().exists()) {
-        			f.getParentFile().mkdirs();
-        		}
-    			FileOutputStream fos = new FileOutputStream(path + iconPath);
-    			fos.write(bs);
-    			fos.flush();
-    			fos.close();
-    			list.add(iconPath);
-        	}
+	        		String iconPath = icon.getPath();
+	        		if(!iconPath.contains(".png"))
+	        			continue;
+	        		byte[] bs = icon.getData();
+	        		File f = new File(path + iconPath);
+	        		if(!f.getParentFile().exists()) {
+	        			f.getParentFile().mkdirs();
+	        		}
+	    			FileOutputStream fos = new FileOutputStream(path + iconPath);
+	    			fos.write(bs);
+	    			fos.flush();
+	    			fos.close();
+	    			list.add(iconPath);
+	        	}
 			apkFile.close();
 			entity = new ApkInfoEntity(meta);
 			entity.setIconPath(list);
@@ -311,7 +327,7 @@ public class TBoxServiceImpl implements TBoxService {
 	public String getNextAppId() throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getNextAppId()", this.getClass());
-		String nextId = appQuery.getNextAppId();
+		String nextId = appQuery.bookingApp();
 		log.info("END: {}.getNextAppId(), exec TIME: {} ms.", this.getClass(), p.executeTime());
 		return nextId;
 	}
@@ -328,6 +344,19 @@ public class TBoxServiceImpl implements TBoxService {
 		log.info("END: {}.findAppById(), id: {}, exec TIME: {} ms.", this.getClass(), id, p.executeTime());
 		return app;
 	}
+	
+	
+
+	@Override
+	public AppEntity findLastVersionApp(String id) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.findLastVersionApp(), appId: {}", this.getClass(), id);
+		AppEntity entity = appQuery.getNewestApp(id);
+		log.debug("appId: {}, entity: {}", id, entity);
+		log.info("END: {}.findLastVersionApp(), appId: {}, exec TIME: {} ms.", this.getClass(), id, p.executeTime());
+		return entity;
+	}
+
 
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#findAllApps(ggd.auth.vo.AdmGroup)
