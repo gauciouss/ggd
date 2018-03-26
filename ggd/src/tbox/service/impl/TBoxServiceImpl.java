@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import baytony.util.Profiler;
 import baytony.util.StringUtil;
 import baytony.util.Util;
+import baytony.util.io.FileUtil;
 import ggd.auth.vo.AdmGroup;
 import ggd.core.common.Constant;
 import ggd.core.util.StandardUtil;
@@ -40,6 +41,7 @@ import tbox.data.dao.MachineQuery;
 import tbox.data.vo.App;
 import tbox.data.vo.AppClz;
 import tbox.data.vo.AppEntity;
+import tbox.data.vo.AppVersion;
 import tbox.data.vo.Area;
 import tbox.data.vo.Company;
 import tbox.data.vo.CompanyEntity;
@@ -115,12 +117,34 @@ public class TBoxServiceImpl implements TBoxService {
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#deleteBookingAppID(java.lang.String)
+	 */
 	@Override
-	public void saveOrUpdateAppInfo(String serial, int clzId, String appName, String appEngName, String version, String pkgName, String appDesc) throws TBoxException {
+	public void deleteBookingAppID(String appId) throws TBoxException {
+		appQuery.deleteBookingApp(appId);
+	}
+
+
+	@Override
+	public void saveOrUpdateAppInfo(String appId, int clzId, String appName, String appEngName, String version, String pkgName, String appDesc) throws TBoxException {
 		Profiler p = new Profiler();
-		log.trace("START: {}.saveOrUpdateAppInfo(), serial: {}, clzId: {}, appName: {}, appEngName: {}, version: {}, pkgName: {}, appDesc: {}", this.getClass(), serial, clzId, appName, appEngName, version, pkgName , appDesc);
+		log.trace("START: {}.saveOrUpdateAppInfo(), appId: {}, clzId: {}, appName: {}, appEngName: {}, version: {}, pkgName: {}, appDesc: {}", this.getClass(), appId, clzId, appName, appEngName, version, pkgName , appDesc);
+		String path = "/app/" + appId;
+		appQuery.updateAppInfo(appId, appName, appEngName, clzId, path + "/res/mipmap-hdpi-v4/ic_launcher.png", appDesc, pkgName);
 		
-		log.info("END: {}.saveOrUpdateAppInfo(), serial: {}, clzId: {}, appName: {}, appEngName: {}, version: {}, pkgName: {}, appDesc: {}, exec TIME: {} ms.", this.getClass(), serial, clzId, appName, appEngName, version, pkgName , appDesc, p.executeTime());
+		AppVersion verEntity = appQuery.getVersion(appId, version);
+		if(verEntity == null)
+			appQuery.saveAppVersion(appId, version, new Timestamp(System.currentTimeMillis()), path + "/" + appName + ".apk");
+		String tempPath = physicalPath + "/app/" + appId + "/temp/";
+		String dPath = physicalPath + "/app/" + appId + "/";
+		try {
+			FileUtil.copyAll(new File(tempPath), new File(dPath));
+		} catch (IOException e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_007);
+		}
+		log.info("END: {}.saveOrUpdateAppInfo(), appId: {}, clzId: {}, appName: {}, appEngName: {}, version: {}, pkgName: {}, appDesc: {}, exec TIME: {} ms.", this.getClass(), appId, clzId, appName, appEngName, version, pkgName , appDesc, p.executeTime());
 	}
 
 
@@ -198,6 +222,7 @@ public class TBoxServiceImpl implements TBoxService {
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#writeApk(org.apache.tomcat.util.http.fileupload.FileItem, java.lang.String, java.lang.String)
 	 */
+	@SuppressWarnings("resource")
 	@Override
 	public ApkInfoEntity saveApk2Disk(FileItem item, String appId, String apkName, boolean isTemp) throws TBoxException {
 		Profiler p = new Profiler();
@@ -222,35 +247,46 @@ public class TBoxServiceImpl implements TBoxService {
 			log.debug("apk path: {}", path + apkName);
 			ApkFile apkFile = new ApkFile(path + apkName);
 			ApkMeta meta = apkFile.getApkMeta();
-			log.debug("pkg name: {}", meta.getPackageName());
 			
-			List<Icon> icons = apkFile.getIconFiles();
-			List<String> list = new ArrayList<String>();
-			for(Icon icon : icons) {
-	        		String iconPath = icon.getPath();
-	        		if(!iconPath.contains(".png"))
-	        			continue;
-	        		byte[] bs = icon.getData();
-	        		File f = new File(path + iconPath);
-	        		if(!f.getParentFile().exists()) {
-	        			f.getParentFile().mkdirs();
-	        		}
-	    			FileOutputStream fos = new FileOutputStream(path + iconPath);
-	    			fos.write(bs);
-	    			fos.flush();
-	    			fos.close();
-	    			list.add(iconPath);
-	        	}
-			apkFile.close();
-			entity = new ApkInfoEntity(meta);
-			entity.setIconPath(list);
-			log.debug("ApkInfoEntity: {}", entity);
-			return entity;
+			String pkgName = meta.getPackageName();
+			log.debug("pkg name: {}", pkgName);
+			
+			if(appQuery.isAppExistByPkgName(pkgName)) {
+				apkFile.close();
+				throw new TBoxException(TBoxCodeMsg.EX_008);
+			}
+			else {
+				List<Icon> icons = apkFile.getIconFiles();
+				List<String> list = new ArrayList<String>();
+				for(Icon icon : icons) {
+		        		String iconPath = icon.getPath();
+		        		if(!iconPath.contains(".png"))
+		        			continue;
+		        		byte[] bs = icon.getData();
+		        		File f = new File(path + iconPath);
+		        		if(!f.getParentFile().exists()) {
+		        			f.getParentFile().mkdirs();
+		        		}
+		    			FileOutputStream fos = new FileOutputStream(path + iconPath);
+		    			fos.write(bs);
+		    			fos.flush();
+		    			fos.close();
+		    			list.add(iconPath);
+		        	}
+				apkFile.close();
+				entity = new ApkInfoEntity(meta);
+				entity.setIconPath(list);
+				log.debug("ApkInfoEntity: {}", entity);
+				return entity;
+			}
 		} 
-		catch (IOException e) {	
+		catch(TBoxException e) {
+			throw e;
+		}
+		catch(IOException e) {
 			log.error(StringUtil.getStackTraceAsString(e));
-			throw new TBoxException(TBoxCodeMsg.EX_007, e.getMessage());
-		} 
+			throw new TBoxException(TBoxCodeMsg.EX_004, e.getMessage());
+		}
 		catch (Exception e) {
 			log.error(StringUtil.getStackTraceAsString(e));
 			throw new TBoxException(TBoxCodeMsg.EX_004, e.getMessage());

@@ -75,6 +75,11 @@ public class TBoxCodeMsg {
 	 */
 	public static final String EX_007 = "EX-007";
 	
+	/**
+	 * 重複的apk
+	 */
+	public static final String EX_008 = "EX-008";
+	
 	private static final Map<String, String> map = new HashMap<String, String>();
 	
 	static {
@@ -90,6 +95,7 @@ public class TBoxCodeMsg {
 		map.put(EX_005, "無法反查註冊公司，非法的機器");
 		map.put(EX_006, "檔案上傳失敗");
 		map.put(EX_007, "檔案寫入硬碟失敗");
+		map.put(EX_008, "重複的apk");
 	}
 
 	public static final String getCodeMessage(String code) {

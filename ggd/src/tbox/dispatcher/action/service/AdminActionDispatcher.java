@@ -21,6 +21,8 @@ import baytony.util.Util;
 import ggd.core.CoreException;
 import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
+import tbox.TBoxException;
+import tbox.core.TBoxCodeMsg;
 import tbox.dispatcher.action.service.ms.command.UploadApkCommand;
 
 @Component("service.admin")
@@ -49,8 +51,12 @@ public class AdminActionDispatcher implements Dispatcher {
 					break;
 			}
 		}
+		catch(TBoxException e) {
+			throw e;
+		}
 		catch (IOException e) {
 			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_004, e);
 		}
 		log.info("END: {}.handler(), exec TIME: {} ms.", this.getClass(), p.executeTime());
 	}

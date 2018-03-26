@@ -67,7 +67,7 @@ public class IndexInfoCommand implements Command {
 		List<AppEntity> entities = service.findControlPanelApp(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());
 		List<App> apps = new ArrayList<App>();
 		for(AppEntity entity : entities) {
-			apps.add(new App(entity));
+			apps.add(new App(entity, fileServerPath));
 		}
 		log.info("END: {}.getControlApp(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
 		return apps;

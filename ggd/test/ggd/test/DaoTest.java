@@ -70,6 +70,14 @@ public class DaoTest {
 	private AppQuery appQuery;
 	
 	@Test
+	public void testIsApkExist() {
+		System.out.println("******* START testIsApkExist() *******");
+		System.out.println(appQuery.isAppExistByPkgName("com.google.android.youtube"));
+		System.out.println("******* END testIsApkExist() *******");
+	}
+	
+	
+	@Test
 	public void testGetAppsLastVersion() {
 		System.out.println("******* START testGetAppsLastVersion() *******");
 		List<AppEntity> list = appQuery.getAppsWithLastVersion("89125266");

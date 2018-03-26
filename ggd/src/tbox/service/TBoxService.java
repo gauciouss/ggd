@@ -35,7 +35,7 @@ public interface TBoxService {
 	 * @param appDesc
 	 * @throws TBoxException
 	 */
-	public void saveOrUpdateAppInfo(String serial, int clzId, String appName, String appEngName, String version, String pkgName, String appDesc) throws TBoxException;
+	public void saveOrUpdateAppInfo(String appId, int clzId, String appName, String appEngName, String version, String pkgName, String appDesc) throws TBoxException;
 		
 	
 	
@@ -59,6 +59,13 @@ public interface TBoxService {
 	 */
 	public ApkInfoEntity getApkInfo(String apkB64, String appId) throws TBoxException;
 	
+	
+	/**
+	 * 刪除預定的APP
+	 * @param appId
+	 * @throws TBoxException
+	 */
+	public void deleteBookingAppID(String appId) throws TBoxException;
 	
 	/**
 	 * 取得下一個APP id

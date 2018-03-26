@@ -1,5 +1,7 @@
 package tbox.data.dao;
 
+import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import baytony.util.Util;
 import ggd.core.common.Constant;
 import ggd.core.db.HibernateQuery;
 import tbox.data.vo.AppEntity;
+import tbox.data.vo.AppVersion;
 
 @Repository("AppQuery")
 public class AppQuery extends HibernateQuery {
@@ -24,9 +27,9 @@ public class AppQuery extends HibernateQuery {
 	 * 查詢商城首頁APP
 	 */
 	private static final String SQL_FIND_APPS_BY_MACHINE =
-			"select a.app_id, a.app_name, a.app_eng_name, a.app_desc, a.icon_path, a.pkg_name, ver.version, ver.publish_time, ver.link, clz.clz_id, clz.clz_name  " + 
+			"select distinct a.app_id, a.app_name, a.app_eng_name, a.app_desc, a.icon_path, a.pkg_name, ver.version, ver.publish_time, ver.link, clz.clz_id, clz.clz_name  " + 
 			"	from (  " + 
-			"		select app.app_id, app_name, app.clz_id, app.icon_path, app.pkg_name, max(ver1.version) version  " + 
+			"		select app.app_id, app_name, app_eng_name, app_desc, app.clz_id, app.icon_path, app.pkg_name, max(ver1.version) version  " + 
 			"			from app app  " + 
 			"			join app_version ver1 on app.app_id = ver1.app_id      " + 
 			"			group by app.app_id, app.app_name) a  " + 
@@ -90,8 +93,80 @@ public class AppQuery extends HibernateQuery {
 	
 	
 	
+	private static final String SQL_DELETE_BOOKING_APP = "delete from app where app_id = ?";
+	
+	
+	private static final String SQL_UPDATE_APP_INFO = 
+			"update app set app_name = ?, app_eng_name = ?, clz_id = ?, icon_path = ?, app_desc = ?, pkg_name = ? where app_id = ?";
+	
+	
+	private static final String SQL_ADD_APP_VERSION =
+			"insert into app_version (app_id, version, publish_time, link) values (?, ?, ?, ?)";
+	
+	
 	private static final String SQL_BOOKING_APP =
 			"insert into app (app_id) values (?)";
+	
+	
+	private static final String SQL_HAS_APP_EXIST_BY_PKG =
+			"select count(*) from app where pkg_name = ?";
+	
+	
+	private static final String SQL_FIND_VERSION_BY_PK =
+			"select * from app_version where app_id = ? and version = ?";
+	
+	
+	private static final String SQL_UPDATE_VERSION_INFO = 
+			"";
+	
+	
+	public AppVersion getVersion(String appId, String version) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getVersion(), appId: {}, version: {}", this.getClass(), appId, version);
+		List<AppVersion> list = super.findBySql(SQL_FIND_VERSION_BY_PK, AppVersion.class, appId, version);
+		AppVersion entity = Util.isEmpty(list) ? null : list.get(0);
+		log.debug("appId: {}, version: {}, entity: {}", appId, version, entity);
+		log.info("END: {}.getVersion(), appId: {}, version: {}, exec TIME: {} ms.", this.getClass(), appId, version, p.executeTime());
+		return entity;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public boolean isAppExistByPkgName(String pkgName) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getAppByPkgName(), pkgName: {}", this.getClass(), pkgName);
+		BigInteger count = ((List<BigInteger>) super.findBySql(SQL_HAS_APP_EXIST_BY_PKG, pkgName)).get(0);
+		log.debug("pkgName: {}, count: {}", pkgName, count);
+		log.info("END: {}.getAppByPkgName(), pkgName: {}, exec TIME: {} ms.", this.getClass(), pkgName, p.executeTime());		
+		return count.intValue() != 0;
+	}
+
+	
+	public int updateAppInfo(String appId, String appName, String appEngName, int clzId, String iconPath, String appDesc, String pkgName) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.updateAppInfo(), appId: {}, appName: {}, appEngName: {}, clzId: {}, iconPath: {}, appDesc: {}, pkgName: {}", this.getClass(), appId, appName, appEngName, clzId, iconPath, appDesc, pkgName);
+		int result = super.executeUpateQuery(SQL_UPDATE_APP_INFO, appName, appEngName, clzId, iconPath, appDesc, pkgName, appId);
+		log.debug("update success ? {}", result == 1);		
+		log.info("START: {}.updateAppInfo(), appId: {}, appName: {}, appEngName: {}, clzId: {}, iconPath: {}, appDesc: {}, pkgName: {}, exec TIME: {} ms.", this.getClass(), appId, appName, appEngName, clzId, iconPath, appDesc, pkgName, p.executeTime());
+		return result;
+	}
+	
+	public int saveAppVersion(String appId, String version, Timestamp publishTime, String link) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.saveAppVersion(), appId: {}, version: {}, publishTime: {}, link: {}", this.getClass(), appId, version, publishTime, link);
+		int result = super.executeUpateQuery(SQL_ADD_APP_VERSION, appId, version, publishTime, link);
+		log.debug("add version success ? {}", result == 1);
+		log.info("START: {}.saveAppVersion(), appId: {}, version: {}, publishTime: {}, link: {}, exec TIME: {} ms.", this.getClass(), appId, version, publishTime, link, p.executeTime());
+		return result;
+	}
+	
+	
+	public void deleteBookingApp(String appId) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.deleteBoogingApp(), appId: {}", this.getClass(), appId);
+		super.executeUpateQuery(SQL_DELETE_BOOKING_APP, appId);
+		log.info("END: {}.deleteBookingApp(), appId: {}, exec TIME: {} ms.", this.getClass(), appId, p.executeTime());
+	}
 	
 	
 	public AppEntity getNewestApp(String appId) {
@@ -125,8 +200,6 @@ public class AppQuery extends HibernateQuery {
 			str = "APP" + str;
 			appId = str;
 		}
-		
-		//TODO
 		super.executeUpateQuery(SQL_BOOKING_APP, appId);
 		return appId;
 	}

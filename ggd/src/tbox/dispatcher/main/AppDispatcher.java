@@ -26,6 +26,7 @@ import ggd.core.CoreException;
 import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
 import tbox.TBoxException;
+import tbox.core.TBoxCodeMsg;
 import tbox.data.vo.AppClz;
 import tbox.data.vo.AppEntity;
 import tbox.service.TBoxService;
@@ -77,11 +78,8 @@ public class AppDispatcher implements Dispatcher {
 				doEdit(view, request);
 				break;
 			case "confirm":
-				//doConfirm(view, request);
+				doConfirm(view, request);
 				break;
-//			case "uploadApk":
-//				doUploadApk(view, request, multiparts);
-//				break;
 			case "cancel":
 				doCancel(view, request);
 				break;
@@ -95,12 +93,19 @@ public class AppDispatcher implements Dispatcher {
 		log.info("END: {}.handler(), action: {}, exec TIME: {} ms.", this.getClass(), action, p.executeTime());
 	}
 	
-	private void doCancel(ModelAndView view, HttpServletRequest request) {
-		//TODO 刪除booking的appid
+	private void doCancel(ModelAndView view, HttpServletRequest request) throws TBoxException {
+		//刪除booking的appid
+		String serial = request.getParameter("serial");
+		try {
+			service.deleteBookingAppID(serial);
+		} catch (TBoxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.doIndex(view, request);
 	}
 	
-	private void deConfirm(ModelAndView view, HttpServletRequest request) {
+	private void doConfirm(ModelAndView view, HttpServletRequest request) throws TBoxException {
 		Profiler p = new Profiler();
 		String serial = request.getParameter("serial");
 		String kind = request.getParameter("kind");
@@ -110,10 +115,21 @@ public class AppDispatcher implements Dispatcher {
 		String pkgName = request.getParameter("pkgName");
 		String appDesc = request.getParameter("appDesc");
 		log.trace("START: {}.doConfirm(), serial: {}, kind: {}, appName: {}, appEngName: {}, version: {}, pkgName: {}, appDesc: {}", this.getClass(), serial, kind, appName, appEngName, version, pkgName, appDesc);
-		
+		try {
+			service.saveOrUpdateAppInfo(serial, Integer.parseInt(kind), appName, appEngName, version, pkgName, appDesc);
+			view.addObject(Constant.ACTION_RESULT, "1");
+		} catch (NumberFormatException e) {
+			log.error(StringUtil.getStackTraceAsString(e));		
+			throw new TBoxException(TBoxCodeMsg.EX_004, e);
+		} catch (TBoxException e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+			throw e;
+		};
+		log.info("END: {}.doConfirm(), serial: {}, kind: {}, appName: {}, appEngName: {}, version: {}, pkgName: {}, appDesc: {}, exec TIME: {} ms.", this.getClass(), serial, kind, appName, appEngName, version, pkgName, appDesc, p.executeTime());
+		this.doIndex(view, request);
 	}
 	
-	private void doEdit(ModelAndView view, HttpServletRequest request) {
+	private void doEdit(ModelAndView view, HttpServletRequest request) throws TBoxException {
 		Profiler p = new Profiler();		
 		String serialNo = request.getParameter("serialNo"); 
 		log.trace("START: {}.deEdit(), serialNo: {}", this.getClass(), serialNo);
@@ -134,15 +150,17 @@ public class AppDispatcher implements Dispatcher {
 		}
 		catch(TBoxException e) {
 			log.error(StringUtil.getStackTraceAsString(e));
+			throw e;
 		}
 		catch(Exception e) {
 			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_004, e);
 		}
 		log.info("END: {}.doEdit(), serialNo: {}, exec TIME: {} ms.", this.getClass(), serialNo, p.executeTime());
 	}
 	
 	
-	private void doIndex(ModelAndView view, HttpServletRequest request) {
+	private void doIndex(ModelAndView view, HttpServletRequest request) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.doIndex()", this.getClass());
 		try {
@@ -151,8 +169,13 @@ public class AppDispatcher implements Dispatcher {
 			view.addObject(Constant.DATA_LIST, list);
 			view.setViewName("app/index");
 		}
+		catch(TBoxException e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+			throw e;
+		}
 		catch(Exception e) {
 			log.error(StringUtil.getStackTraceAsString(e));
+			throw new TBoxException(TBoxCodeMsg.EX_004, e);
 		}
 		log.info("END: {}.doIndex(), exec TIME: {} ms.", this.getClass(), p.executeTime());
 	}

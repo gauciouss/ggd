@@ -94,12 +94,12 @@ public class IndexInfoAdapter implements Serializable {
 		private long publishTime;
 		private String pkgName;
 
-		public App(AppEntity entity) {
+		public App(AppEntity entity, String physicalPath) {
 			this.appId = entity.getAppId();
 			this.clzId = String.valueOf(entity.getClzId());
 			this.clzName = entity.getClzName();
 			this.name = entity.getName();
-			this.link = entity.getLink();
+			this.link = physicalPath + entity.getLink();
 			this.version = entity.getVersion();
 			this.publishTime = entity.getPublishTime().getTime();
 			this.pkgName = entity.getPkgName();

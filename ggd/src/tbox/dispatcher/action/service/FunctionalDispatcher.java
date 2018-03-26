@@ -48,19 +48,6 @@ public class FunctionalDispatcher implements Dispatcher {
 		log.trace("START: {}.handler(), tbox: {}", this.getClass(), tbox);
 		Command cmd = context.getBean(info.getAction(), Command.class);
 		cmd.execute(view, request, tbox);
-//		switch(info.getAction()) {
-//			case "register":
-//				registerCmd.execute(view, request, tbox);
-//				break;
-//			case "home.index":
-//				indexCmd.execute(view, request, tbox);
-//				break;
-//			case "home.area":
-//				areaCmd.execute(view, request, tbox);
-//				break;
-//			case "apps.index":
-//				break;
-//		}
 		log.info("END: {}.handler(), tbox: {}, exec TIME: {} ms.", this.getClass(), tbox, p.executeTime());
 	}
 

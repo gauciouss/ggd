@@ -94,25 +94,18 @@
 					</div>
 					<div class="form-group">
 						<div class="form-row">
-							<label for="appDesc">APP說明</label>
-							<textarea id="appDesc" name="appDesc" class="form-control">
+							<div class="col-md-6">
+								<label for="appDesc">APP說明</label>
+								<textarea id="appDesc" name="appDesc" class="form-control">
 								<%=app.getDesc() == null ? "" : app.getDesc() %>
 							</textarea>
-						</div>
-					</div>
-					
-					<div class="form-group">
-						<div class="form-row">
+							</div>
 							<div class="col-md-6">
 								<label for="hdpi">hdpi</label>
 								<img id="hdpi" class="form-control"/>
 							</div>
-							<div class="col-md-6">
-								<label for="mdpi">mdpi</label>
-								<img id="mdpi" class="form-control"/>
-							</div>
 						</div>
-					</div>					
+					</div>
 					
 					<div class="form-group">
 						<input type="file" id="apk" name="apk">
@@ -166,13 +159,11 @@
 					var icons = body.iconPath;
 					$.each(icons, function(i, p) {
 						p = "/fileserver/app/" + $("#serial").val() + "/temp/" + p
-						if(p.indexOf("-mdpi-") > 0) {
-							$("#mdpi").attr("src", p);
-						}
-						else if(p.indexOf("-hdpi-") > 0) {
+						if(p.indexOf("-hdpi-") > 0) {
 							$("#hdpi").attr("src", p);
-						}						
+						}
 					});
+					$("#hdpi").trigger("refresh");
 				}
 				else {
 					alert(res.header.msg);
@@ -191,6 +182,8 @@
 		if(!ggd.util.isEmpty(iconPath)) {
 			$("#icon-path").attr("src", "/fileserver/app/" + iconPath)
 		}
+		
+		$("#kind").val(kind);
 	};
 	
 	$(document).ready(function() {		

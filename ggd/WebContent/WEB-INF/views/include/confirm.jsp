@@ -56,7 +56,7 @@ var action = ggd.util.isEmpty("${param.action}") ? "confirm" : "${param.action}"
 	});
 	
 	$("#cancel").on("click", function() {
-		$("#<%=Constant.ACTION_TYPE %>").val("index");
+		$("#<%=Constant.ACTION_TYPE %>").val("cancel");
 		document.form.submit();
 	});
 	

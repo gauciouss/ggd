@@ -33,6 +33,10 @@ public class AppIndexCommand implements Command {
 	@Autowired
 	@Qualifier("TBoxService")
 	private TBoxService service;
+	
+	@Autowired
+	@Qualifier("FILE_SERVER_PATH")
+	private String fileServerPath;
 
 	/* (non-Javadoc)
 	 * @see tbox.dispatcher.action.service.command.Command#execute(org.springframework.web.servlet.ModelAndView, javax.servlet.http.HttpServletRequest, tbox.core.TBoxData)
@@ -55,7 +59,7 @@ public class AppIndexCommand implements Command {
 		List<AppEntity> entities = service.findAppsWithLastVersion(ein);
 		List<App> apps = new ArrayList<App>();
 		for(AppEntity entity : entities) {
-			apps.add(new App(entity));
+			apps.add(new App(entity, fileServerPath));
 		}
 		log.info("END: {}.getControlApp(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
 		return apps;
