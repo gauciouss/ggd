@@ -109,15 +109,16 @@ public class AppQuery extends HibernateQuery {
 	
 	
 	private static final String SQL_HAS_APP_EXIST_BY_PKG =
-			"select count(*) from app where pkg_name = ?";
+			"select count(*) " + 
+			"	from app a " + 
+			"    inner join app_version b on a.app_id =  b.app_id " + 
+			"    where a.pkg_name = ? " + 
+			"    and b.version = ?";
 	
 	
 	private static final String SQL_FIND_VERSION_BY_PK =
 			"select * from app_version where app_id = ? and version = ?";
 	
-	
-	private static final String SQL_UPDATE_VERSION_INFO = 
-			"";
 	
 	
 	public AppVersion getVersion(String appId, String version) {
@@ -132,12 +133,12 @@ public class AppQuery extends HibernateQuery {
 	
 	
 	@SuppressWarnings("unchecked")
-	public boolean isAppExistByPkgName(String pkgName) {
+	public boolean isAppExistByPkgName(String pkgName, String version) {
 		Profiler p = new Profiler();
-		log.trace("START: {}.getAppByPkgName(), pkgName: {}", this.getClass(), pkgName);
-		BigInteger count = ((List<BigInteger>) super.findBySql(SQL_HAS_APP_EXIST_BY_PKG, pkgName)).get(0);
+		log.trace("START: {}.getAppByPkgName(), pkgName: {}, version: {}", this.getClass(), pkgName, version);
+		BigInteger count = ((List<BigInteger>) super.findBySql(SQL_HAS_APP_EXIST_BY_PKG, pkgName, version)).get(0);
 		log.debug("pkgName: {}, count: {}", pkgName, count);
-		log.info("END: {}.getAppByPkgName(), pkgName: {}, exec TIME: {} ms.", this.getClass(), pkgName, p.executeTime());		
+		log.info("END: {}.getAppByPkgName(), pkgName: {}, version: {}, exec TIME: {} ms.", this.getClass(), pkgName, version, p.executeTime());		
 		return count.intValue() != 0;
 	}
 

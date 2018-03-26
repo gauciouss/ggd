@@ -249,9 +249,10 @@ public class TBoxServiceImpl implements TBoxService {
 			ApkMeta meta = apkFile.getApkMeta();
 			
 			String pkgName = meta.getPackageName();
-			log.debug("pkg name: {}", pkgName);
+			String version = meta.getVersionName();
+			log.debug("pkg name: {}, version: {}", pkgName, version);
 			
-			if(appQuery.isAppExistByPkgName(pkgName)) {
+			if(appQuery.isAppExistByPkgName(pkgName, version)) {
 				apkFile.close();
 				throw new TBoxException(TBoxCodeMsg.EX_008);
 			}

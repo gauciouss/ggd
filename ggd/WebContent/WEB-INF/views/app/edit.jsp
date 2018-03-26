@@ -97,8 +97,8 @@
 							<div class="col-md-6">
 								<label for="appDesc">APP說明</label>
 								<textarea id="appDesc" name="appDesc" class="form-control">
-								<%=app.getDesc() == null ? "" : app.getDesc() %>
-							</textarea>
+									<%=app.getDesc() == null ? "" : app.getDesc().trim() %>
+								</textarea>
 							</div>
 							<div class="col-md-6">
 								<label for="hdpi">hdpi</label>
