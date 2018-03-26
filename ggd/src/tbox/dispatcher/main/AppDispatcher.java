@@ -94,14 +94,6 @@ public class AppDispatcher implements Dispatcher {
 	}
 	
 	private void doCancel(ModelAndView view, HttpServletRequest request) throws TBoxException {
-		//刪除booking的appid
-		String serial = request.getParameter("serial");
-		try {
-			service.deleteBookingAppID(serial);
-		} catch (TBoxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		this.doIndex(view, request);
 	}
 	
