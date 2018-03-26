@@ -1,3 +1,5 @@
+<%@page import="tbox.data.vo.AppEntity"%>
+<%@page import="tbox.data.vo.FastApp"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="ggd.core.util.JSONUtil"%>
 <%@page import="tbox.data.vo.Area"%>
@@ -23,7 +25,13 @@
 	String logo = (String) request.getAttribute(CompanyDispatcher.LOGO_BASE64);
 	String bg = (String) request.getAttribute(CompanyDispatcher.BG_BASE64);
 	
+	List<FastApp> appsIdx = (List<FastApp>) request.getAttribute(CompanyDispatcher.FAST_INDEX_APPS);
+	List<FastApp> appsCtrlP = (List<FastApp>) request.getAttribute(CompanyDispatcher.FAST_CTRL_PNL_APPS);
+	List<AppEntity> allApps = (List<AppEntity>) request.getAttribute(CompanyDispatcher.ALL_APPS);
 	
+	String appsStr = Util.isEmpty(allApps) ? "undefined" : JSONUtil.toJsonString(allApps);
+	String idxAppsStr = Util.isEmpty(appsIdx) ? "undefined" : JSONUtil.toJsonString(appsIdx);
+	String ctrlAppsStr = Util.isEmpty(appsIdx) ? "undefined" : JSONUtil.toJsonString(appsCtrlP);
 %>
 <!DOCTYPE>
 <html>
@@ -95,27 +103,50 @@
 					<!-- 快捷APP -->
 					<div class="form-group">
 						<div class="form-row">
-							<div class="col-md-3">
-								<label for="fastKey1">快捷APP1</label>
-								<input type="text" name="fastKey1" id="fastKey1" class="form-control"/>
+							<div class="col-md-6 form-group">
+								<label>首頁快捷APP</label>
+								<div class="panel-body">
+									<div class="col-mod-3">
+										<label for="fastKey1">快捷APP1</label>
+										<select class="form-control apps idx-apps" id="fastKey1" name="fastKey1"></select>
+									</div>
+									<div class="col-mod-3">
+										<label for="fastKey2">快捷APP2</label>										
+										<select class="form-control apps idx-apps" id="fastKey2" name="fastKey2"></select>
+									</div>
+									<div class="col-mod-3">
+										<label for="fastKey3">快捷APP3</label>
+										<select class="form-control apps idx-apps" id="fastKey3" name="fastKey3"></select>
+									</div>
+									<div class="col-mod-3">
+										<label for="fastKey4">快捷APP4</label>
+										<select class="form-control apps idx-apps" id="fastKey4" name="fastKey4"></select>
+									</div>
+								</div>
 							</div>
-							<div class="col-md-3">
-								<label for="fastKey2">快捷APP2</label>
-								<input type="text" name="fastKey2" id="fastKey2" class="form-control"/>
-							</div>
-							<div class="col-md-3">
-								<label for="fastKey3">快捷APP3</label>
-								<input type="text" name="fastKey3" id="fastKey3" class="form-control"/>
-							</div>
-							<div class="col-md-3">
-								<label for="fastKey4">快捷APP4</label>
-								<input type="text" name="fastKey4" id="fastKey4" class="form-control"/>
+							<div class="col-md-6 form-group">
+								<label>遙控器快捷APP</label>
+								<div class="panel-body">
+									<div class="col-mod-3">
+										<label for="fastKey1">遙控器快捷APP1</label>
+										<select class="form-control apps ctrl-apps" id="ctrlApp1" name="ctrlApp1"></select>
+									</div>
+									<div class="col-mod-3">
+										<label for="fastKey2">遙控器快捷APP2</label>
+										<select class="form-control apps ctrl-apps" id="ctrlApp2" name="ctrlApp2"></select>
+									</div>
+									<div class="col-mod-3">
+										<label for="fastKey3">遙控器快捷APP3</label>
+										<select class="form-control apps ctrl-apps" id="ctrlApp3" name="ctrlApp3"></select>
+									</div>
+									<div class="col-mod-3">
+										<label for="fastKey4">遙控器快捷APP4</label>
+										<select class="form-control apps ctrl-apps" id="ctrlApp4" name="ctrlApp4"></select>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
-					
-					
-					
 					
 					
 					<!-- 圖檔 -->
@@ -159,6 +190,10 @@
 	var logoB64 = "<%=logo %>";
 	var bgB64 = "<%=bg %>";
 	
+	var apps = <%=appsStr %>;
+	var idxApps = <%=idxAppsStr %>;
+	var ctrlApps = <%=ctrlAppsStr %>;
+	
 	var setDefaultValue = function() {
 		var group = "<%=comp.getGroup() == null ? "" : comp.getGroup().getGroupId()%>";
 		$("#group").val(group);
@@ -173,6 +208,25 @@
 		
 		if(!ggd.util.isEmpty(bgB64)) {
 			bgB64 = "data:image/png;base64," + bgB64;
+		}
+		
+		
+		if(apps !== undefined) {
+			$.each(apps, function(i, v) {
+				$(".apps").append("<option value='" + v.appId + "'>" + v.name + "</option>");
+			});
+		}
+		
+		for(var i=0 ; i<4 ; i++) {
+			var app = idxApps[i];
+			if(typeof(app) != "undefined")
+				$("#fastKey" + (i+1)).val(app.appId);
+		}
+		
+		for(var i=0 ; i<4 ; i++) {
+			var app = ctrlApps[i];
+			if(typeof(app) != "undefined")
+				$("#ctrlApp" + (i+1)).val(app.appId);
 		}
 		
 	};

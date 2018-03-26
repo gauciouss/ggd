@@ -14,6 +14,7 @@ import tbox.data.vo.AppEntity;
 import tbox.data.vo.Area;
 import tbox.data.vo.Company;
 import tbox.data.vo.CompanyEntity;
+import tbox.data.vo.FastApp;
 import tbox.data.vo.KV;
 import tbox.data.vo.KVEntity;
 import tbox.data.vo.KVKind;
@@ -23,6 +24,24 @@ import tbox.service.entity.ApkInfoEntity;
 
 @Transactional
 public interface TBoxService {
+	
+	
+	/**
+	 * 查詢快捷APP
+	 * @param EIN
+	 * @return
+	 * @throws TBoxException
+	 */
+	public List<FastApp> findControlPanelFastApp(String EIN) throws TBoxException;
+	
+	/**
+	 * 查詢快捷APP
+	 * @param EIN
+	 * @return
+	 * @throws TBoxException
+	 */
+	public List<FastApp> findIndexFastApp(String EIN) throws TBoxException;
+	
 	
 	/**
 	 * 新增/更新APP資訊 
@@ -37,8 +56,6 @@ public interface TBoxService {
 	 */
 	public void saveOrUpdateAppInfo(String appId, int clzId, String appName, String appEngName, String version, String pkgName, String appDesc) throws TBoxException;
 		
-	
-	
 	
 	/**
 	 * 儲存.apk 檔

@@ -35,18 +35,6 @@ public class Company implements Serializable {
 	@Column(name = "background_url")
 	private String backgroundURL;
 
-	@Column(name = "fast_key1")
-	private String fastKey1;
-
-	@Column(name = "fast_key2")
-	private String fastKey2;
-
-	@Column(name = "fast_key3")
-	private String fastKey3;
-
-	@Column(name = "fast_key4")
-	private String fastKey4;
-
 	@OneToOne
 	@JoinColumn(name = "group_id", updatable = false, insertable = false)
 	private AdmGroup group;
@@ -54,25 +42,20 @@ public class Company implements Serializable {
 	public Company() {
 	}
 
-	public Company(String EIN, String name, Area area, String logoURL, String backgroundURL, String fastKey1,
-			String fastKey2, String fastKey3, String fastKey4, AdmGroup group) {
+	public Company(String EIN, String name, Area area, String logoURL, String backgroundURL, AdmGroup group) {
 		super();
 		this.EIN = EIN;
 		this.name = name;
 		this.area = area;
 		this.logoURL = logoURL;
 		this.backgroundURL = backgroundURL;
-		this.fastKey1 = fastKey1;
-		this.fastKey2 = fastKey2;
-		this.fastKey3 = fastKey3;
-		this.fastKey4 = fastKey4;
 		this.group = group;
 	}
 
 	public String getEIN() {
 		return EIN;
 	}
-	
+
 	public void setEIN(String eIN) {
 		EIN = eIN;
 	}
@@ -138,66 +121,6 @@ public class Company implements Serializable {
 	}
 
 	/**
-	 * @return the fastKey1
-	 */
-	public String getFastKey1() {
-		return fastKey1;
-	}
-
-	/**
-	 * @param fastKey1
-	 *            the fastKey1 to set
-	 */
-	public void setFastKey1(String fastKey1) {
-		this.fastKey1 = fastKey1;
-	}
-
-	/**
-	 * @return the fastKey2
-	 */
-	public String getFastKey2() {
-		return fastKey2;
-	}
-
-	/**
-	 * @param fastKey2
-	 *            the fastKey2 to set
-	 */
-	public void setFastKey2(String fastKey2) {
-		this.fastKey2 = fastKey2;
-	}
-
-	/**
-	 * @return the fastKey3
-	 */
-	public String getFastKey3() {
-		return fastKey3;
-	}
-
-	/**
-	 * @param fastKey3
-	 *            the fastKey3 to set
-	 */
-	public void setFastKey3(String fastKey3) {
-		this.fastKey3 = fastKey3;
-	}
-
-	/**
-	 * @return the fastKey4
-	 */
-	public String getFastKey4() {
-		return fastKey4;
-	}
-
-	/**
-	 * @param fastKey4
-	 *            the fastKey4 to set
-	 */
-	public void setFastKey4(String fastKey4) {
-		this.fastKey4 = fastKey4;
-	}
-
-	/**
 	 * @return the group
 	 */
 	public AdmGroup getGroup() {
@@ -230,21 +153,15 @@ public class Company implements Serializable {
 		builder.append(logoURL);
 		builder.append(", backgroundURL=");
 		builder.append(backgroundURL);
-		builder.append(", fastKey1=");
-		builder.append(fastKey1);
-		builder.append(", fastKey2=");
-		builder.append(fastKey2);
-		builder.append(", fastKey3=");
-		builder.append(fastKey3);
-		builder.append(", fastKey4=");
-		builder.append(fastKey4);
 		builder.append(", group=");
 		builder.append(group);
 		builder.append("]");
 		return builder.toString();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -255,7 +172,9 @@ public class Company implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -275,5 +194,4 @@ public class Company implements Serializable {
 		return true;
 	}
 
-	
 }

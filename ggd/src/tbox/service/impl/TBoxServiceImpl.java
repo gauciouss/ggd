@@ -33,6 +33,7 @@ import tbox.data.dao.AppQuery;
 import tbox.data.dao.AreaDao;
 import tbox.data.dao.AreaQuery;
 import tbox.data.dao.CompanyDao;
+import tbox.data.dao.FastAppDao;
 import tbox.data.dao.KVDao;
 import tbox.data.dao.KVKindDao;
 import tbox.data.dao.KVQuery;
@@ -45,6 +46,7 @@ import tbox.data.vo.AppVersion;
 import tbox.data.vo.Area;
 import tbox.data.vo.Company;
 import tbox.data.vo.CompanyEntity;
+import tbox.data.vo.FastApp;
 import tbox.data.vo.KV;
 import tbox.data.vo.KVEntity;
 import tbox.data.vo.KVKind;
@@ -113,10 +115,46 @@ public class TBoxServiceImpl implements TBoxService {
 	@Qualifier("MachineQuery")
 	private MachineQuery machineQuery;
 	
+	@Autowired
+	@Qualifier("FastAppDao")
+	private FastAppDao fastAppDao;
 	
 	
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#findControlPanelFastApp()
+	 */
+	@Override
+	public List<FastApp> findControlPanelFastApp(String EIN) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.findControlPanelFastApp(), EIN: {}", this.getClass(), EIN);
+		List<FastApp> list = this.findFastApp(2, EIN);
+		log.info("END: {}.findControlPanelFastApp(), EIN: {}, exec TIME: {} ms.", this.getClass(), EIN, p.executeTime());
+		return list;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#findIndexFastApp()
+	 */
+	@Override
+	public List<FastApp> findIndexFastApp(String EIN) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.findIndexFastApp(), EIN: {}", this.getClass(), EIN);
+		List<FastApp> list = this.findFastApp(1, EIN);
+		log.info("END: {}.findIndexFastApp(), EIN: {}, exec TIME: {} ms.", this.getClass(), EIN, p.executeTime());
+		return list;
+	}
 	
 	
+	private List<FastApp> findFastApp(int type, String EIN) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.findFastApp(), type: {}, EIN: {}", this.getClass(), type, EIN);
+		List<FastApp> list = fastAppDao.findAllByType(type, EIN);
+		log.info("END: {}.findFastApp(), type: {}, EIN: {}, exec TIME: {} ms.", this.getClass(), type, EIN, p.executeTime());
+		return list;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#deleteBookingAppID(java.lang.String)
 	 */
@@ -523,15 +561,10 @@ public class TBoxServiceImpl implements TBoxService {
 		Profiler p = new Profiler();			
 		log.trace("START: {}.getControlPanelAppByEIN(), EIN: {}", this.getClass(), EIN);
 		List<AppEntity> list = new ArrayList<AppEntity>();
-		Company comp = compDao.findById(EIN);
-		if(!Util.isEmpty(comp.getFastKey1()))
-			list.add(this.getAppInfo(comp.getFastKey1()));
-		if(!Util.isEmpty(comp.getFastKey2()))
-			list.add(this.getAppInfo(comp.getFastKey2()));
-		if(!Util.isEmpty(comp.getFastKey3()))
-			list.add(this.getAppInfo(comp.getFastKey3()));
-		if(!Util.isEmpty(comp.getFastKey4()))
-			list.add(this.getAppInfo(comp.getFastKey4()));
+		List<FastApp> fps = this.findControlPanelFastApp(EIN);
+		for(FastApp fp : fps) {
+			list.add(this.getAppInfo(fp.getAppId()));
+		}		
 		log.info("END: {}.getControlPanelAppByEIN(), EIN: {}, exec TIME: {} ms.", this.getClass(), EIN, p.executeTime());
 		return list;
 	}

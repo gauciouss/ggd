@@ -17,14 +17,17 @@ import baytony.util.StringUtil;
 import baytony.util.Util;
 import ggd.auth.AuthService;
 import ggd.auth.vo.AdmGroup;
+import ggd.auth.vo.AdmUser;
 import ggd.core.CoreException;
 import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
 import ggd.core.util.StandardUtil;
 import tbox.TBoxException;
+import tbox.data.vo.AppEntity;
 import tbox.data.vo.Area;
 import tbox.data.vo.Company;
 import tbox.data.vo.CompanyEntity;
+import tbox.data.vo.FastApp;
 import tbox.service.TBoxService;
 
 @Component("main.comp")
@@ -34,9 +37,11 @@ public class CompanyDispatcher implements Dispatcher {
 	
 	public static final String ALL_APPROVED_GROUPS = CompanyDispatcher.class + "_GROUP";
 	public static final String ALL_AREA = CompanyDispatcher.class + "_AREA";
-	
 	public static final String LOGO_BASE64 = CompanyDispatcher.class + "_LOGO";
 	public static final String BG_BASE64 = CompanyDispatcher.class + "_BG";
+	public static final String FAST_INDEX_APPS = CompanyDispatcher.class + "_IDX_FAST_APPS";
+	public static final String FAST_CTRL_PNL_APPS = CompanyDispatcher.class + "_CTRL_PNL_FAST_APPS";
+	public static final String ALL_APPS = CompanyDispatcher.class + "_ALL_APPS";
 	
 	
 	@Autowired
@@ -160,6 +165,16 @@ public class CompanyDispatcher implements Dispatcher {
 			if(!Util.isEmpty(bgPath) && bgFile.exists())
 				bgB64 = StandardUtil.readFileToBase64(physicalPath + "/" + bgPath);
 			
+			
+			List<FastApp> indexFasts = service.findIndexFastApp(EIN);
+			List<FastApp> ctrlPFasts = service.findControlPanelFastApp(EIN);
+			
+			AdmUser user = (AdmUser) request.getSession().getAttribute(Constant.USER);
+			List<AppEntity> all_apps = service.findAllApps(user.getGroup());
+			
+			view.addObject(ALL_APPS, all_apps);
+			view.addObject(FAST_INDEX_APPS, indexFasts);
+			view.addObject(FAST_CTRL_PNL_APPS, ctrlPFasts);
 			view.addObject(LOGO_BASE64, logoB64);
 			view.addObject(BG_BASE64, bgB64);
 			view.addObject(Constant.DATA_LIST, comp);
