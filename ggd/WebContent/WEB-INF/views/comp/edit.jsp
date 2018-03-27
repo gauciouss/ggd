@@ -217,18 +217,21 @@
 			});
 		}
 		
-		for(var i=0 ; i<4 ; i++) {
-			var app = idxApps[i];
-			if(typeof(app) != "undefined")
-				$("#idxApp" + (i+1)).val(app.appId);
+		if(typeof(idxApps) != "undefined") {
+			for(var i=0 ; i<idxApps.length ; i++) {
+				var app = idxApps[i];
+				if(typeof(app) != "undefined")
+					$("#idxApp" + (i+1)).val(app.appId);
+			}
 		}
 		
-		for(var i=0 ; i<4 ; i++) {
-			var app = ctrlApps[i];
-			if(typeof(app) != "undefined")
-				$("#ctrlApp" + (i+1)).val(app.appId);
+		if(typeof(ctrlApps) != "undefined") {
+			for(var i=0 ; i<ctrlApps.length ; i++) {
+				var app = ctrlApps[i];
+				if(typeof(app) != "undefined")
+					$("#ctrlApp" + (i+1)).val(app.appId);
+			}
 		}
-		
 	};
 	
 	$(document).ready(function() {
@@ -241,7 +244,6 @@
     		imgSrc: logoB64,
     		callback: function(b64) {
     			var sp = b64.split(",");    			
-    			console.log(sp[1]);
     			$("#logoB64").val(sp[1]);
     		}
 		});
@@ -251,8 +253,7 @@
     		targetImg: $("#bg"),
     		imgSrc: bgB64,
     		callback: function(b64) {
-    			var sp = b64.split(",");    			
-    			console.log(sp[1]);
+    			var sp = b64.split(",");
     			$("#bgB64").val(sp[1]);
     		}
 		});
