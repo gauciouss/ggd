@@ -108,19 +108,19 @@
 								<div class="panel-body">
 									<div class="col-mod-3">
 										<label for="fastKey1">快捷APP1</label>
-										<select class="form-control apps idx-apps" id="fastKey1" name="fastKey1"></select>
+										<select class="form-control apps idx-apps" id="idxApp1" name="idxApp1"></select>
 									</div>
 									<div class="col-mod-3">
 										<label for="fastKey2">快捷APP2</label>										
-										<select class="form-control apps idx-apps" id="fastKey2" name="fastKey2"></select>
+										<select class="form-control apps idx-apps" id="idxApp2" name="idxApp2"></select>
 									</div>
 									<div class="col-mod-3">
 										<label for="fastKey3">快捷APP3</label>
-										<select class="form-control apps idx-apps" id="fastKey3" name="fastKey3"></select>
+										<select class="form-control apps idx-apps" id="idxApp3" name="idxApp3"></select>
 									</div>
 									<div class="col-mod-3">
 										<label for="fastKey4">快捷APP4</label>
-										<select class="form-control apps idx-apps" id="fastKey4" name="fastKey4"></select>
+										<select class="form-control apps idx-apps" id="idxApp3" name="idxApp4"></select>
 									</div>
 								</div>
 							</div>
@@ -220,7 +220,7 @@
 		for(var i=0 ; i<4 ; i++) {
 			var app = idxApps[i];
 			if(typeof(app) != "undefined")
-				$("#fastKey" + (i+1)).val(app.appId);
+				$("#idxApp" + (i+1)).val(app.appId);
 		}
 		
 		for(var i=0 ; i<4 ; i++) {

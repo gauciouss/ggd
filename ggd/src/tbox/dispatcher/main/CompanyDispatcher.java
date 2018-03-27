@@ -91,12 +91,20 @@ public class CompanyDispatcher implements Dispatcher {
 		String group = request.getParameter("group");
 		String logo = request.getParameter("logoB64");
 		String bg = request.getParameter("bgB64");
-		String fk1 = request.getParameter("fastKey1");
-		String fk2 = request.getParameter("fastKey2");
-		String fk3 = request.getParameter("fastKey3");
-		String fk4 = request.getParameter("fastKey4");
 		
-		log.trace("START: {}.doConfirm(), EIN: {}, compName: {}, area: {}, group: {}, fk1: {}, fk2: {}, fk3: {}, fk4: {}", this.getClass(), EIN, compName, area, group, fk1, fk2, fk3, fk4);
+		//首頁快捷APP
+		String idxApp1 = request.getParameter("idxApp1");
+		String idxApp2 = request.getParameter("idxApp2");
+		String idxApp3 = request.getParameter("idxApp3");
+		String idxApp4 = request.getParameter("idxApp4");
+		
+		//遙控器快捷APP
+		String ctrlApp1 = request.getParameter("ctrlApp1");
+		String ctrlApp2 = request.getParameter("ctrlApp2");
+		String ctrlApp3 = request.getParameter("ctrlApp3");
+		String ctrlApp4 = request.getParameter("ctrlApp4");
+		
+		log.trace("START: {}.doConfirm(), EIN: {}, compName: {}, area: {}, group: {}, idxApp1: {}, idxApp2: {}, idxApp3: {}, idxApp4: {}, ctrlApp1: {}, ctrlApp2: {}, ctrlApp3: {}, ctrlApp4: {}", this.getClass(), EIN, compName, area, group, idxApp1, idxApp2, idxApp3, idxApp4, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4);
 		
 		if(Util.isEmpty(logo) || Util.isEmpty(bg)) {
 			log.warn("******** logo or bg base64 value is empty !!!!!!!!!");
@@ -116,7 +124,8 @@ public class CompanyDispatcher implements Dispatcher {
 					StandardUtil.writeBase64ToFile(logo, imgAbsPath, "logo.png");
 				if(!Util.isEmpty(bg))
 					StandardUtil.writeBase64ToFile(bg, imgAbsPath, "bg.png");
-				service.addCompany(EIN, compName, area, imgPath + "logo.png", imgPath + "bg.png", fk1, fk2, fk3, fk4, group);
+				//service.addCompany(EIN, compName, area, imgPath + "logo.png", imgPath + "bg.png", fk1, fk2, fk3, fk4, group);
+				service.addCompany(EIN, compName, area, compName, imgPath + "bg.png", idxApp1, idxApp2, idxApp3, idxApp4, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4, group);
 			}
 			else {
 				log.debug("EIN: {}, do action: update.", EIN);
@@ -124,11 +133,11 @@ public class CompanyDispatcher implements Dispatcher {
 					StandardUtil.writeBase64ToFile(logo, imgAbsPath, "logo.png");
 				if(!Util.isEmpty(bg))
 					StandardUtil.writeBase64ToFile(bg, imgAbsPath, "bg.png");
-				service.updateCompInfo(EIN, compName, area, imgPath + "logo.png", imgPath + "bg.png", fk1, fk2, fk3, fk4, group);
+				service.updateCompInfo(EIN, compName, area, imgPath + "logo.png", imgPath + "bg.png", idxApp1, idxApp2, idxApp3, idxApp4, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4, group);
 			}
 			
 			view.addObject(Constant.ACTION_RESULT, "1");
-			log.info("END: {}.doConfirm(), EIN: {}, compName: {}, area: {}, group: {}, fk1: {}, fk2: {}, fk3: {}, fk4: {}, exec TIME: {} ms.", this.getClass(), EIN, compName, area, group, fk1, fk2, fk3, fk4, p.executeTime());
+			log.trace("END: {}.doConfirm(), EIN: {}, compName: {}, area: {}, group: {}, fk1: {}, fk2: {}, fk3: {}, fk4: {}, ck1: {}, ck2: {}, ck3: {}, ck4: {}, exec TIME: {} ms.", this.getClass(), EIN, compName, area, group, idxApp1, idxApp2, idxApp3, idxApp4, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4, p.executeTime());
 		}
 		catch(TBoxException e) {
 			view.addObject(Constant.ACTION_RESULT, "0");

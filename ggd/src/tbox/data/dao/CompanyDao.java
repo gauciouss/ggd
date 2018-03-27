@@ -18,18 +18,18 @@ public class CompanyDao extends HibernateDao<Company, String> {
 	private final static Logger log = LoggerFactory.getLogger(CompanyDao.class);
 	
 	
-	private static final String SQL_UPDATE_COMP_INFO = 
-			"update company set "
-			+ " name = ?, "
-			+ " area_id = ?, "
-			+ " logo_url = ?, "
-			+ " background_url = ?, "
-			+ " fast_key1 = ?, "
-			+ " fast_key2 = ?, "
-			+ " fast_key3 = ?, "
-			+ " fast_key4 = ?, "
-			+ " group_id = ?"
-			+ " where EIN = ?";
+//	private static final String SQL_UPDATE_COMP_INFO = 
+//			"update company set "
+//			+ " name = ?, "
+//			+ " area_id = ?, "
+//			+ " logo_url = ?, "
+//			+ " background_url = ?, "
+//			+ " fast_key1 = ?, "
+//			+ " fast_key2 = ?, "
+//			+ " fast_key3 = ?, "
+//			+ " fast_key4 = ?, "
+//			+ " group_id = ?"
+//			+ " where EIN = ?";
 	
 	private static final String SQL_FIND_EIN_BY_ACCOUNT = 
 			"select distinct c.EIN " + 
@@ -45,22 +45,69 @@ public class CompanyDao extends HibernateDao<Company, String> {
 			"    inner join adm_group n on c.group_id = n.group_id";
 	
 	
-	private static final String SQL_ADD_NEW_COMPANY =
-			"insert into company(EIN, name, area_id, logo_url, background_url, fast_key1, fast_key2, fast_key3, fast_key4, group_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//	private static final String SQL_ADD_NEW_COMPANY =
+//			"insert into company(EIN, name, area_id, logo_url, background_url, fast_key1, fast_key2, fast_key3, fast_key4, group_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
-	public void save(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) {
+//	public void save(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) {
+//		Profiler p = new Profiler();
+//		log.trace("START: {}.save(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
+//		super.executeUpateQuery(SQL_ADD_NEW_COMPANY, EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
+//		log.info("END: {}.save(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId, p.executeTime());
+//	}
+//	
+//	
+//	public void update(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) {
+//		Profiler p = new Profiler();
+//		log.trace("START: {}.update(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
+//		super.executeUpateQuery(SQL_UPDATE_COMP_INFO, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId, EIN);
+//		log.info("END: {}.update(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId, p.executeTime());
+//	}
+	
+	
+	
+	private static final String SQL_ADD_NEW_COMP =
+			"insert into company (EIN, name, area_id, logo_url, background_url, group_id) values (?, ?, ?, ?, ?, ?)";
+	
+	private static final String SQL_ADD_FAST_APP =
+			"insert into fast_app (type, app_id, EIN, sort) values (?, ?, ?, ?)";
+	
+	private static final String SQL_DELETE_FAST_APP =
+			"delete from fast_app where type = ? and EIN = ?";
+	
+
+	private static final String SQL_UPDATE_COMP_INFO =
+			"update company set name = ?, area_id = ?, logo_url = ?, background_url = ?, group_id = ? where EIN = ?";
+	
+	public void update(String EIN, String name, String areaId, String logo, String bg, String grpId) {
 		Profiler p = new Profiler();
-		log.trace("START: {}.save(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
-		super.executeUpateQuery(SQL_ADD_NEW_COMPANY, EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
-		log.info("END: {}.save(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId, p.executeTime());
+		log.trace("START: {}.update(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, grpId);
+		super.executeUpateQuery(SQL_UPDATE_COMP_INFO, name, areaId, logo, bg, grpId, EIN);
+		log.info("END: {}.update(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, grpId, p.executeTime());
 	}
 	
-	
-	public void update(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) {
+	public void saveFastApp(int type, String EIN, String...appIds) {
 		Profiler p = new Profiler();
-		log.trace("START: {}.update(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
-		super.executeUpateQuery(SQL_UPDATE_COMP_INFO, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId, EIN);
-		log.info("END: {}.update(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId, p.executeTime());
+		log.trace("START: {}.saveFastApp(), type: {}, EIN: {}, appIds: {}", this.getClass(), type, EIN, appIds);
+		int i = 1;
+		for(String appId : appIds) {
+			super.executeUpateQuery(SQL_ADD_FAST_APP, type, appId, EIN, i);
+			i++;
+		}
+		log.info("END: {}.saveFastApp(), type: {}, EIN: {}, appIds: {}, exec TIME: {} ms.", this.getClass(), type, EIN, appIds, p.executeTime());
+	}
+	
+	public void deleteFastApps(int type, String EIN) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.deleteFastApps(), type: {}, EIN: {}", this.getClass(), type, EIN);
+		super.executeUpateQuery(SQL_DELETE_FAST_APP, type, EIN);
+		log.info("END: {}.deleteFastApps(), type: {}, EIN: {}, exec TIME: {} ms.", this.getClass(), type, EIN, p.executeTime());
+	}
+	
+	public void save(String EIN, String name, String areaId, String logo, String bg, String grpId) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.save(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, grpId);
+		super.executeUpateQuery(SQL_ADD_NEW_COMP, EIN, name, areaId, logo, bg, grpId);
+		log.trace("START: {}.save(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, grpId, p.executeTime());
 	}
 	
 	public String getEIN(String account) {
