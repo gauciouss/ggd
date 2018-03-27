@@ -93,6 +93,7 @@ public class IndexInfoAdapter implements Serializable {
 		private String version;
 		private long publishTime;
 		private String pkgName;
+		private String iconPath;
 
 		public App(AppEntity entity, String physicalPath) {
 			this.appId = entity.getAppId();
@@ -103,8 +104,13 @@ public class IndexInfoAdapter implements Serializable {
 			this.version = entity.getVersion();
 			this.publishTime = entity.getPublishTime().getTime();
 			this.pkgName = entity.getPkgName();
+			this.iconPath = physicalPath + entity.getIconPath();
 		}
-
+		
+		public String getIconPath() {
+			return iconPath;
+		}
+		
 		/**
 		 * @return the appId
 		 */
@@ -161,9 +167,7 @@ public class IndexInfoAdapter implements Serializable {
 			return pkgName;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
+		/* (non-Javadoc)
 		 * @see java.lang.Object#toString()
 		 */
 		@Override
@@ -185,6 +189,8 @@ public class IndexInfoAdapter implements Serializable {
 			builder.append(publishTime);
 			builder.append(", pkgName=");
 			builder.append(pkgName);
+			builder.append(", iconPath=");
+			builder.append(iconPath);
 			builder.append("]");
 			return builder.toString();
 		}
