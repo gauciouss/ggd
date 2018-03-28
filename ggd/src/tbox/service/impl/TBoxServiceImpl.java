@@ -842,7 +842,9 @@ public class TBoxServiceImpl implements TBoxService {
 	public MachineBox findMachine(String sn, String mac, String wifi) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.findMachine(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
-		List<MachineBox> list = machineDao.findBy(sn, mac, wifi);
+		//List<MachineBox> list = machineDao.findBy(sn, mac, wifi);
+		//改為只用機器序號作為驗證
+		List<MachineBox> list = machineDao.findBy(sn);
 		log.debug("sn: {}, mac: {}, wifi: {}, machine size: {}", sn, mac, wifi, list.size());
 		log.info("END: {}.findMachine(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
 		if(Util.isEmpty(list))

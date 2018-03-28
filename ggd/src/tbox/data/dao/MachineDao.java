@@ -31,6 +31,10 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 			+ "   and m.ethernetMAC = ? "
 			+ "   and m.wifiMAC = ?";
 	
+	private static final String HQL_FIND_BY_SN =
+			"from MachineBox m "
+			+ " where m.machineSN = ? ";		
+	
 	private static final String SQL_ACTIVE_MACHINE_BOX = 
 			"update machine_box set isEnabled = true, start_date = ?, authorized_end_date = ? where machine_sn = ? and ethernet_mac = ? and wifi_mac = ?";
 	
@@ -95,6 +99,15 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 		log.trace("START: {}.findBy(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
 		List<MachineBox> list = (List<MachineBox>) super.findByHql(HQL_FIND_BY_SN_MAC_WIFI, sn, mac, wifi);
 		log.info("END: {}.findBy(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
+		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MachineBox> findBy(String sn) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.findBy(), sn: {}", this.getClass(), sn);
+		List<MachineBox> list = (List<MachineBox>) super.findByHql(HQL_FIND_BY_SN, sn);
+		log.info("END: {}.findBy(), sn: {}, exec TIME: {} ms.", this.getClass(), sn, p.executeTime());
 		return list;
 	}
 	
