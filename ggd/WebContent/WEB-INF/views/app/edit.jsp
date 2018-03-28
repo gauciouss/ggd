@@ -101,7 +101,8 @@
 								</textarea>
 							</div>
 							<div class="col-md-6">
-								<label for="hdpi">hdpi</label>
+								<label for="hdpi">圖檔</label>
+								<input type="file" style="display: none" id="imgFile" name="imgFile"/>
 								<img id="hdpi" class="form-control"/>
 							</div>
 						</div>
@@ -163,7 +164,20 @@
 						if(p.indexOf("-hdpi-") > 0) {
 							$("#hdpi").attr("src", p);
 						}
+						else if(p.indexOf("-mdpi-") > 0) {
+							$("#hdpi").attr("src", p);
+						}
+						else if(p.indexOf("-xhdpi-") > 0) {
+							$("#hdpi").attr("src", p);
+						}
+						else if(p.indexOf("-xxhdpi-") > 0) {
+							$("#hdpi").attr("src", p);
+						}
+						else {
+							$("#hdpi").attr("src", p);
+						}
 					});
+					
 					$("#hdpi").trigger("refresh");
 				}
 				else {

@@ -23,6 +23,8 @@
 		<description>這裡的設定都是跟系統參數有關的資訊</description>
 		<entry key="MAIN_PATH_HOST" value-ref="MAIN_PATH"/>
 		<entry key="CWB_AUTH_KEY" value-ref = "CWB_AUTH_KEY"/>
+		<entry key="FILE_SERVER_PATH" value-ref="FILE_SERVER_PATH"/>
+		<entry key="FILE_PHYSICAL_PATH" value-ref="FILE_PHYSICAL_PATH"/>
 	</util:map>
 	
 

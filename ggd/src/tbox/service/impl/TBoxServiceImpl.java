@@ -39,6 +39,7 @@ import tbox.data.dao.KVKindDao;
 import tbox.data.dao.KVQuery;
 import tbox.data.dao.MachineDao;
 import tbox.data.dao.MachineQuery;
+import tbox.data.dao.OSVersionDao;
 import tbox.data.vo.App;
 import tbox.data.vo.AppClz;
 import tbox.data.vo.AppEntity;
@@ -52,6 +53,7 @@ import tbox.data.vo.KVEntity;
 import tbox.data.vo.KVKind;
 import tbox.data.vo.MachineBox;
 import tbox.data.vo.MachineEntity;
+import tbox.data.vo.OSVersion;
 import tbox.proxy.cwb.gov.tw.OpendataAPI;
 import tbox.proxy.cwb.gov.tw.OpendataAPI.Entity;
 import tbox.service.TBoxService;
@@ -119,7 +121,70 @@ public class TBoxServiceImpl implements TBoxService {
 	@Qualifier("FastAppDao")
 	private FastAppDao fastAppDao;
 	
+	@Autowired
+	@Qualifier("OSVersionDao")
+	private OSVersionDao osvDao;
 	
+	
+	
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#getOSVerion(int)
+	 */
+	@Override
+	public OSVersion getOSVerion(int serialNo) throws TBoxException {
+		return osvDao.findById(serialNo);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#getNewestOSVersion()
+	 */
+	@Override
+	public OSVersion getNewestOSVersion() throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getNewestOSVersion().", this.getClass());
+		OSVersion version = osvDao.findLastVersion();
+		log.info("END: {}.getNewestOSVersion(), exec TIME: {} ms.", this.getClass(), p.executeTime());
+		return version;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#updateOSVersion(tbox.data.vo.OSVersion)
+	 */
+	@Override
+	public void updateOSVersion(OSVersion version) throws TBoxException {
+		osvDao.update(version);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#deleteOSVersion(int)
+	 */
+	@Override
+	public void deleteOSVersion(int serialNo) throws TBoxException {
+		osvDao.deleteVersion(serialNo);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#saveNewVersion(tbox.data.vo.OSVersion)
+	 */
+	@Override
+	public void saveNewVersion(OSVersion version) throws TBoxException {
+		osvDao.save(version);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#findAllVersion()
+	 */
+	@Override
+	public List<OSVersion> findAllVersion() throws TBoxException {
+		return osvDao.findAll();
+	}
+
+
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#findControlPanelFastApp()
 	 */
@@ -164,16 +229,50 @@ public class TBoxServiceImpl implements TBoxService {
 	}
 
 
+	
+	private static final String[] ICON_PATH = {"/res/mipmap-hdpi-v4/ic_launcher.png", "/res/mipmap-mdpi-v4/ic_launcher.png", "/res/mipmap-xhdpi-v4/ic_launcher.png", "/res/mipmap-xxhdpi-v4/ic_launcher.png"};
+	
 	@Override
 	public void saveOrUpdateAppInfo(String appId, int clzId, String appName, String appEngName, String version, String pkgName, String appDesc) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.saveOrUpdateAppInfo(), appId: {}, clzId: {}, appName: {}, appEngName: {}, version: {}, pkgName: {}, appDesc: {}", this.getClass(), appId, clzId, appName, appEngName, version, pkgName , appDesc);
 		String path = "/app/" + appId;
-		appQuery.updateAppInfo(appId, appName, appEngName, clzId, path + "/res/mipmap-hdpi-v4/ic_launcher.png", appDesc, pkgName);
+		
+		String iconDapth = Constant.EMPTY;
+		for(String iPath : ICON_PATH) {
+			String tp = physicalPath + path + "/temp/" + iPath;
+			log.debug("icon path: {}", tp);
+			if(new File(tp).exists()) {
+				iconDapth = path + iPath;
+				break;
+			}
+		}
+		
+		if(Util.isEmpty(iconDapth)) {
+			File res = new File(physicalPath + path + "/temp/res/");
+			File[] list = res.listFiles();
+			for(File obj : list) {
+				if(obj.isDirectory() && obj.getName().indexOf("dpi-") >= 0) {
+					File[] dirSub = obj.listFiles();
+					for(File pic : dirSub) {
+						if(pic.getName().indexOf(".png") >= 0) {
+							iconDapth = path + "/res/" + obj.getName() + "/" + pic.getName();
+							break;
+						}
+					}
+					break;					
+				}
+			}
+		}
+		
+		log.debug("iconDapth: {}", iconDapth);		
+		
+		appQuery.updateAppInfo(appId, appName, appEngName, clzId, iconDapth, appDesc, pkgName);
 		
 		AppVersion verEntity = appQuery.getVersion(appId, version);
 		if(verEntity == null)
 			appQuery.saveAppVersion(appId, version, new Timestamp(System.currentTimeMillis()), path + "/" + appName + ".apk");
+		
 		String tempPath = physicalPath + "/app/" + appId + "/temp/";
 		String dPath = physicalPath + "/app/" + appId + "/";
 		try {
@@ -266,9 +365,6 @@ public class TBoxServiceImpl implements TBoxService {
 
 
 
-
-
-
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#writeApk(org.apache.tomcat.util.http.fileupload.FileItem, java.lang.String, java.lang.String)
 	 */
@@ -302,34 +398,57 @@ public class TBoxServiceImpl implements TBoxService {
 			String version = meta.getVersionName();
 			log.debug("pkg name: {}, version: {}", pkgName, version);
 			
-			if(appQuery.isAppExistByPkgName(pkgName, version)) {
-				apkFile.close();
-				throw new TBoxException(TBoxCodeMsg.EX_008);
-			}
-			else {
-				List<Icon> icons = apkFile.getIconFiles();
-				List<String> list = new ArrayList<String>();
-				for(Icon icon : icons) {
-		        		String iconPath = icon.getPath();
-		        		if(!iconPath.contains(".png"))
-		        			continue;
-		        		byte[] bs = icon.getData();
-		        		File f = new File(path + iconPath);
-		        		if(!f.getParentFile().exists()) {
-		        			f.getParentFile().mkdirs();
-		        		}
-		    			FileOutputStream fos = new FileOutputStream(path + iconPath);
-		    			fos.write(bs);
-		    			fos.flush();
-		    			fos.close();
-		    			list.add(iconPath);
-		        	}
-				apkFile.close();
-				entity = new ApkInfoEntity(meta);
-				entity.setIconPath(list);
-				log.debug("ApkInfoEntity: {}", entity);
-				return entity;
-			}
+			List<Icon> icons = apkFile.getIconFiles();
+			List<String> list = new ArrayList<String>();
+			for(Icon icon : icons) {
+	        		String iconPath = icon.getPath();
+	        		if(!iconPath.contains(".png"))
+	        			continue;
+	        		byte[] bs = icon.getData();
+	        		File f = new File(path + iconPath);
+	        		if(!f.getParentFile().exists()) {
+	        			f.getParentFile().mkdirs();
+	        		}
+	    			FileOutputStream fos = new FileOutputStream(path + iconPath);
+	    			fos.write(bs);
+	    			fos.flush();
+	    			fos.close();
+	    			list.add(iconPath);
+	        	}
+			apkFile.close();
+			entity = new ApkInfoEntity(meta);
+			entity.setIconPath(list);
+			log.debug("ApkInfoEntity: {}", entity);
+			return entity;
+			
+//			if(appQuery.isAppExistByPkgName(pkgName, version)) {
+//				apkFile.close();
+//				throw new TBoxException(TBoxCodeMsg.EX_008);
+//			}
+//			else {
+//				List<Icon> icons = apkFile.getIconFiles();
+//				List<String> list = new ArrayList<String>();
+//				for(Icon icon : icons) {
+//		        		String iconPath = icon.getPath();
+//		        		if(!iconPath.contains(".png"))
+//		        			continue;
+//		        		byte[] bs = icon.getData();
+//		        		File f = new File(path + iconPath);
+//		        		if(!f.getParentFile().exists()) {
+//		        			f.getParentFile().mkdirs();
+//		        		}
+//		    			FileOutputStream fos = new FileOutputStream(path + iconPath);
+//		    			fos.write(bs);
+//		    			fos.flush();
+//		    			fos.close();
+//		    			list.add(iconPath);
+//		        	}
+//				apkFile.close();
+//				entity = new ApkInfoEntity(meta);
+//				entity.setIconPath(list);
+//				log.debug("ApkInfoEntity: {}", entity);
+//				return entity;
+//			}
 		} 
 		catch(TBoxException e) {
 			throw e;

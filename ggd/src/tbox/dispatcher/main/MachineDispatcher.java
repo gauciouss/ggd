@@ -120,7 +120,7 @@ public class MachineDispatcher implements Dispatcher {
 	}
 
 	private void doConfirm(ModelAndView view, HttpServletRequest request) {
-		//TODO
+		//TODO 
 	}
 	
 	private void doEdit(ModelAndView view, HttpServletRequest request) {

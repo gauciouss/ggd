@@ -20,11 +20,56 @@ import tbox.data.vo.KVEntity;
 import tbox.data.vo.KVKind;
 import tbox.data.vo.MachineBox;
 import tbox.data.vo.MachineEntity;
+import tbox.data.vo.OSVersion;
 import tbox.service.entity.ApkInfoEntity;
 
 @Transactional
 public interface TBoxService {
 	
+	
+	/**
+	 * 取得 os version
+	 * @param serialNo
+	 * @return
+	 * @throws TBoxException
+	 */
+	public OSVersion getOSVerion(int serialNo) throws TBoxException;
+	
+	
+	/**
+	 * 取得最新版本的 os version
+	 * @return
+	 * @throws TBoxException
+	 */
+	public OSVersion getNewestOSVersion() throws TBoxException;
+	
+	/**
+	 * 更新os version版本資訊
+	 * @param version
+	 * @throws TBoxException
+	 */
+	public void updateOSVersion(OSVersion version) throws TBoxException;	
+	
+	/**
+	 * 刪除os version版本
+	 * @param serialNo
+	 * @throws TBoxException
+	 */
+	public void deleteOSVersion(int serialNo) throws TBoxException;
+	
+	/**
+	 * 新增OS version
+	 * @param version
+	 * @throws TBoxException
+	 */
+	public void saveNewVersion(OSVersion version) throws TBoxException;	
+	
+	/**
+	 * os version列表
+	 * @return
+	 * @throws TBoxException
+	 */
+	public List<OSVersion> findAllVersion() throws TBoxException;	
 	
 	/**
 	 * 查詢快捷APP

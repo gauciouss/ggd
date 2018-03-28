@@ -24,6 +24,7 @@ import ggd.core.dispatcher.Dispatcher;
 import tbox.TBoxException;
 import tbox.core.TBoxCodeMsg;
 import tbox.dispatcher.action.service.ms.command.UploadApkCommand;
+import tbox.dispatcher.action.service.ms.command.UploadOSCommand;
 
 @Component("service.admin")
 public class AdminActionDispatcher implements Dispatcher {
@@ -33,6 +34,10 @@ public class AdminActionDispatcher implements Dispatcher {
 	@Autowired
 	@Qualifier("UploadApkCommand")
 	private UploadApkCommand uploadApkCmd;
+	
+	@Autowired
+	@Qualifier("UploadOSCommand")
+	private UploadOSCommand uploadOSCmd;
 
 	/* (non-Javadoc)
 	 * @see ggd.core.dispatcher.Dispatcher#handler(org.springframework.web.servlet.ModelAndView, javax.servlet.http.HttpServletRequest)
@@ -48,6 +53,9 @@ public class AdminActionDispatcher implements Dispatcher {
 			switch(action) {
 				case "uploadApk":
 					uploadApkCmd.execute(view, multiparts);
+					break;
+				case "uploadOS":
+					uploadOSCmd.execute(view, multiparts);
 					break;
 			}
 		}
