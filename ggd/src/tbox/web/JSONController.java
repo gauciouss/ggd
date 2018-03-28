@@ -20,16 +20,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 import baytony.util.Profiler;
 import baytony.util.StringUtil;
+import baytony.util.Util;
 import ggd.core.common.Constant;
 import ggd.core.controller.CommonController;
 import ggd.core.dispatcher.Dispatcher;
 import ggd.core.entity.ServiceResponse;
 import ggd.core.util.WebUtil;
 import tbox.TBoxException;
+import tbox.core.TBoxConstant;
 import tbox.core.TBoxData;
 import tbox.core.TBoxDataImpl;
 import tbox.core.TBoxInfo;
 import tbox.core.TBoxServieResponseHeader;
+import tbox.data.vo.OSVersion;
 import tbox.service.TBoxService;
 
 /**
@@ -101,7 +104,12 @@ public class JSONController extends CommonController{
 			TBoxInfo info = data.getTBoxInfo();
 			header.setSn(info.getMachineSN());
 			header.setMac(info.getMAC());
-			header.setWife_mac(info.getWIFIMAC());			
+			header.setWife_mac(info.getWIFIMAC());
+			if(Util.isEmpty(TBoxConstant.OS_VERSION)) {
+				OSVersion osBean = service.getNewestOSVersion();
+				TBoxConstant.OS_VERSION = osBean == null ? "" : osBean.getVersion();
+			} 
+			header.setOsVersion(TBoxConstant.OS_VERSION);
 			String beanName = String.format(BEAN_ENTITY, category, command);
 			Dispatcher d = context.getBean(beanName, Dispatcher.class);
 			if(d != null){

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import baytony.util.Profiler;
+import baytony.util.Util;
 import ggd.core.db.HibernateDao;
 import tbox.data.vo.OSVersion;
 
@@ -29,8 +30,8 @@ public class OSVersionDao extends HibernateDao<OSVersion, Integer> {
 	public OSVersion findLastVersion() {
 		Profiler p = new Profiler();
 		log.trace("START: {}.findLastVersion().");
-		List<OSVersion> list = this.findAll();
-		OSVersion version = list.get(0);
+		List<OSVersion> list = this.findAll();		
+		OSVersion version = Util.isEmpty(list) ? null : list.get(0);
 		log.debug("last version: {}", version);
 		log.info("END: {}.findLastVersion(), exec TIME: {} ms.", this.getClass(), p.executeTime());
 		return version;
