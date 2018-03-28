@@ -15,4 +15,6 @@ public class TBoxConstant {
 	public static final String BODY = "body";
 	
 	public static final String RES_TIME_FORMAT = "yyyyMMdd HHmmss";
+	
+	public static String OS_VERSION = "";
 }

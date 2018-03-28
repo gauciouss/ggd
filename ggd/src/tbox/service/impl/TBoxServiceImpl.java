@@ -27,6 +27,7 @@ import net.dongliu.apk.parser.bean.ApkMeta;
 import net.dongliu.apk.parser.bean.Icon;
 import tbox.TBoxException;
 import tbox.core.TBoxCodeMsg;
+import tbox.core.TBoxConstant;
 import tbox.data.dao.AppClzDao;
 import tbox.data.dao.AppDao;
 import tbox.data.dao.AppQuery;
@@ -155,6 +156,7 @@ public class TBoxServiceImpl implements TBoxService {
 	@Override
 	public void updateOSVersion(OSVersion version) throws TBoxException {
 		this.moveOSFile();
+		TBoxConstant.OS_VERSION = Constant.EMPTY;
 		osvDao.update(version);
 	}
 
@@ -164,6 +166,7 @@ public class TBoxServiceImpl implements TBoxService {
 	 */
 	@Override
 	public void deleteOSVersion(int serialNo) throws TBoxException {
+		TBoxConstant.OS_VERSION = Constant.EMPTY;
 		osvDao.deleteVersion(serialNo);
 	}
 
@@ -174,6 +177,7 @@ public class TBoxServiceImpl implements TBoxService {
 	@Override
 	public void saveNewVersion(OSVersion version) throws TBoxException {
 		this.moveOSFile();
+		TBoxConstant.OS_VERSION = Constant.EMPTY;
 		osvDao.save(version);
 	}
 	

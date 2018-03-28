@@ -11,6 +11,9 @@ public class TBoxServieResponseHeader extends Header {
 	private String mac = Constant.EMPTY;
 	private String wife_mac = Constant.EMPTY;
 	private String authorizedEnd = Constant.EMPTY;
+	private String osVersion = Constant.EMPTY;
+	
+	
 	/**
 	 * @return the sn
 	 */
@@ -58,6 +61,14 @@ public class TBoxServieResponseHeader extends Header {
 	 */
 	public void setAuthorizedEnd(String authorizedEnd) {
 		this.authorizedEnd = authorizedEnd;
+	}
+	
+	public String getOsVersion() {
+		return osVersion;
+	}
+	
+	public void setOsVersion(String osVersion) {
+		this.osVersion = osVersion;
 	}
 	
 	@Override
