@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 import baytony.util.Profiler;
 import baytony.util.StringUtil;
 import baytony.util.Util;
-import baytony.util.io.FileUtil;
 import ggd.auth.vo.AdmGroup;
 import ggd.core.common.Constant;
 import ggd.core.util.StandardUtil;
@@ -177,7 +177,19 @@ public class TBoxServiceImpl implements TBoxService {
 		String tempPath = physicalPath + "/app/" + appId + "/temp/";
 		String dPath = physicalPath + "/app/" + appId + "/";
 		try {
-			FileUtil.copyAll(new File(tempPath), new File(dPath));
+			File f1 = new File(tempPath);
+			File f2 = new File(dPath);
+			FileUtils.copyDirectory(f1, f2);
+			FileUtils.deleteDirectory(new File(tempPath));
+			
+			File[] fileList = f2.listFiles();
+			for(File file : fileList) {
+				if(file.getName().contains(".apk")) {
+					file.renameTo(new File(dPath + appName + ".apk"));
+					break;
+				}
+			}
+			
 		} catch (IOException e) {
 			log.error(StringUtil.getStackTraceAsString(e));
 			throw new TBoxException(TBoxCodeMsg.EX_007);
@@ -439,11 +451,11 @@ public class TBoxServiceImpl implements TBoxService {
 	@Override
 	public List<AppEntity> findAllApps(AdmGroup grp) throws TBoxException {
 		Profiler p = new Profiler();
-		log.trace("{}.findAllApps(), grp: {}", this.getClass(), grp.getGroupId());
+		log.trace("{}.findAllApps(), grp: {}", this.getClass(), grp);
 		List<AppEntity> list = null;
 		//TODO 要分出每個廠商可管的APP，admin就是全部抓
 		list = appQuery.getAllApps();		
-		log.info("{}.findAllApps(), grp: {}, exec TIME: {} ms.", this.getClass(), grp.getGroupId(), p.executeTime());
+		log.info("{}.findAllApps(), grp: {}, exec TIME: {} ms.", this.getClass(), grp, p.executeTime());
 		return list;
 	}
 
@@ -539,6 +551,28 @@ public class TBoxServiceImpl implements TBoxService {
 		log.info("END: {].getAppsWithLastVersion(), EIN: {}, exec TIME: {} ms.", this.getClass(), EIN, p.executeTime());
 		return list;
 	}
+	
+	
+	
+	
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#findIndexFastApp(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<AppEntity> findIndexFastApp(String sn, String mac, String wifi) throws TBoxException {
+		Profiler p = new Profiler();			
+		log.trace("START: {}.findIndexFastApp(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
+		MachineBox box = this.findMachine(sn, mac, wifi);
+		List<AppEntity> list = new ArrayList<AppEntity>();
+		List<FastApp> fps = this.findIndexFastApp(box.getCompany().getEIN());
+		for(FastApp fp : fps) {
+			list.add(this.getAppInfo(fp.getAppId()));
+		}		
+		log.info("END: {}.findIndexFastApp(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
+		return list;
+	}
+
 
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#getControlPanelAppByEIN(java.lang.String, java.lang.String, java.lang.String)

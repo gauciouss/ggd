@@ -154,9 +154,19 @@ public interface TBoxService {
 	 */
 	public List<AppEntity> findAppsWithLastVersion(String EIN) throws TBoxException;	
 	
-	
 	/**
 	 * 查詢首頁快捷APP資訊
+	 * @param sn
+	 * @param mac
+	 * @param wifi
+	 * @return
+	 * @throws TBoxException
+	 */
+	public List<AppEntity> findIndexFastApp(String sn, String mac, String wifi) throws TBoxException;
+	
+	
+	/**
+	 * 查詢遙控器快捷APP資訊
 	 * @param sn
 	 * @param mac
 	 * @param wifi
@@ -166,7 +176,7 @@ public interface TBoxService {
 	public List<AppEntity> findControlPanelApp(String sn, String mac, String wifi) throws TBoxException;
 	
 	/**
-	 * 查詢首頁快捷APP資訊
+	 * 查詢遙控器快捷APP資訊
 	 * @param EIN
 	 * @return
 	 * @throws TBoxException

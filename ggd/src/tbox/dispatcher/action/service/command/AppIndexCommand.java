@@ -56,7 +56,8 @@ public class AppIndexCommand implements Command {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getControlApp(), box: {}", this.getClass(), box);
 		String ein = service.findEINByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());		
-		List<AppEntity> entities = service.findAppsWithLastVersion(ein);
+		//List<AppEntity> entities = service.findAppsWithLastVersion(ein);
+		List<AppEntity> entities = service.findAllApps(null);
 		List<App> apps = new ArrayList<App>();
 		for(AppEntity entity : entities) {
 			apps.add(new App(entity, fileServerPath));

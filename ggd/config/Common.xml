@@ -23,6 +23,7 @@
 		<description>這裡的設定都是跟系統參數有關的資訊</description>
 		<entry key="MAIN_PATH_HOST" value-ref="MAIN_PATH"/>
 		<entry key="CWB_AUTH_KEY" value-ref = "CWB_AUTH_KEY"/>
+		<entry key="FILE_SERVER_PATH" value-ref="FILE_SERVER_PATH"/>
 	</util:map>
 	
 
@@ -48,7 +49,7 @@
    	
    	<bean id="FILE_PHYSICAL_PATH" class="java.lang.String">
    		<description>檔案存放實體路徑</description>
-   		<constructor-arg value="/root/tomcat/webapps/fileserver"/>
+   		<constructor-arg value="/usr/local/tomcat/apache-tomcat-8.5.20/webapps/fileserver"/>
    	</bean>
    	
    	

@@ -12,6 +12,8 @@ public class IndexInfoAdapter implements Serializable {
 	private static final long serialVersionUID = 3021172280798396302L;
 
 	private List<App> controlPanel;
+	
+	private List<App> idxFastApp;
 
 	private List<Msg> msg;
 
@@ -19,20 +21,15 @@ public class IndexInfoAdapter implements Serializable {
 
 	private Weather weather;
 
-	public IndexInfoAdapter(List<App> controlPanel, List<Msg> msg, KVS kv, Weather weather) {
+	public IndexInfoAdapter(List<App> controlPanel, List<App> idxFastApp, List<Msg> msg, KVS kv, Weather weather) {
 		super();
 		this.controlPanel = controlPanel;
 		this.msg = msg;
 		this.kv = kv;
 		this.weather = weather;
+		this.idxFastApp = idxFastApp;
 	}
 
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 
 	/**
 	 * @return the controlPanel
@@ -40,6 +37,17 @@ public class IndexInfoAdapter implements Serializable {
 	public List<App> getControlPanel() {
 		return controlPanel;
 	}
+	
+	
+
+	/**
+	 * @return the idxFastApp
+	 */
+	public List<App> getIdxFastApp() {
+		return idxFastApp;
+	}
+
+
 
 	/**
 	 * @return the msg
@@ -62,16 +70,16 @@ public class IndexInfoAdapter implements Serializable {
 		return weather;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("IndexInfoEntity [controlPanel=");
+		builder.append("IndexInfoAdapter [controlPanel=");
 		builder.append(controlPanel);
+		builder.append(", idxFastApp=");
+		builder.append(idxFastApp);
 		builder.append(", msg=");
 		builder.append(msg);
 		builder.append(", kv=");

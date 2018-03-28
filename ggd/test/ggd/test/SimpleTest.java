@@ -3,11 +3,15 @@ package ggd.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -23,6 +27,35 @@ import net.dongliu.apk.parser.bean.Icon;
 
 
 public class SimpleTest {
+	
+	@Test
+	public void testDir() {
+		String path = "C:/Users/admin/Desktop/logo";
+		String path2 = "C:/Users/admin/Desktop/logo2";
+		try {
+			
+			//FileUtils.copyDirectory(new File(path), new File(path2));						
+			//File f1 = new File("G:/外包/GGD/fileserver/WebContent/app/APP0000014/YouTube_v13.09.57_apkpure.com.apk");
+			//f1.renameTo(new File("G:/外包/GGD/fileserver/WebContent/app/APP0000014/YouTube.apk"));
+			
+			
+			
+			File f2 = new File("G:\\外包\\GGD\\fileserver\\WebContent\\app\\APP0000008");
+			
+			
+			File[] fileList = f2.listFiles();
+			for(File file : fileList) {
+				if(file.getName().contains(".apk")) {
+					file.renameTo(new File("aaaa" + ".apk"));
+					break;
+				}
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
+	}
 	
 	@Test
 	public void testGetApkInfo() {		

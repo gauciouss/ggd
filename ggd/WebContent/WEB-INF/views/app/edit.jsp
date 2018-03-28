@@ -131,6 +131,7 @@
 <script>
 
 	var kind = <%=app.getClzId() != null ? app.getClzId() : "undefined" %>;
+	var hdpi = "<%=common.getValue("FILE_SERVER_PATH") + "/" + app.getIconPath()%>";
 	
 	
 	var registerUploadBtnEnvent = function() {
@@ -180,10 +181,12 @@
 	var setDefaultValue = function() {
 		var iconPath = "<%=app.getIconPath() == null ? "" : app.getIconPath() %>";
 		if(!ggd.util.isEmpty(iconPath)) {
-			$("#icon-path").attr("src", "/fileserver/app/" + iconPath)
+			iconPath = "<%=common.getValue("FILE_SERVER_PATH")%>" + iconPath;
+			console.log(iconPath);
+			$("#hdpi").attr("src", iconPath);
 		}
 		
-		$("#kind").val(kind);
+		$("#kind").val(kind);		
 	};
 	
 	$(document).ready(function() {		
