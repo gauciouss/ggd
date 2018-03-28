@@ -109,14 +109,14 @@
 					<div class="form-group" id="imgTag">
 						<div class="form-row">
 							<div class="col-md-6">
-								<label for="kv">KV圖檔</label>
+								<label for="kv">圖檔</label>
 								<input type="file" id="kv" class="form-control"/>
 								<img id="kvimg" class="form-control"/>
 								<input type="hidden" name="kvB64" id="kvB64"/>
 							</div>
 							<div class="col-md-6">
-								<label for="msg">KV訊息</label>
-								<input type="text" id="msg" name="msg" class="form-control" value="<%=kv.getMsg()%>"/>
+								<label for="msg">訊息</label>
+								<input type="text" id="msg" name="msg" class="form-control" value="<%=kv.getMsg() == null ? "" : kv.getMsg()%>"/>
 							</div>
 						</div>
 					</div>

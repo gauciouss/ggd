@@ -12,24 +12,27 @@ public class IndexInfoAdapter implements Serializable {
 	private static final long serialVersionUID = 3021172280798396302L;
 
 	private List<App> controlPanel;
-	
+
 	private List<App> idxFastApp;
 
 	private List<Msg> msg;
+
+	private List<Msg> marquee;
 
 	private KVS kv;
 
 	private Weather weather;
 
-	public IndexInfoAdapter(List<App> controlPanel, List<App> idxFastApp, List<Msg> msg, KVS kv, Weather weather) {
+	public IndexInfoAdapter(List<App> controlPanel, List<App> idxFastApp, List<Msg> msg, List<Msg> marquee, KVS kv,
+			Weather weather) {
 		super();
 		this.controlPanel = controlPanel;
 		this.msg = msg;
 		this.kv = kv;
 		this.weather = weather;
 		this.idxFastApp = idxFastApp;
+		this.marquee = marquee;
 	}
-
 
 	/**
 	 * @return the controlPanel
@@ -37,8 +40,13 @@ public class IndexInfoAdapter implements Serializable {
 	public List<App> getControlPanel() {
 		return controlPanel;
 	}
-	
-	
+
+	/**
+	 * @return the marquee
+	 */
+	public List<Msg> getMarquee() {
+		return marquee;
+	}
 
 	/**
 	 * @return the idxFastApp
@@ -46,8 +54,6 @@ public class IndexInfoAdapter implements Serializable {
 	public List<App> getIdxFastApp() {
 		return idxFastApp;
 	}
-
-
 
 	/**
 	 * @return the msg
@@ -82,6 +88,8 @@ public class IndexInfoAdapter implements Serializable {
 		builder.append(idxFastApp);
 		builder.append(", msg=");
 		builder.append(msg);
+		builder.append(", marquee=");
+		builder.append(marquee);
 		builder.append(", kv=");
 		builder.append(kv);
 		builder.append(", weather=");
@@ -104,6 +112,7 @@ public class IndexInfoAdapter implements Serializable {
 		private String iconPath;
 
 		public App(AppEntity entity, String physicalPath) {
+			System.out.println(entity);
 			this.appId = entity.getAppId();
 			this.clzId = String.valueOf(entity.getClzId());
 			this.clzName = entity.getClzName();
@@ -114,11 +123,11 @@ public class IndexInfoAdapter implements Serializable {
 			this.pkgName = entity.getPkgName();
 			this.iconPath = physicalPath + entity.getIconPath();
 		}
-		
+
 		public String getIconPath() {
 			return iconPath;
 		}
-		
+
 		/**
 		 * @return the appId
 		 */
@@ -175,7 +184,9 @@ public class IndexInfoAdapter implements Serializable {
 			return pkgName;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.Object#toString()
 		 */
 		@Override
@@ -419,16 +430,20 @@ public class IndexInfoAdapter implements Serializable {
 		public String getFuture() {
 			return future;
 		}
-		
+
 		public String getIcon() {
-			if(desc.contains("晴")) icon = fileServerPath + "/weather/sunny.png";
-			else if(desc.contains("陰")) icon = fileServerPath + "/weather/cloudy.png";
-			else if(desc.contains("雨")) icon = fileServerPath + "/weather/rain.png";
+			if (desc.contains("晴"))
+				icon = fileServerPath + "/weather/sunny.png";
+			else if (desc.contains("陰"))
+				icon = fileServerPath + "/weather/cloudy.png";
+			else if (desc.contains("雨"))
+				icon = fileServerPath + "/weather/rain.png";
 			return icon;
 		}
-				
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.lang.Object#toString()
 		 */
 		@Override

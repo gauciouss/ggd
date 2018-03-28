@@ -227,7 +227,8 @@ public class AppQuery extends HibernateQuery {
 	public AppEntity getApp(String appId, String ver) {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getApp(), appId: {}, ver: {}", this.getClass(), appId, ver);
-		AppEntity entity = super.findBySql(SQL_APP_INFO, AppEntity.class, appId, ver).get(0);
+		List<AppEntity> list = (List<AppEntity>) super.findBySql(SQL_APP_INFO, AppEntity.class, appId, ver);
+		AppEntity entity = Util.isEmpty(list) ? null : list.get(0);
 		log.debug("entity: {}, appId: {}, ver: {}", entity, appId, ver);
 		log.info("END: {}.getApp(), appId: {}, ver: {}, exec TIME: {} ms.", this.getClass(), appId, ver, p.executeTime());
 		return entity;

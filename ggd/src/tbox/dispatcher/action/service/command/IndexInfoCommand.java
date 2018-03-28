@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import baytony.util.Profiler;
+import baytony.util.Util;
 import ggd.core.common.Constant;
 import tbox.TBoxException;
 import tbox.core.TBoxData;
@@ -56,7 +57,7 @@ public class IndexInfoCommand implements Command {
 		log.trace("START: {}.execute(), tbox: {}", this.getClass(), tbox);
 		TBoxInfo box = tbox.getTBoxInfo();
 		KVS kvs = new KVS(getKV1(box), getKV2(box));
-		IndexInfoAdapter adapter = new IndexInfoAdapter(getControlApp(box), getIdxFastApp(box), getMsg(box), kvs, getWeather(box));
+		IndexInfoAdapter adapter = new IndexInfoAdapter(getControlApp(box), getIdxFastApp(box), getMsg(box), getMarquee(box), kvs, getWeather(box));
 		view.addObject(Constant.JSON_RESPONSE, adapter);
 		log.info("END: {}.execute(), tbox: {}, exec TIME: {}", this.getClass(), tbox, p.executeTime());
 	}
@@ -66,9 +67,13 @@ public class IndexInfoCommand implements Command {
 		log.trace("START: {}.getControlApp(), box: {}", this.getClass(), box);
 		List<AppEntity> entities = service.findIndexFastApp(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());
 		List<App> apps = new ArrayList<App>();
-		for(AppEntity entity : entities) {
-			apps.add(new App(entity, fileServerPath));
+		if(!Util.isEmpty(entities)) {
+			for(AppEntity entity : entities) {
+				if(entity != null)
+					apps.add(new App(entity, fileServerPath));
+			}
 		}
+		
 		log.info("END: {}.getControlApp(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
 		return apps;
 	}
@@ -77,19 +82,35 @@ public class IndexInfoCommand implements Command {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getControlApp(), box: {}", this.getClass(), box);
 		List<AppEntity> entities = service.findControlPanelApp(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());
+		log.debug("AppEntity entities: {}", entities);
 		List<App> apps = new ArrayList<App>();
-		for(AppEntity entity : entities) {
-			apps.add(new App(entity, fileServerPath));
+		if(!Util.isEmpty(entities)) {
+			for(AppEntity entity : entities) {
+				if(entity != null)
+					apps.add(new App(entity, fileServerPath));
+			}	
 		}
 		log.info("END: {}.getControlApp(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
 		return apps;
+	}
+	
+	private List<Msg> getMarquee(TBoxInfo box) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getMsg(), box: {}", this.getClass(), box);
+		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 4);
+		List<Msg> list = new ArrayList<Msg>();
+		for(KVEntity entity : entities) {
+			list.add(new Msg(entity));
+		}
+		log.info("END: {}.getMsg(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
+		return list;
 	}
 	
 	
 	private List<Msg> getMsg(TBoxInfo box) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getMsg(), box: {}", this.getClass(), box);
-		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 4);
+		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 6);
 		List<Msg> list = new ArrayList<Msg>();
 		for(KVEntity entity : entities) {
 			list.add(new Msg(entity));
