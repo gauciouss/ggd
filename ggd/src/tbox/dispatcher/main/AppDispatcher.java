@@ -131,7 +131,6 @@ public class AppDispatcher implements Dispatcher {
 				app = new AppEntity();
 				String nextId = service.getNextAppId();
 				app.setAppId(nextId);
-				//view.setViewName("app/upload");
 			}
 			view.setViewName("app/edit");
 				

@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 import tbox.TBoxException;
 import tbox.core.TBoxData;
 
-@Component("kv.clickcount")
+@Component("app.clickcount")
 public class AppClickCount implements Command {
 
 	/* (non-Javadoc)

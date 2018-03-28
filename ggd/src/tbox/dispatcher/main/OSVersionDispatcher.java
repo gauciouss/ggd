@@ -1,5 +1,7 @@
 package tbox.dispatcher.main;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import baytony.util.Profiler;
-import baytony.util.StringUtil;
 import baytony.util.Util;
+import baytony.util.date.DateUtil;
 import ggd.core.CoreException;
 import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
@@ -66,11 +68,14 @@ public class OSVersionDispatcher implements Dispatcher {
 		String publishTime = request.getParameter("publishTime");
 		String osDesc = request.getParameter("osDesc");
 		log.trace("START: {}.doConfirm(), serialNo: {}, version: {}, publishTime: {}, osDesc: {}", this.getClass(), serialNo, version, publishTime, osDesc);
+		Timestamp ts = DateUtil.changeToTimestamp(new Date(publishTime));
 		if(Util.isEmpty(serialNo)) {
-			//OSVersion bean = new OSVersion(serialNo, version, osDesc, "/os/" + version + "/os.apk", publishTime);
+			OSVersion bean = new OSVersion(version, osDesc, "/os/" + version + "/os.apk", ts);
+			service.saveNewVersion(bean);
 		}
 		else {
-			
+			OSVersion bean = new OSVersion(Integer.parseInt(serialNo), version, osDesc, "/os/" + version + "/os.apk", ts);
+			service.updateOSVersion(bean);
 		}
 		log.info("END: {}.doConfirm(), serialNo: {}, version: {}, publishTime: {}, osDesc: {}, exec TIME: {} ms.", this.getClass(), serialNo, version, publishTime, osDesc, p.executeTime());
 		this.doIndex(view, request);

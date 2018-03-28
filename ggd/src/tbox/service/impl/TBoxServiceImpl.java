@@ -154,6 +154,7 @@ public class TBoxServiceImpl implements TBoxService {
 	 */
 	@Override
 	public void updateOSVersion(OSVersion version) throws TBoxException {
+		this.moveOSFile();
 		osvDao.update(version);
 	}
 
@@ -172,8 +173,32 @@ public class TBoxServiceImpl implements TBoxService {
 	 */
 	@Override
 	public void saveNewVersion(OSVersion version) throws TBoxException {
+		this.moveOSFile();
 		osvDao.save(version);
 	}
+	
+	
+	////////////////////////////////////////////////////////////
+	
+	
+	private void moveOSFile() throws TBoxException {
+		String osTempPath = physicalPath + "/os/temp/";
+		File f1 = new File(osTempPath);
+		if(f1.exists()) {
+			try {
+				FileUtils.copyDirectory(f1, new File(physicalPath + "/os/"));
+				FileUtils.deleteDirectory(f1);
+			}
+			catch(IOException e) {
+				log.error(StringUtil.getStackTraceAsString(e));
+				throw new TBoxException(TBoxCodeMsg.EX_007, e);
+			}
+		}
+	}
+	
+	
+	
+	////////////////////////////////////////////////////////////
 
 
 	/* (non-Javadoc)

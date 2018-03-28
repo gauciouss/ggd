@@ -31,7 +31,7 @@
 <html>
 <head>
 <jsp:include page="/WEB-INF/views/include/header.jsp">
-	<jsp:param value="APP編輯" name="title" />
+	<jsp:param value="OS版本編輯" name="title" />
 	<jsp:param value="<%=common.getValue(Constant.MAIN_PATH_HOST)%>"
 		name="main" />
 </jsp:include>
@@ -48,8 +48,7 @@
 		<div class="card card-register mx-auto mt-5">
 			<div class="card-header">OS版本編輯</div>
 			<div class="card-body">
-				<form name="form" method="post" class="form-control"
-					action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/app">
+				<form name="form" method="post" class="form-control" action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/os">
 					<input type="hidden" name="<%=Constant.ACTION_TYPE%>" id="<%=Constant.ACTION_TYPE%>" value="confirm" />				
 					<input type="hidden" name="serial" id="serial" value="<%=os.getSerialNo() == null ? "" : os.getSerialNo()%>"/>	
 					<div class="form-group">
