@@ -34,9 +34,9 @@ public class AppQuery extends HibernateQuery {
 			"			join app_version ver1 on app.app_id = ver1.app_id      " + 
 			"			group by app.app_id, app.app_name) a  " + 
 			"	inner join app_version ver on (a.app_id = ver.app_id and a.version = ver.version)  " + 
-			"	inner join app_clz clz on a.clz_id = clz.clz_id  " + 
-			"	inner join comp_app_mapping cam on a.app_id = cam.app_id      " + 
-			"where cam.EIN = ?    ";
+			"	inner join app_clz clz on a.clz_id = clz.clz_id  "; 
+			//"	inner join comp_app_mapping cam on a.app_id = cam.app_id      " + 
+			//"where cam.EIN = ?    ";
 	
 	
 	/**
@@ -120,6 +120,10 @@ public class AppQuery extends HibernateQuery {
 			"select * from app_version where app_id = ? and version = ?";
 	
 	
+	public void deleteApp(String serialNo) {
+		//TODO delete app
+	}
+	
 	
 	public AppVersion getVersion(String appId, String version) {
 		Profiler p = new Profiler();
@@ -188,7 +192,6 @@ public class AppQuery extends HibernateQuery {
 		List<String> list = (List<String>) super.findBySql(SQL_MAX_APP_ID);
 		String appId = Constant.EMPTY;
 		if(Util.isEmpty(list)) {
-			//return "APP0000001";
 			appId = "APP0000001";
 		}
 		else {
