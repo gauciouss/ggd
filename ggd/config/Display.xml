@@ -20,7 +20,7 @@
 	
     <util:map id="DISPLAY_MAP" key-type="java.lang.String" value-type="java.lang.String">
     	<description>這裡的設定都是跟顯示說明有關的資訊</description>
-    	<entry key="PAGE_TITLE" value="GGD"/>
+    	<entry key="PAGE_TITLE" value="T-Box管理介面"/>
     </util:map>
     
 </beans>
