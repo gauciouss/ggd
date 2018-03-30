@@ -45,7 +45,18 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 	
 	
 	private static final String SQL_ADD_NEW_MACHINE = 
-			"insert into machine_box (machine_sn, wifi_mac, ethernet_mac, area_id, EIN, start_date, authorized_start_date, authorized_end_date) values (?, ?, ?, ?, ?, ?, ?, ?)";
+			"insert into machine_box (machine_sn, wifi_mac, ethernet_mac, area_id, EIN, start_date, authorized_start_date, authorized_end_date, isEnabled) values (?, ?, ?, ?, ?, ?, ?, ?, true)";
+	
+	private static final String SQL_UPDATE_MACHINE_BOX =
+			"update machine_box set isEnabled = true, area_id = ?, EIN = ?, start_date = ? , authorized_start_date = ? , authorized_end_date = ? where machine_sn = ? and ethernet_mac = ? and wifi_mac = ?";
+	
+	public int updateMachineBox(String machineSN, String wifiMac, String mac, int areaId, String EIN, Timestamp start, Timestamp end) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.updateMachineBox(), machineSN: {}, wifiMac: {}, mac: {}, areaId: {}, EIN: {}, start: {}, end: {}", this.getClass(), machineSN, wifiMac, mac, areaId, EIN, start, end);
+		int i = super.executeUpateQuery(SQL_UPDATE_MACHINE_BOX, areaId, EIN, start, start, end, machineSN, mac, wifiMac);
+		log.info("END: {}.updateMachineBox(), machineSN: {}, wifiMac: {}, mac: {}, areaId: {}, EIN: {}, start: {}, end: {}, exec TIME: {} ms.", this.getClass(), machineSN, wifiMac, mac, areaId, EIN, start, end, p.executeTime());
+		return i;
+	}
 	
 	/**
 	 * 新增新的機上盒

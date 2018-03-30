@@ -61,7 +61,7 @@ public class MachineBox implements Serializable {
 	private Timestamp startDate;
 
 	@Column(name = "isEnabled")
-	private boolean isEnabled;
+	private Boolean isEnabled;
 
 	@Column(name = "authorized_start_date")
 	private Timestamp authorizedStartDate;
@@ -74,7 +74,7 @@ public class MachineBox implements Serializable {
 
 	public MachineBox(Integer serialNo, String machineSN, String wifiMAC, String ethernetMAC, Area area,
 			Company company, Timestamp lastLoginTime, String loginIP, String phone, String customerName, String email,
-			Timestamp startDate, boolean isEnabled, Timestamp authorizedStartDate, Timestamp authorizedEndDate) {
+			Timestamp startDate, Boolean isEnabled, Timestamp authorizedStartDate, Timestamp authorizedEndDate) {
 		super();
 		this.serialNo = serialNo;
 		this.machineSN = machineSN;
@@ -276,7 +276,7 @@ public class MachineBox implements Serializable {
 	/**
 	 * @return the isEnabled
 	 */
-	public boolean isEnabled() {
+	public Boolean isEnabled() {
 		return isEnabled;
 	}
 
@@ -284,7 +284,7 @@ public class MachineBox implements Serializable {
 	 * @param isEnabled
 	 *            the isEnabled to set
 	 */
-	public void setEnabled(boolean isEnabled) {
+	public void setEnabled(Boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
 

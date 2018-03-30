@@ -24,7 +24,7 @@ public class MachineQuery extends HibernateQuery {
 		Profiler p = new Profiler();
 		log.trace("START: {}.findAllMachine().", this.getClass());
 		List<MachineEntity> list = super.findBySql(SQL_FIND_ALL_MACHINE, MachineEntity.class);
-		log.info("END: {}.findAllMachine(), exec TIME: {} ms.", this.getClass(), p.executeTime());
+		log.info("END: {}.findAllMachine(), machine size: {}, exec TIME: {} ms.", this.getClass(), list.size(), p.executeTime());
 		return list;
 	}
 }

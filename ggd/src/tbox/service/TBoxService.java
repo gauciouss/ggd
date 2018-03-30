@@ -265,6 +265,22 @@ public interface TBoxService {
 	public long activeMachine(String sn, String mac, String wifi, String ip) throws TBoxException;
 	
 	/**
+	 * 新增機上盒
+	 * @param box
+	 * @return
+	 * @throws TBoxException
+	 */
+	public int saveMachineBox(MachineEntity box) throws TBoxException;	
+	
+	/**
+	 * 更新機上盒
+	 * @param box
+	 * @return
+	 * @throws TBoxException
+	 */
+	public int updateMachineBox(MachineEntity box) throws TBoxException;
+	
+	/**
 	 * 匯入機上盒資料
 	 * @param box
 	 * @return

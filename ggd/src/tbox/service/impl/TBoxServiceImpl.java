@@ -829,6 +829,35 @@ public class TBoxServiceImpl implements TBoxService {
 	}
 
 
+	
+	
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#saveMachineBox(tbox.data.vo.MachineEntity)
+	 */
+	@Override
+	public int saveMachineBox(MachineEntity box) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.saveMachineBox(), box: {}", this.getClass(), box);
+		int count = machineDao.addNewMachine(box.getMachineSN(), box.getWifiMac(), box.getMac(), box.getAreaId(), box.getEIN(), box.getAuthStartDate(), box.getAuthEndDate());;
+		log.info("END: {}.saveMachineBox(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
+		return count;
+	}
+	
+	
+
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#updateMachineBox(tbox.data.vo.MachineEntity)
+	 */
+	@Override
+	public int updateMachineBox(MachineEntity box) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.updateMachineBox(), box: {}", this.getClass(), box);
+		int count = machineDao.updateMachineBox(box.getMachineSN(), box.getWifiMac(), box.getMac(), box.getAreaId(), box.getEIN(), box.getAuthStartDate(), box.getAuthEndDate());
+		log.info("END: {}.updateMachineBox(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
+		return count;
+	}
+
 
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#importMachineBoxData(java.util.List)

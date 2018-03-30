@@ -28,6 +28,7 @@ import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
 import ggd.core.util.JSONUtil;
 import tbox.TBoxException;
+import tbox.data.vo.Area;
 import tbox.data.vo.CompanyEntity;
 import tbox.data.vo.MachineBox;
 import tbox.data.vo.MachineEntity;
@@ -44,6 +45,7 @@ public class MachineDispatcher implements Dispatcher {
 	
 	public static final String IMPORT_COUNT = MachineDispatcher.class + "_COUNT";
 	public static final String ALL_COMPANY = MachineDispatcher.class + "_ALL_COMPANY";
+	public static final String ALL_AREA = MachineDispatcher.class +"_ALL_AREA";
 	
 	
 	@Autowired
@@ -84,7 +86,7 @@ public class MachineDispatcher implements Dispatcher {
 	
 	private void upload(ModelAndView view, HttpServletRequest request) {
 		Profiler p = new Profiler();
-		log.trace("START: {}.upload()");
+		log.trace("START: {}.upload()", this.getClass());
 		String csvData = request.getParameter("csvData");
 		try {
 			JsonNode node = JSONUtil.parser(csvData);
@@ -104,10 +106,9 @@ public class MachineDispatcher implements Dispatcher {
 				list.add(entity);
 			}
 			count = service.importMachineBoxData(list);
-			
-			
 			view.addObject(IMPORT_COUNT, count);
 			view.addObject(Constant.ACTION_RESULT, "1");
+			log.info("END: {}.upload(), exec TIME: {} ms.", this.getClass(), p.executeTime());
 			this.doIndex(view, request);
 		}
 		catch (IOException e) {
@@ -119,41 +120,52 @@ public class MachineDispatcher implements Dispatcher {
 		
 	}
 
-	private void doConfirm(ModelAndView view, HttpServletRequest request) {
-		//TODO 
+	private void doConfirm(ModelAndView view, HttpServletRequest request) throws TBoxException {
+		Profiler p = new Profiler();
+		String serial = request.getParameter("serial");
+		String machineSN = request.getParameter("machineSN");
+		String ethernetMac = request.getParameter("ethernetMac");
+		String wifiMac = request.getParameter("wifiMac");
+		String area = request.getParameter("area");
+		String EIN  = request.getParameter("EIN");
+		String authStart = request.getParameter("authStart");
+		String authEnd = request.getParameter("authEnd");
+		log.trace("START: {}.doConfirm() exec start, machineSN: {}, ethernetMac: {}, wifiMac: {}, area: {}, EIN: {}, authStart: {}, authEnd: {}.", this.getClass(), machineSN, ethernetMac, wifiMac, area, EIN, authStart, authEnd);
+		Timestamp authStartDate = Util.isEmpty(authStart) ? null : new Timestamp(new Date(authStart).getTime());
+		Timestamp authEndDate = Util.isEmpty(authStart) ? null : new Timestamp(new Date(authEnd).getTime());	
+		MachineEntity entity = new MachineEntity(machineSN, ethernetMac, wifiMac, EIN, Integer.parseInt(area), authStartDate, authStartDate, authEndDate);
+		if(Util.isEmpty(serial)) {
+			service.saveMachineBox(entity);
+		}
+		else {
+			service.updateMachineBox(entity);
+		}
+		
+		log.info("END: {}.doConfirm() exec start, machineSN: {}, ethernetMac: {}, wifiMac: {}, area: {}, EIN: {}, authStart: {}, authEnd: {}, exec TIME: {} ms.", this.getClass(), machineSN, ethernetMac, wifiMac, area, EIN, authStart, authEnd, p.executeTime());
+		this.doIndex(view, request);
 	}
 	
-	private void doEdit(ModelAndView view, HttpServletRequest request) {
+	private void doEdit(ModelAndView view, HttpServletRequest request) throws NumberFormatException, TBoxException {
 		Profiler p = new Profiler();		
 		String serialNo = request.getParameter("serialNo"); 
 		log.trace("START: {}.deEdit(), serialNo: {}", this.getClass(), serialNo);
-		try {
-			MachineBox box = Util.isEmpty(serialNo) ? new MachineBox() : service.findMachine(Integer.parseInt(serialNo));
-			view.setViewName("machine/edit");
-			List<CompanyEntity> list = service.findAllComp();
-			view.addObject(ALL_COMPANY, list);
-			view.addObject(Constant.DATA_LIST, box);
-		}
-		catch(TBoxException e) {
-			log.error(StringUtil.getStackTraceAsString(e));
-		}
-		catch(Exception e) {
-			log.error(StringUtil.getStackTraceAsString(e));
-		}
+		MachineBox box = Util.isEmpty(serialNo) ? new MachineBox() : service.findMachine(Integer.parseInt(serialNo));
+		view.setViewName("machine/edit");
+		List<CompanyEntity> list = service.findAllComp();
+		List<Area> areas = service.findAllArea();
+		view.addObject(ALL_COMPANY, list);
+		view.addObject(ALL_AREA, areas);
+		view.addObject(Constant.DATA_LIST, box);
 		log.info("END: {}.doEdit(), serialNo: {}, exec TIME: {} ms.", this.getClass(), serialNo, p.executeTime());
 	}
 	
-	private void doIndex(ModelAndView view, HttpServletRequest request) {
+	private void doIndex(ModelAndView view, HttpServletRequest request) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.doIndex()", this.getClass());
-		try {
-			List<MachineEntity> list = service.findAllMachine();
-			view.addObject(Constant.DATA_LIST, list);
-			view.setViewName("machine/index");
-		}
-		catch(Exception e) {
-			log.error(StringUtil.getStackTraceAsString(e));
-		}
+		List<MachineEntity> list = service.findAllMachine();
+		log.debug("list machine size: {}", list.size());
+		view.addObject(Constant.DATA_LIST, list);
+		view.setViewName("machine/index");
 		log.info("END: {}.doIndex(), exec TIME: {} ms.", this.getClass(), p.executeTime());
 	}
 }
