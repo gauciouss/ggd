@@ -26,6 +26,13 @@ import tbox.service.entity.ApkInfoEntity;
 @Transactional
 public interface TBoxService {
 	
+	/**
+	 * 刪除app
+	 * @param serialNo
+	 * @throws TBoxException
+	 */
+	public void deleteApp(String serialNo) throws TBoxException;	
+	
 	
 	/**
 	 * 取得 os version

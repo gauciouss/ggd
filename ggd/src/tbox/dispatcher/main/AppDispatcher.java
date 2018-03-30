@@ -94,6 +94,11 @@ public class AppDispatcher implements Dispatcher {
 	}
 	
 	private void doCancel(ModelAndView view, HttpServletRequest request) throws TBoxException {
+		Profiler p = new Profiler();
+		String serialNo = request.getParameter("serialNo");
+		log.trace("START: {}.doCancel(), serialNo: {}", this.getClass(), serialNo);
+		service.deleteApp(serialNo);
+		log.info("END: {}.doCancel(), serialNo: {}, exec TIME: {} ms.", this.getClass(), serialNo, p.executeTime());
 		this.doIndex(view, request);
 	}
 	

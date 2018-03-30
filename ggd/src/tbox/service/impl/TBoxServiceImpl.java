@@ -129,6 +129,18 @@ public class TBoxServiceImpl implements TBoxService {
 	
 	
 	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#deleteApp(java.lang.String)
+	 */
+	@Override
+	public void deleteApp(String serialNo) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.deleteApp(), serialNo: {}", this.getClass(), serialNo);
+		appQuery.deleteApp(serialNo);
+		log.info("END: {}.deleteApp(), serialNo: {}, exec TIME: {} ms.", this.getClass(), serialNo, p.executeTime());
+	}
+
+
+	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#getOSVerion(int)
 	 */
 	@Override
