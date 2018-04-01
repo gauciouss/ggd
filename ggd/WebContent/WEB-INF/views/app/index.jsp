@@ -38,6 +38,7 @@
 						<th>序號</th>
 						<th>種類</th>
 						<th>名稱</th>
+						<th>版本</th>
 						<th>發布日期</th>
 					</tr>
 				</thead>
@@ -50,6 +51,7 @@
 						<td><%=app.getAppId() %></td>
 						<td><%=app.getClzName() %></td>
 						<td><%=app.getName() %></td>
+						<td><%=app.getVersion() %></td>
 						<td><%=StandardUtil.time2String(app.getPublishTime(), "yyyy-MM-dd") %></td>
 					</tr>
 				<%		
