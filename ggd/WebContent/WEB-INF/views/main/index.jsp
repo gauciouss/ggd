@@ -15,17 +15,19 @@
 		sb.append("[");
 		int i = 0;
 		for(AdmFunc func : funcs) {
-			if(i != 0) 
-				sb.append(",");
-			if(func.isRoot()) {
-				String p = String.format(TREE_NODE_PARAM, func.getFuncId(), "0", func.getFuncName(), "", func.isRoot());
-				sb.append(p);
+			if(func.isEnabled() && func.isApproved()) {
+				if(i != 0) 
+					sb.append(",");
+				if(func.isRoot()) {
+					String p = String.format(TREE_NODE_PARAM, func.getFuncId(), "0", func.getFuncName(), "", func.isRoot());
+					sb.append(p);
+				}
+				else {
+					String s = String.format(TREE_NODE_PARAM, func.getFuncId(), func.getParent().getFuncId(), func.getFuncName(), func.getUrl(), func.isRoot());
+					sb.append(s);
+				}			
+				i++;
 			}
-			else {
-				String s = String.format(TREE_NODE_PARAM, func.getFuncId(), func.getParent().getFuncId(), func.getFuncName(), func.getUrl(), func.isRoot());
-				sb.append(s);
-			}			
-			i++;
 		}
 		sb.append("]");
 		return sb.toString();
