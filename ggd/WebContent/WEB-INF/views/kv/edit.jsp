@@ -199,8 +199,8 @@
 
 	var setDefaultValue = function() {
 		$("#kind").val(kind);
-		if(kind == 4) {
-			$("#kvimg").hide();
+		if(kind == 4 || kind == 6) {
+			$("#imgTag").hide();
 		}
 		
 		
@@ -211,8 +211,8 @@
 	};
 	
 	var registerKindChangeEvent = function() {
-		$("#kvimg").on("change", function() {
-			if($(this).val() == 4) {
+		$("#kind").on("change", function() {
+			if($(this).val() == 4 || $(this).val() == 6) {
 				$("#imgTag").hide();
 			}
 			else {

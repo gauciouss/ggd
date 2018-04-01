@@ -353,7 +353,7 @@ public class TBoxServiceImpl implements TBoxService {
 		log.trace("START: {}.addKV(), name: {}, kind: {}, clickLink: {}, msg: {}, createUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}", this.getClass(), name, kind, clickLink, msg, createUser, start, end, isEnabled, isApproved, EINs);
 		try {
 			int kvSerial = 0;
-			if(kind != 4) {
+			if(kind != 4 && kind != 6) {
 				String fileName = System.currentTimeMillis() + ".jpg";	
 				StandardUtil.writeBase64ToFile(imgB64, physicalPath + "/kv/", fileName);
 				kvSerial = kvQuery.addNewKV(kind, "kv/" + fileName, clickLink, msg, createUser, name);
@@ -387,7 +387,7 @@ public class TBoxServiceImpl implements TBoxService {
 		Profiler p = new Profiler();
 		log.trace("START: {}.updateKV(), serialNo: {}, kind: {}, name: {}, clickLink: {}, msg: {}, updateUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}", this.getClass(), serialNo, kind, name, clickLink, msg, updateUser, start, end, isEnabled, isApproved, EINs);
 		try {
-			if(kind != 4) {
+			if(kind != 4 && kind != 6) {
 				String fileName = System.currentTimeMillis() + ".jpg";	
 				StandardUtil.writeBase64ToFile(imgB64, physicalPath + "/kv/", fileName);
 				kvQuery.updateKV(serialNo, kind, "kv/" + fileName, clickLink, msg, updateUser, name);
