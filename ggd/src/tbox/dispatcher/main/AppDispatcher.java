@@ -110,7 +110,7 @@ public class AppDispatcher implements Dispatcher {
 		String appEngName = request.getParameter("appEngName");
 		String version = request.getParameter("version");
 		String pkgName = request.getParameter("pkgName");
-		String appDesc = request.getParameter("appDesc");
+		String appDesc = request.getParameter("appDesc").trim();
 		log.trace("START: {}.doConfirm(), serial: {}, kind: {}, appName: {}, appEngName: {}, version: {}, pkgName: {}, appDesc: {}", this.getClass(), serial, kind, appName, appEngName, version, pkgName, appDesc);
 		try {
 			service.saveOrUpdateAppInfo(serial, Integer.parseInt(kind), appName, appEngName, version, pkgName, appDesc);

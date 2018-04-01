@@ -292,23 +292,27 @@ public class TBoxServiceImpl implements TBoxService {
 		if(Util.isEmpty(iconDapth)) {
 			File res = new File(physicalPath + path + "/temp/res/");
 			File[] list = res.listFiles();
-			for(File obj : list) {
-				if(obj.isDirectory() && obj.getName().indexOf("dpi-") >= 0) {
-					File[] dirSub = obj.listFiles();
-					for(File pic : dirSub) {
-						if(pic.getName().indexOf(".png") >= 0) {
-							iconDapth = path + "/res/" + obj.getName() + "/" + pic.getName();
-							break;
+			if(!Util.isEmpty(list)) {
+				for(File obj : list) {
+					if(obj.isDirectory() && obj.getName().indexOf("dpi-") >= 0) {
+						File[] dirSub = obj.listFiles();
+						for(File pic : dirSub) {
+							if(pic.getName().indexOf(".png") >= 0) {
+								iconDapth = path + "/res/" + obj.getName() + "/" + pic.getName();
+								break;
+							}
 						}
+						break;					
 					}
-					break;					
 				}
 			}
 		}
 		
-		log.debug("iconDapth: {}", iconDapth);		
-		
-		appQuery.updateAppInfo(appId, appName, appEngName, clzId, iconDapth, appDesc, pkgName);
+		log.debug("iconDapth: {}", iconDapth);
+		if(!Util.isEmpty(iconDapth))
+			appQuery.updateAppInfo(appId, appName, appEngName, clzId, iconDapth, appDesc, pkgName);
+		else 
+			appQuery.updateAppInfo(appId, appName, appEngName, clzId, appDesc, pkgName);
 		
 		AppVersion verEntity = appQuery.getVersion(appId, version);
 		if(verEntity == null)
@@ -318,19 +322,21 @@ public class TBoxServiceImpl implements TBoxService {
 		String dPath = physicalPath + "/app/" + appId + "/";
 		try {
 			File f1 = new File(tempPath);
-			File f2 = new File(dPath);
-			FileUtils.copyDirectory(f1, f2);
-			FileUtils.deleteDirectory(new File(tempPath));
-			
-			File[] fileList = f2.listFiles();
-			for(File file : fileList) {
-				if(file.getName().contains(".apk")) {
-					file.renameTo(new File(dPath + appName + ".apk"));
-					break;
+			if(f1.exists()) {
+				File f2 = new File(dPath);
+				FileUtils.copyDirectory(f1, f2);
+				FileUtils.deleteDirectory(new File(tempPath));
+				
+				File[] fileList = f2.listFiles();
+				for(File file : fileList) {
+					if(file.getName().contains(".apk")) {
+						file.renameTo(new File(dPath + appName + ".apk"));
+						break;
+					}
 				}
 			}
-			
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			log.error(StringUtil.getStackTraceAsString(e));
 			throw new TBoxException(TBoxCodeMsg.EX_007);
 		}

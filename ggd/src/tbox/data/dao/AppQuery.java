@@ -99,6 +99,9 @@ public class AppQuery extends HibernateQuery {
 	private static final String SQL_UPDATE_APP_INFO = 
 			"update app set app_name = ?, app_eng_name = ?, clz_id = ?, icon_path = ?, app_desc = ?, pkg_name = ? where app_id = ?";
 	
+	private static final String SQL_UPDATE_APP_INFO2 =
+			"update app set app_name = ?, app_eng_name = ?, clz_id = ?, app_desc = ?, pkg_name = ? where app_id = ?";
+	
 	
 	private static final String SQL_ADD_APP_VERSION =
 			"insert into app_version (app_id, version, publish_time, link) values (?, ?, ?, ?)";
@@ -155,6 +158,16 @@ public class AppQuery extends HibernateQuery {
 		log.info("START: {}.updateAppInfo(), appId: {}, appName: {}, appEngName: {}, clzId: {}, iconPath: {}, appDesc: {}, pkgName: {}, exec TIME: {} ms.", this.getClass(), appId, appName, appEngName, clzId, iconPath, appDesc, pkgName, p.executeTime());
 		return result;
 	}
+	
+	public int updateAppInfo(String appId, String appName, String appEngName, int clzId, String appDesc, String pkgName) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.updateAppInfo(), appId: {}, appName: {}, appEngName: {}, clzId: {}, appDesc: {}, pkgName: {}", this.getClass(), appId, appName, appEngName, clzId, appDesc, pkgName);
+		int result = super.executeUpateQuery(SQL_UPDATE_APP_INFO2, appName, appEngName, clzId, appDesc, pkgName, appId);
+		log.debug("update success ? {}", result == 1);		
+		log.info("START: {}.updateAppInfo(), appId: {}, appName: {}, appEngName: {}, clzId: {}, appDesc: {}, pkgName: {}, exec TIME: {} ms.", this.getClass(), appId, appName, appEngName, clzId, appDesc, pkgName, p.executeTime());
+		return result;
+	}
+	
 	
 	public int saveAppVersion(String appId, String version, Timestamp publishTime, String link) {
 		Profiler p = new Profiler();
