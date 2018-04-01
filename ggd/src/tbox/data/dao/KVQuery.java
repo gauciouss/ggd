@@ -63,7 +63,7 @@ public class KVQuery extends HibernateQuery {
 			"delete from kv_comp_mapping where kv_serial_no = ?";
 	
 	private static final String SQL_ADD_KV_PUBLISHER =
-			"insert into kv_comp_mapping (EIN, kv_serial_no, start_date, end_date, isEnabled, isApproved) values (?, ?, ?, ?, ?, ?)";
+			"insert into kv_comp_mapping (EIN, kv_serial_no, start_date, end_date, isEnabled, isApproved) values (?, ?, ?, ?, ?, ?)";	
 	
 	
 	

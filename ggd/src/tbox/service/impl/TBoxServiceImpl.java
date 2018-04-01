@@ -384,10 +384,18 @@ public class TBoxServiceImpl implements TBoxService {
 			if(kind != 4) {
 				String fileName = System.currentTimeMillis() + ".jpg";	
 				StandardUtil.writeBase64ToFile(imgB64, physicalPath + "/kv/", fileName);
-				kvQuery.updateKV(serialNo, kind, "kv/" + fileName, clickLink, msg, updateUser, name);;
+				kvQuery.updateKV(serialNo, kind, "kv/" + fileName, clickLink, msg, updateUser, name);
+				kvQuery.deleteAllKV_Comp(serialNo);
+				for(String EIN : EINs) {
+					kvQuery.addKVPublisher(EIN, serialNo, start, end, isEnabled, isApproved);
+				}
 			}
 			else {
-				kvQuery.updateKV(serialNo, kind, "", clickLink, msg, updateUser, name);;
+				kvQuery.updateKV(serialNo, kind, "", clickLink, msg, updateUser, name);
+				kvQuery.deleteAllKV_Comp(serialNo);
+				for(String EIN : EINs) {
+					kvQuery.addKVPublisher(EIN, serialNo, start, end, isEnabled, isApproved);
+				}
 			}
 		}
 		catch (IOException e) {	
