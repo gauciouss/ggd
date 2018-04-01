@@ -106,6 +106,14 @@
 							<input type="text" id="clickLink" class="form-control" name="clickLink" value="<%=kv.getClickLink() == null ? "" : kv.getClickLink() %>" />
 						</div>
 					</div>
+					
+					<div class="form-group">
+						<div class="form-row">
+							<label for="msg">訊息</label>
+								<textarea id="msg" name="msg" class="form-control" style="height: 250px"><%=kv.getMsg() == null ? "" : kv.getMsg()%></textarea>
+						</div>
+					</div>
+					
 					<div class="form-group" id="imgTag">
 						<div class="form-row">
 							<div class="col-md-6">
@@ -113,17 +121,13 @@
 								<input type="file" id="kv" class="form-control"/>
 								<img id="kvimg" class="form-control"/>
 								<input type="hidden" name="kvB64" id="kvB64"/>
-							</div>
-							<div class="col-md-6">
-								<label for="msg">訊息</label>
-								<input type="text" id="msg" name="msg" class="form-control" value="<%=kv.getMsg() == null ? "" : kv.getMsg()%>"/>
-							</div>
+							</div>							
 						</div>
 					</div>
 					
 					<div class="form-group">
 						<label for="publishComp">發送對象</label>
-						<div class="form-inline">
+						<div class="form-row">
 							<select multiple="multiple" id="publishComp" name="publishComp" class="form-control">
 								
 								<%
