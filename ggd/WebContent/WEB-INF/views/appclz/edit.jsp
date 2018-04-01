@@ -57,7 +57,7 @@
 					</div>
 					<div class="form-group">
 						<div class="form-row">
-							<div class="col-md-6">
+							<div class="col-md-2">
 								<label for="icon">類別圖檔</label>
 								<input type="file" id="icon" class="form-control"/>
 								<img id="iconImg" class="form-control"/>

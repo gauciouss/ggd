@@ -6,4 +6,5 @@
 <link rel="stylesheet" type="text/css" href="${param.main }ggd-js/vendor/font-awesome/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="${param.main }ggd-js/vendor/datatables/dataTables.bootstrap4.css">
 <link rel="stylesheet" type="text/css" href="${param.main }ggd-js/vendor/sb-admin.min.css">
+<link rel="stylesheet" type="text/css" href="${param.main }/css/tbox.css">
 

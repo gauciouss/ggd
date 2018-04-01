@@ -94,18 +94,17 @@
 					</div>
 					<div class="form-group">
 						<div class="form-row">
-							<label for="hdpi">圖檔</label>
-							<input type="file" style="display: none" id="imgFile" name="imgFile"/>
-							<img id="hdpi" class="form-control"/>
+							<div class="col-md-1">
+								<label for="hdpi">圖檔</label>
+								<input type="file" style="display: none" id="imgFile" name="imgFile"/>
+								<img id="hdpi" class="form-control"/>
+							</div>
+							<div class="col-md-11">
+								<label for="appDesc">APP說明</label>
+								<textarea id="appDesc" name="appDesc" class="form-control" style="height: 250px"><%=app.getDesc() == null ? "" : app.getDesc().trim() %></textarea>
+							</div>
 						</div>
 					</div>
-					<div class="form-group">
-						<div class="form-row">
-							<label for="appDesc">APP說明</label>
-							<textarea id="appDesc" name="appDesc" class="form-control"><%=app.getDesc() == null ? "" : app.getDesc().trim() %></textarea>
-						</div>
-					</div>
-					
 					
 					
 					<div class="form-group">
