@@ -33,14 +33,15 @@
 	String compsStr = Util.isEmpty(comps) ? "undefined" : JSONUtil.toJsonString(comps);
 	
 	String startDate = Constant.EMPTY;
-	String endDate = Constant.EMPTY;
-	String boxStr = "undefined";
+	String endDate = Constant.EMPTY;		
+	
 	if(box.getAuthorizedStartDate() != null) {
 		startDate = StandardUtil.time2String(box.getAuthorizedStartDate(), "yyyy/MM/dd");
 	}
 	if(box.getAuthorizedEndDate() != null) {
 		endDate = StandardUtil.time2String(box.getAuthorizedEndDate(), "yyyy/MM/dd");
 	}
+	
 	
 %>
 <!DOCTYPE>
@@ -131,14 +132,15 @@
 
 	var areas = <%=areaStr %>;
 	var comps = <%=compsStr %>;
-	var box = <%=boxStr %>;
+	var areaId = "<%=box.getArea().getAreaId() %>";
+	var compId = "<%=box.getCompany().getEIN() %>";
 
 	
 	var setDefaultValue = function() {
 		var area = $("#area");
 		$.each(areas, function(i, v) {
 			area.append("<option value='" + v.areaId + "'>" + v.areaName + "</option>");
-		});
+		});		
 		
 		
 		var EIN = $("#EIN");
@@ -146,10 +148,9 @@
 			EIN.append("<option value='" + v.ein + "'>" + v.name + "</option>");
 		});
 		
-		if(typeof(box) != "undefined") {
-			area.val(box.area.areaId);
-			EIN.val(box.company.EIN)	
-		}
+		area.val(areaId);
+		EIN.val(compId)	
+		
 		
 	};
 	

@@ -46,6 +46,7 @@
 						<th>網卡序號</th>
 						<th>WIFI網卡序號</th>
 						<th>所屬公司</th>
+						<th>地區</th>
 						<th>是否啟用</th>
 						<th>啟用日期</th>	
 						<th>授權時間</th>			
@@ -61,6 +62,7 @@
 						<td><%=machine.getMac() %></td>
 						<td><%=machine.getWifiMac() %></td>
 						<td><%=machine.getCompanyName() %></td>
+						<td><%=machine.getAreaName() %></td>
 						<td><%=machine.isEnabled() == null || machine.isEnabled() == false ? "未啟用" : "啟用" %></td>
 						<td><%=machine.getStartDate() %></td>
 						<td><%=machine.getAuthStartDate() == null ? "" : machine.getAuthStartDate() %> ~ <%=machine.getAuthEndDate() == null ? "" : machine.getAuthEndDate() %></td>

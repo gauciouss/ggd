@@ -248,12 +248,10 @@ public interface TBoxService {
 	/**
 	 * 判斷是否為合法的機器
 	 * @param sn
-	 * @param mac
-	 * @param wifi
 	 * @return
 	 * @throws TBoxException
 	 */
-	public boolean isLegitimateMachine(String sn, String mac, String wifi) throws TBoxException;	
+	public boolean isLegitimateMachine(String sn) throws TBoxException;	
 	
 	/**
 	 * 啟動機上盒並記錄最後登入時間&IP，若已經啟動機上盒，則只記錄最後登入時間&IP
@@ -291,12 +289,10 @@ public interface TBoxService {
 	/**
 	 * 查詢機上盒資料
 	 * @param sn
-	 * @param mac
-	 * @param wifi
 	 * @return
 	 * @throws TBoxException
 	 */
-	public MachineBox findMachine(String sn, String mac, String wifi) throws TBoxException;
+	public MachineBox findMachine(String sn) throws TBoxException;
 	
 	/**
 	 * 查詢機上盒資料

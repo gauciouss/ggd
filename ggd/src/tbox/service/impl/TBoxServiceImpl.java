@@ -723,7 +723,7 @@ public class TBoxServiceImpl implements TBoxService {
 	public List<AppEntity> findIndexFastApp(String sn, String mac, String wifi) throws TBoxException {
 		Profiler p = new Profiler();			
 		log.trace("START: {}.findIndexFastApp(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
-		MachineBox box = this.findMachine(sn, mac, wifi);
+		MachineBox box = this.findMachine(sn);
 		List<AppEntity> list = new ArrayList<AppEntity>();
 		List<FastApp> fps = this.findIndexFastApp(box.getCompany().getEIN());
 		for(FastApp fp : fps) {
@@ -741,7 +741,7 @@ public class TBoxServiceImpl implements TBoxService {
 	public List<AppEntity> findControlPanelApp(String sn, String mac, String wifi) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getControlPanelApp(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
-		MachineBox box = this.findMachine(sn, mac, wifi);
+		MachineBox box = this.findMachine(sn);
 		List<AppEntity> list = this.findControlPanelApp(box.getCompany().getEIN());
 		log.info("END: {}.getControlPanelApp(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
 		return list;
@@ -796,12 +796,12 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#isLegitimateMachine(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean isLegitimateMachine(String sn, String mac, String wifi) throws TBoxException {
+	public boolean isLegitimateMachine(String sn) throws TBoxException {
 		Profiler p = new Profiler();
-		log.trace("START: {}.isLegitimateMachine(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
-		boolean isLegitimate = machineDao.isLegitimateMachine(sn, mac, wifi);
+		log.trace("START: {}.isLegitimateMachine(), sn: {}", this.getClass(), sn);
+		boolean isLegitimate = machineDao.isLegitimateMachine(sn);
 		log.debug("isLegitimate: {}", isLegitimate);
-		log.info("END: {}.isLegitimateMachine(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
+		log.info("END: {}.isLegitimateMachine(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, p.executeTime());
 		return isLegitimate;
 	}
 
@@ -814,7 +814,7 @@ public class TBoxServiceImpl implements TBoxService {
 	public long activeMachine(String sn, String mac, String wifi, String ip) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.activeMachine(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
-		MachineBox box = this.findMachine(sn, mac, wifi);
+		MachineBox box = this.findMachine(sn);
 		log.debug("is box enabled ? {}", box.isEnabled());
 		if(!box.isEnabled()) {
 			//啟動時間預設以現在時間往後加1年
@@ -880,14 +880,13 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#findBy(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public MachineBox findMachine(String sn, String mac, String wifi) throws TBoxException {
+	public MachineBox findMachine(String sn) throws TBoxException {
 		Profiler p = new Profiler();
-		log.trace("START: {}.findMachine(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
-		//List<MachineBox> list = machineDao.findBy(sn, mac, wifi);
+		log.trace("START: {}.findMachine(), sn: {}", this.getClass(), sn);
 		//改為只用機器序號作為驗證
 		List<MachineBox> list = machineDao.findBy(sn);
-		log.debug("sn: {}, mac: {}, wifi: {}, machine size: {}", sn, mac, wifi, list.size());
-		log.info("END: {}.findMachine(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
+		log.debug("sn: {}, machine size: {}", sn, list.size());
+		log.info("END: {}.findMachine(), sn: {}, exec TIME: {} ms.", this.getClass(), sn, p.executeTime());
 		if(Util.isEmpty(list))
 			throw new TBoxException(TBoxCodeMsg.EX_002);
 		else if(!Util.isEmpty(list) && list.size() > 1) 

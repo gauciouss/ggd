@@ -20,16 +20,16 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 	private static final String SQL_FIND_EIN_BY_MACHINE = 
 			"select EIN "
 			+ " from machine_box m "
-			+ " where m.machine_sn = ? "
-			+ "   and m.ethernet_mac = ? "
-			+ "   and m.wifi_mac = ?";
+			+ " where m.machine_sn = ? ";
+//			+ "   and m.ethernet_mac = ? "
+//			+ "   and m.wifi_mac = ?";
 	
 
 	private static final String HQL_FIND_BY_SN_MAC_WIFI =
 			"from MachineBox m "
-			+ " where m.machineSN = ? "
-			+ "   and m.ethernetMAC = ? "
-			+ "   and m.wifiMAC = ?";
+			+ " where m.machineSN = ? ";
+//			+ "   and m.ethernetMAC = ? "
+//			+ "   and m.wifiMAC = ?";
 	
 	private static final String HQL_FIND_BY_SN =
 			"from MachineBox m "
@@ -39,9 +39,9 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 			"update machine_box set isEnabled = true, start_date = ?, authorized_end_date = ? where machine_sn = ? and ethernet_mac = ? and wifi_mac = ?";
 	
 	private static final String SQL_UPDATE_LAST_LOGIN_INFO = 
-			"update machine_box set last_login_time = ?, login_ip = ? where machine_sn = ? and ethernet_mac = ? and wifi_mac = ?";
+			"update machine_box set last_login_time = ?, login_ip = ? where machine_sn = ?";
 	
-	private static final String SQL_COUNT_MACHINE = "select count(*) from machine_box where machine_sn = ? and ethernet_mac = ? and wifi_mac = ?";
+	private static final String SQL_COUNT_MACHINE = "select count(*) from machine_box where machine_sn = ? ";
 	
 	
 	private static final String SQL_ADD_NEW_MACHINE = 
@@ -82,7 +82,7 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 	public List<String> findEINByMachine(String sn, String mac, String wifi) {
 		Profiler p = new Profiler();
 		log.trace("START: {}.activeMachine(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
-		List<String> list = (List<String>) super.findBySql(SQL_FIND_EIN_BY_MACHINE, sn, mac, wifi);
+		List<String> list = (List<String>) super.findBySql(SQL_FIND_EIN_BY_MACHINE, sn);
 		log.info("END: {}.activeMachine(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
 		return list;
 	}
@@ -92,7 +92,7 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 		Profiler p = new Profiler();
 		log.trace("START: {}.activeMachine(), sn: {}, mac: {}, wifi: {}, ip: {}", this.getClass(), sn, mac, wifi, ip);
 		long now = System.currentTimeMillis();
-		super.executeUpateQuery(SQL_UPDATE_LAST_LOGIN_INFO, new Timestamp(now), ip, sn, mac, wifi);
+		super.executeUpateQuery(SQL_UPDATE_LAST_LOGIN_INFO, new Timestamp(now), ip, sn);
 		log.info("END: {}.activeMachine(), sn: {}, mac: {}, wifi: {}, ip: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, ip, p.executeTime());
 		return now;
 	}
@@ -108,7 +108,7 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 	public List<MachineBox> findBy(String sn, String mac, String wifi) {
 		Profiler p = new Profiler();
 		log.trace("START: {}.findBy(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
-		List<MachineBox> list = (List<MachineBox>) super.findByHql(HQL_FIND_BY_SN_MAC_WIFI, sn, mac, wifi);
+		List<MachineBox> list = (List<MachineBox>) super.findByHql(HQL_FIND_BY_SN_MAC_WIFI, sn);
 		log.info("END: {}.findBy(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
 		return list;
 	}
@@ -122,13 +122,13 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 		return list;
 	}
 	
-	public boolean isLegitimateMachine(String sn, String mac, String wifi) {
+	public boolean isLegitimateMachine(String sn) {
 		Profiler p = new Profiler();
-		log.trace("START: {}.findBy(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
-		List<Integer> list = (List<Integer>) super.findBySql(SQL_COUNT_MACHINE, Integer.class, sn, mac, wifi);
+		log.trace("START: {}.findBy(), sn: {}", this.getClass(), sn);
+		List<Integer> list = (List<Integer>) super.findBySql(SQL_COUNT_MACHINE, Integer.class, sn);
 		int count = list.get(0);
-		log.debug("sn: {}, mac: {}, wifi: {}, count: {}", sn, mac, wifi, count);
-		log.info("END: {}.findBy(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
+		log.debug("sn: {}, count: {}", sn, count);
+		log.info("END: {}.findBy(), sn: {}, exec TIME: {} ms.", this.getClass(), sn, p.executeTime());
 		return count == 1;
 	}
 }

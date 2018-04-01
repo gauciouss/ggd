@@ -12,9 +12,10 @@ import tbox.data.vo.MachineEntity;
 public class MachineQuery extends HibernateQuery {
 
 	private static final String SQL_FIND_ALL_MACHINE = 
-			"select m.serial_no, m.machine_sn, m.ethernet_mac, m.wifi_mac, c.name, m.isEnabled, m.start_date, m.authorized_start_date, m.authorized_end_date " + 
+			"select m.serial_no, m.machine_sn, m.ethernet_mac, m.wifi_mac, c.name, m.isEnabled, m.start_date, m.authorized_start_date, m.authorized_end_date, a.area_name, m.area_id, c.EIN " + 
 			"	from machine_box m " + 
-			"    inner join company c on m.EIN = c.EIN";
+			"    inner join company c on m.EIN = c.EIN " +
+			"    inner join area a on a.area_id = m.area_id";
 	
 	/**
 	 * 查詢所有機上盒

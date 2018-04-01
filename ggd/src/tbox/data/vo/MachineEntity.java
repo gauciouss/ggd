@@ -16,40 +16,42 @@ public class MachineEntity implements Serializable {
 	@Id
 	@Column(name = "serial_no")
 	private String serialNo;
-	
+
 	@Column(name = "machine_sn")
 	private String machineSN;
-	
+
 	@Column(name = "ethernet_mac")
 	private String mac;
-	
+
 	@Column(name = "wifi_mac")
 	private String wifiMac;
-	
+
 	@Column(name = "name")
 	private String companyName;
-	
-	@Transient
+
+	@Column(name = "EIN")
 	private String EIN;
-	
-	@Transient
+
+	@Column(name = "area_id")
 	private Integer areaId;
-	
+
+	@Column(name = "area_name")
+	private String areaName;
+
 	@Column(name = "isEnabled")
 	private Boolean isEnabled;
-	
+
 	@Column(name = "start_date")
 	private Timestamp startDate;
-	
+
 	@Column(name = "authorized_start_date")
 	private Timestamp authStartDate;
-	
+
 	@Column(name = "authorized_end_date")
 	private Timestamp authEndDate;
-	
-	public MachineEntity() {}
-	
-	
+
+	public MachineEntity() {
+	}
 
 	public MachineEntity(String machineSN, String mac, String wifiMac, String eIN, Integer areaId, Timestamp startDate,
 			Timestamp authStartDate, Timestamp authEndDate) {
@@ -63,8 +65,36 @@ public class MachineEntity implements Serializable {
 		this.authStartDate = authStartDate;
 		this.authEndDate = authEndDate;
 	}
+	
+	
 
+	/**
+	 * @return the areaName
+	 */
+	public String getAreaName() {
+		return areaName;
+	}
 
+	/**
+	 * @param areaName the areaName to set
+	 */
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
+	}
+
+	/**
+	 * @return the isEnabled
+	 */
+	public Boolean getIsEnabled() {
+		return isEnabled;
+	}
+
+	/**
+	 * @param isEnabled the isEnabled to set
+	 */
+	public void setIsEnabled(Boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
 
 	/**
 	 * @return the serialNo
@@ -74,7 +104,8 @@ public class MachineEntity implements Serializable {
 	}
 
 	/**
-	 * @param serialNo the serialNo to set
+	 * @param serialNo
+	 *            the serialNo to set
 	 */
 	public void setSerialNo(String serialNo) {
 		this.serialNo = serialNo;
@@ -88,7 +119,8 @@ public class MachineEntity implements Serializable {
 	}
 
 	/**
-	 * @param machineSN the machineSN to set
+	 * @param machineSN
+	 *            the machineSN to set
 	 */
 	public void setMachineSN(String machineSN) {
 		this.machineSN = machineSN;
@@ -102,7 +134,8 @@ public class MachineEntity implements Serializable {
 	}
 
 	/**
-	 * @param mac the mac to set
+	 * @param mac
+	 *            the mac to set
 	 */
 	public void setMac(String mac) {
 		this.mac = mac;
@@ -116,7 +149,8 @@ public class MachineEntity implements Serializable {
 	}
 
 	/**
-	 * @param wifiMac the wifiMac to set
+	 * @param wifiMac
+	 *            the wifiMac to set
 	 */
 	public void setWifiMac(String wifiMac) {
 		this.wifiMac = wifiMac;
@@ -130,7 +164,8 @@ public class MachineEntity implements Serializable {
 	}
 
 	/**
-	 * @param companyName the companyName to set
+	 * @param companyName
+	 *            the companyName to set
 	 */
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
@@ -144,7 +179,8 @@ public class MachineEntity implements Serializable {
 	}
 
 	/**
-	 * @param isEnabled the isEnabled to set
+	 * @param isEnabled
+	 *            the isEnabled to set
 	 */
 	public void setEnabled(Boolean isEnabled) {
 		this.isEnabled = isEnabled;
@@ -158,7 +194,8 @@ public class MachineEntity implements Serializable {
 	}
 
 	/**
-	 * @param startDate the startDate to set
+	 * @param startDate
+	 *            the startDate to set
 	 */
 	public void setStartDate(Timestamp startDate) {
 		this.startDate = startDate;
@@ -172,7 +209,8 @@ public class MachineEntity implements Serializable {
 	}
 
 	/**
-	 * @param authStartDate the authStartDate to set
+	 * @param authStartDate
+	 *            the authStartDate to set
 	 */
 	public void setAuthStartDate(Timestamp authStartDate) {
 		this.authStartDate = authStartDate;
@@ -186,24 +224,25 @@ public class MachineEntity implements Serializable {
 	}
 
 	/**
-	 * @param authEndDate the authEndDate to set
+	 * @param authEndDate
+	 *            the authEndDate to set
 	 */
 	public void setAuthEndDate(Timestamp authEndDate) {
 		this.authEndDate = authEndDate;
 	}
-	
+
 	public String getEIN() {
 		return EIN;
 	}
-	
+
 	public void setEIN(String eIN) {
 		EIN = eIN;
 	}
-	
+
 	public Integer getAreaId() {
 		return areaId;
 	}
-	
+
 	public void setAreaId(Integer areaId) {
 		this.areaId = areaId;
 	}
@@ -224,6 +263,12 @@ public class MachineEntity implements Serializable {
 		builder.append(wifiMac);
 		builder.append(", companyName=");
 		builder.append(companyName);
+		builder.append(", EIN=");
+		builder.append(EIN);
+		builder.append(", areaId=");
+		builder.append(areaId);
+		builder.append(", areaName=");
+		builder.append(areaName);
 		builder.append(", isEnabled=");
 		builder.append(isEnabled);
 		builder.append(", startDate=");
@@ -236,7 +281,9 @@ public class MachineEntity implements Serializable {
 		return builder.toString();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -247,7 +294,9 @@ public class MachineEntity implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -266,6 +315,5 @@ public class MachineEntity implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
+
 }
