@@ -51,6 +51,8 @@
 	}
 	
 	String kvB64 = (String) request.getAttribute(KVDispatcher.KV_BASE64);
+	
+	int isSave = kv.getSerialNo() == null ? 1 : 0;
 %>
 <!DOCTYPE>
 <html>
@@ -79,6 +81,7 @@
 					action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/kv">
 					<input type="hidden" name="<%=Constant.ACTION_TYPE%>" id="<%=Constant.ACTION_TYPE%>" value="confirm" />
 					<input type="hidden" name="serial" id="serial" value="<%=kv.getSerialNo() == null ? "" : kv.getSerialNo()%>"/>
+					<input type="hidden" name="isSave" id="isSave" value="<%=isSave %>"/>
 					<div class="form-group">
 						<div class="form-row">
 							<div class="col-md-6">

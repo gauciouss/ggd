@@ -128,6 +128,22 @@ public class TBoxServiceImpl implements TBoxService {
 	
 	
 	
+	
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see tbox.service.TBoxService#deleteKV(int)
+	 */
+	@Override
+	public void deleteKV(int serialNo) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.deleteKV(), serialNo: {}", this.getClass(), serialNo);
+		kvDao.delete(serialNo);
+		log.info("END: {}.deleteApp(), serialNo: {}, exec TIME: {} ms.", this.getClass(), serialNo, p.executeTime());
+	}
+
+
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#deleteApp(java.lang.String)
 	 */

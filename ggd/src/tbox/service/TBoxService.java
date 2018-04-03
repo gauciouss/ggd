@@ -27,6 +27,13 @@ import tbox.service.entity.ApkInfoEntity;
 public interface TBoxService {
 	
 	/**
+	 * 刪除KV
+	 * @param serialNo
+	 * @throws TBoxException
+	 */
+	public void deleteKV(int serialNo) throws TBoxException;	
+	
+	/**
 	 * 刪除app
 	 * @param serialNo
 	 * @throws TBoxException

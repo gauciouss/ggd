@@ -74,12 +74,34 @@ public class KVDispatcher implements Dispatcher {
 			case "confirm":
 				doConfirm(view, request);
 				break;			
+			case "delete":
+				doDelete(view, request);
+				break;
 			case "index":
 			default:
 				doIndex(view, request);
 				break;
 		}
 		log.info("END: {}.handler(), action: {}, exec TIME: {} ms.", this.getClass(), action, p.executeTime());
+	}
+	
+	private void doDelete(ModelAndView view, HttpServletRequest request) {
+		Profiler p = new Profiler();
+		String serial = request.getParameter("serial");
+		log.trace("START: {}.doDelete() exec start, serial: {}", serial);
+		try {
+			service.deleteKV(Integer.parseInt(serial));
+		}
+		catch(TBoxException e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
+		catch(Exception e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
+		log.info("END: {}.doDelete(), serial: {}, exec TIME: {} ms.", this.getClass(), serial, p.executeTime());
+		this.doIndex(view, request);
 	}
 	
 	private void doConfirm(ModelAndView view, HttpServletRequest request) {

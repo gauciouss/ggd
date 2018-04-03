@@ -25,7 +25,8 @@
 	
 <div class="form-group confirmArea">
 	<input type="button" class="btn btn-success" id="confirm" value="儲存" />
-	<input type="button" class="btn btn-danger" id="cancel" value="取消"/>	
+	<input type="button" class="btn btn-danger" id="delete" value="刪除" />
+	<input type="button" class="btn btn-default" id="cancel" value="取消"/>	
 </div>
 
 <script>
@@ -45,14 +46,26 @@ var action = ggd.util.isEmpty("${param.action}") ? "confirm" : "${param.action}"
 	if(!cp) {
 		$(".control-panel").hide();
 	}
+		
+	if($("#isSave").val() == 1) {
+		$("#delete").hide();
+	}
 	
 	$("#isEnabled").val(isEnabled).trigger("change");
 	$("#isApproved").val(isApproved).trigger("change");
 	
 	$("#confirm").on("click", function() {
 		$("#<%=Constant.ACTION_TYPE %>").val(action);
-		if(typeof(confirmCallback) == "function") confirmCallback();
+		if(typeof(beforeSubmit) == "function") beforeSubmit();
 		document.form.submit();
+	});
+	
+	$("#delete").on("click", function() {
+		$("#<%=Constant.ACTION_TYPE %>").val("delete");
+		if(confirm("確定刪除嗎?")) {
+			if(typeof(beforeSubmit) == "function") beforeSubmit();
+			document.form.submit();
+		}
 	});
 	
 	$("#cancel").on("click", function() {
