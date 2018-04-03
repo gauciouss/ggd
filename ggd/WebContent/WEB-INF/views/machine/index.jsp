@@ -34,8 +34,9 @@
 		<i class="fa fa-table"></i>機上盒管理管理
 		<input type="file" name="machineCSV" id="machineCSV"/>
 		<a href="#" class="btn btn-info" id="importBtn">匯入</a>
-		<input type="hidden" name="csvData" id="csvData"/>
 		<a href="#" class="btn btn-info" id="saveBtn">新增</a>
+		<a href="<%=common.getValue(Constant.MAIN_PATH_HOST)%>/doc/machine_data.csv" class="btn btn-info" id="downloadSample" download="machine_data.csv">下載範本</a>
+		<input type="hidden" name="csvData" id="csvData"/>
 	</div>
 	<div class="card-body">		
 		<div class="table-responsive">
