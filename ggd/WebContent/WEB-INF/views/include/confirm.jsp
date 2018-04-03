@@ -25,7 +25,7 @@
 	
 <div class="form-group confirmArea">
 	<input type="button" class="btn btn-success" id="confirm" value="儲存" />
-	<input type="button" class="btn btn-danger" id="delete" value="刪除" />
+	<input type="button" class="btn btn-danger" style="display: none" id="delete" value="刪除" />
 	<input type="button" class="btn btn-default" id="cancel" value="取消"/>	
 </div>
 
@@ -47,8 +47,8 @@ var action = ggd.util.isEmpty("${param.action}") ? "confirm" : "${param.action}"
 		$(".control-panel").hide();
 	}
 		
-	if($("#isSave").val() == 1) {
-		$("#delete").hide();
+	if($("#isSave").val() == 0) {
+		$("#delete").show();
 	}
 	
 	$("#isEnabled").val(isEnabled).trigger("change");

@@ -132,8 +132,8 @@
 
 	var areas = <%=areaStr %>;
 	var comps = <%=compsStr %>;
-	var areaId = "<%=box.getArea().getAreaId() %>";
-	var compId = "<%=box.getCompany().getEIN() %>";
+	var areaId = "<%=box.getArea() == null ? "" : box.getArea().getAreaId() %>";
+	var compId = "<%=box.getCompany() == null ? "" : box.getCompany().getEIN() %>";
 
 	
 	var setDefaultValue = function() {
