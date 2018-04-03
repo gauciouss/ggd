@@ -70,27 +70,45 @@ public class AppDispatcher implements Dispatcher {
 		}
 		action = Util.isEmpty(action) ? "index" : action;
 		log.trace("START: {}.handler(), action: {}", this.getClass(), action);
-		switch(action) {
-			case "edit":
-				doEdit(view, request);
-				break;			
-			case "save":
-				doEdit(view, request);
-				break;
-			case "confirm":
-				doConfirm(view, request);
-				break;
-			case "cancel":
-				doCancel(view, request);
-				break;
-			case "index":
-				doIndex(view, request);
-				break;			
-			default:
-				doIndex(view, request);
-				break;
+		try {
+			switch(action) {
+				case "edit":
+					doEdit(view, request);
+					break;			
+				case "save":
+					doEdit(view, request);
+					break;
+				case "confirm":
+					doConfirm(view, request);
+					break;
+				case "cancel":
+					doCancel(view, request);
+					break;
+				case "delete":
+					doDelete(view, request);
+					break;
+				case "index":
+					doIndex(view, request);
+					break;			
+				default:
+					doIndex(view, request);
+					break;
+			}
+		}
+		catch(TBoxException e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
 		}
 		log.info("END: {}.handler(), action: {}, exec TIME: {} ms.", this.getClass(), action, p.executeTime());
+	}
+	
+	private void doDelete(ModelAndView view, HttpServletRequest request) throws TBoxException {
+		Profiler p = new Profiler();
+		String serial = request.getParameter("serial");
+		log.trace("START: {}.doDelete(), serial: {}", this.getClass(), serial);
+		service.deleteApp(serial);
+		log.info("END: {}.doDelete(), serial: {}, exec TIME: {} ms.", this.getClass(), serial, p.executeTime());
+		view.addObject(Constant.ACTION_RESULT, "1");
+		this.doIndex(view, request);
 	}
 	
 	private void doCancel(ModelAndView view, HttpServletRequest request) throws TBoxException {

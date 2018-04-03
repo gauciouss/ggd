@@ -94,6 +94,7 @@ public class AppQuery extends HibernateQuery {
 	
 	
 	private static final String SQL_DELETE_BOOKING_APP = "delete from app where app_id = ?";
+	private static final String SQL_DELETE_APP_MAPPING = "delete from comp_app_mapping where app_id = ?";
 	
 	
 	private static final String SQL_UPDATE_APP_INFO = 
@@ -123,8 +124,12 @@ public class AppQuery extends HibernateQuery {
 			"select * from app_version where app_id = ? and version = ?";
 	
 	
-	public void deleteApp(String serialNo) {
-		//TODO delete app
+	public void deleteApp(String appId) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.deleteApp(), appId: {}", this.getClass(), appId);
+		this.deleteBookingApp(appId);
+		super.executeUpateQuery(SQL_DELETE_APP_MAPPING, appId);
+		log.info("END: {}.deleteApp(), appId: {}, exec TIME: {} ms.", this.getClass(), appId, p.executeTime());
 	}
 	
 	

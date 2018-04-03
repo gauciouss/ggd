@@ -21,6 +21,8 @@
 	AdmUser loginUser = (AdmUser) session.getAttribute(Constant.USER);
 	List<AppClz> kinds = (List<AppClz>) request.getAttribute(AppDispatcher.ALL_APP_KIND);
 	AppEntity app = (AppEntity) request.getAttribute(Constant.DATA_LIST);
+	
+	int isSave = app.getPkgName() == null ? 1 : 0;
 %>
 <!DOCTYPE>
 <html>
@@ -43,7 +45,8 @@
 			<div class="card-body">
 				<form name="form" method="post" class="form-control"
 					action="<%=common.getValue(Constant.MAIN_PATH_HOST)%>ui/view/main/app">
-					<input type="hidden" name="<%=Constant.ACTION_TYPE%>" id="<%=Constant.ACTION_TYPE%>" value="confirm" />					
+					<input type="hidden" name="<%=Constant.ACTION_TYPE%>" id="<%=Constant.ACTION_TYPE%>" value="confirm" />			
+					<input type="hidden" name="isSave" id="isSave" value="<%=isSave %>"/>		
 					<div class="form-group">
 						<div class="form-row">
 							<div class="col-md-6">
