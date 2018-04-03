@@ -69,12 +69,7 @@ public class DaoTest {
 	@Qualifier("AppQuery")
 	private AppQuery appQuery;
 	
-	@Test
-	public void testIsApkExist() {
-		System.out.println("******* START testIsApkExist() *******");
-		System.out.println(appQuery.isAppExistByPkgName("com.google.android.youtube"));
-		System.out.println("******* END testIsApkExist() *******");
-	}
+	
 	
 	
 	@Test
@@ -129,16 +124,7 @@ public class DaoTest {
 		System.out.println("******* END testFindAllUsers() *******");
 	}
 	
-	@Test
-	public void testAddNewGroup() {
-		System.out.println("******* START testGetArea() *******");
-		Area a = areaDao.findById(111);
-		AdmGroup grp = admGroupDao.findById("GRP0000001");
-		Company c = new Company("89125522", "TEST", a, "", "", "", "", "", "", grp);
-		cDao.save(c);
-		System.out.println(cDao.findById("89125522"));
-		System.out.println("******* END testGetArea() *******");
-	}
+	
 	
 	@Test
 	public void testFindALLGroup() {
