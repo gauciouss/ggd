@@ -31,10 +31,10 @@
 
 <script>
 
-var isEnabled = ${param.isEnabled} == true ? 1 : 0;
-var isApproved = ${param.isApproved} == true ? 1 : 0;
-var isManager = ${param.isManager} == true ? 1 : 0;
-var cp = ${param.showPanel} == true ? 1 : 0;
+var isEnabled = ${param.isEnabled } == true ? 1 : 0;
+var isApproved = ${param.isApproved } == true ? 1 : 0;
+var isManager = ${param.isManager } == true ? 1 : 0;
+var cp = ${param.showPanel } == true ? 1 : 0;
 var action = ggd.util.isEmpty("${param.action}") ? "confirm" : "${param.action}";
 
 (function() {
