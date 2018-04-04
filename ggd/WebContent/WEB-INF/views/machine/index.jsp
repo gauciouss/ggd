@@ -1,3 +1,4 @@
+<%@page import="ggd.core.util.JSONUtil"%>
 <%@page import="tbox.dispatcher.main.MachineDispatcher"%>
 <%@page import="tbox.data.vo.MachineEntity"%>
 <%@page import="tbox.data.vo.AppClz"%>
@@ -15,7 +16,17 @@
 	Config common = (Config) request.getAttribute(Constant.COMMON_CONFIG);
 	List<MachineEntity> machines = (List<MachineEntity>) request.getAttribute(Constant.DATA_LIST);
 	String actionResult = (String) request.getAttribute(Constant.ACTION_RESULT);
+	String actionResultMsg = "undefined";
+	if(request.getAttribute(Constant.ACTION_RESULT_MSG) != null) {
+		actionResultMsg = (String) request.getAttribute(Constant.ACTION_RESULT_MSG);
+	}
 	Integer importCount = (Integer) request.getAttribute(MachineDispatcher.IMPORT_COUNT);
+	
+	
+	List<String> fails = (List<String>) request.getAttribute(MachineDispatcher.UPLOAD_FAIL_COUNT);
+	String json_fails = "undefined";
+	if(!Util.isEmpty(fails))
+		json_fails = JSONUtil.toJsonString(fails);
 %>
 <!DOCTYPE>
 <html>
@@ -90,6 +101,7 @@
 <script>
 
 		var importCount = <%=importCount %>;
+		var json_fails = <%=json_fails %>;
 
 		var csvToArray = function(strData, strDelimiter) {
 			strDelimiter = (strDelimiter || ",");
@@ -228,16 +240,31 @@
 
 			$("#dataTable").DataTable();
 			
-			var ar = "<%=actionResult%>";			
+			var ar = "<%=actionResult%>";
+			var arMsg = "<%=actionResultMsg %>";
 			if(ar == "1") {
-				var msg = "執行成功";
+				var msg = "";
 				if(importCount > 0) {
-					msg += "，共匯入" + importCount + "筆";
+					msg += "執行完畢，共匯入" + importCount + "筆";
+				}
+				
+				if(typeof(json_fails) != "undefined") {
+					var failCount = json_fails.length;
+					msg += "，失敗" + failCount + "筆，失敗序號如下\n";					
+					for(var jf in json_fails) {
+						msg += (js + "\n");
+					}
+				}
+				
+				alert(msg);
+			}
+			else if(ar == "0") {
+				var msg = "執行失敗";				
+				if(!ggd.util.isEmpty(arMsg)) {
+					msg += ("，" + arMsg);
 				}
 				alert(msg);
 			}
-			else if(ar == "0")
-				alert("執行失敗");
 			
 		})();
 	

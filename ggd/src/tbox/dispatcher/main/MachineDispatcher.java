@@ -130,15 +130,21 @@ public class MachineDispatcher implements Dispatcher {
 		}
 		catch (IOException e) {
 			view.addObject(Constant.ACTION_RESULT, "0");
+			view.addObject(Constant.ACTION_RESULT_MSG, e.getMessage());
 			log.error(StringUtil.getStackTraceAsString(e));
+			this.doIndex(view, request);
 		} 
 		catch (TBoxException e) {
 			view.addObject(Constant.ACTION_RESULT, "0");
+			view.addObject(Constant.ACTION_RESULT_MSG, e.getMessage());
 			log.error(StringUtil.getStackTraceAsString(e));
+			this.doIndex(view, request);
 		}
 		catch(Exception e) {
 			view.addObject(Constant.ACTION_RESULT, "0");
+			view.addObject(Constant.ACTION_RESULT_MSG, e.getMessage());
 			log.error(StringUtil.getStackTraceAsString(e));
+			this.doIndex(view, request);
 		}
 		
 	}
