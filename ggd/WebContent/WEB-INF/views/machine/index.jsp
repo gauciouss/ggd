@@ -62,10 +62,10 @@
 						<td><%=machine.getMachineSN() %></td>
 						<td><%=machine.getMac() %></td>
 						<td><%=machine.getWifiMac() %></td>
-						<td><%=machine.getCompanyName() %></td>
-						<td><%=machine.getAreaName() %></td>
+						<td><%=Util.isEmpty(machine.getCompanyName()) ? "" : machine.getCompanyName() %></td>
+						<td><%=Util.isEmpty(machine.getAreaName()) ? "" : machine.getAreaName() %></td>
 						<td><%=machine.isEnabled() == null || machine.isEnabled() == false ? "未啟用" : "啟用" %></td>
-						<td><%=machine.getStartDate() %></td>
+						<td><%=machine.getStartDate() == null ? "-" : machine.getStartDate() %></td>						
 						<td><%=machine.getAuthStartDate() == null ? "" : machine.getAuthStartDate() %> ~ <%=machine.getAuthEndDate() == null ? "" : machine.getAuthEndDate() %></td>
 					</tr>
 				<%		

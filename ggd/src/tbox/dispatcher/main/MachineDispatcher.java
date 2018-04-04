@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import baytony.util.Profiler;
 import baytony.util.StringUtil;
 import baytony.util.Util;
-import ggd.core.CoreException;
 import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
 import ggd.core.util.JSONUtil;
@@ -56,11 +55,12 @@ public class MachineDispatcher implements Dispatcher {
 	 * @see ggd.core.dispatcher.Dispatcher#handler(org.springframework.web.servlet.ModelAndView, javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public void handler(ModelAndView view, HttpServletRequest request) throws CoreException {
+	public void handler(ModelAndView view, HttpServletRequest request) {
 		Profiler p = new Profiler();
 		String action = request.getParameter(Constant.ACTION_TYPE);		
 		action = Util.isEmpty(action) ? "index" : action;
 		log.trace("START: {}.handler(), action: {}", this.getClass(), action);
+		try {
 		switch(action) {
 			case "edit":
 				doEdit(view, request);
@@ -80,6 +80,19 @@ public class MachineDispatcher implements Dispatcher {
 			default:
 				doIndex(view, request);
 				break;
+		}
+		}
+		catch(TBoxException e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
+		catch(NumberFormatException e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
+		catch(Exception e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
+			log.error(StringUtil.getStackTraceAsString(e));
 		}
 		log.info("END: {}.handler(), action: {}, exec TIME: {} ms.", this.getClass(), action, p.executeTime());
 	}
@@ -112,15 +125,17 @@ public class MachineDispatcher implements Dispatcher {
 			this.doIndex(view, request);
 		}
 		catch (IOException e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
 			log.error(StringUtil.getStackTraceAsString(e));
 		} 
 		catch (TBoxException e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
 			log.error(StringUtil.getStackTraceAsString(e));
 		}
 		
 	}
 
-	private void doConfirm(ModelAndView view, HttpServletRequest request) throws TBoxException {
+	private void doConfirm(ModelAndView view, HttpServletRequest request) {
 		Profiler p = new Profiler();
 		String serial = request.getParameter("serial");
 		String machineSN = request.getParameter("machineSN");
@@ -134,15 +149,22 @@ public class MachineDispatcher implements Dispatcher {
 		Timestamp authStartDate = Util.isEmpty(authStart) ? null : new Timestamp(new Date(authStart).getTime());
 		Timestamp authEndDate = Util.isEmpty(authStart) ? null : new Timestamp(new Date(authEnd).getTime());	
 		MachineEntity entity = new MachineEntity(machineSN, ethernetMac, wifiMac, EIN, Integer.parseInt(area), authStartDate, authStartDate, authEndDate);
-		if(Util.isEmpty(serial)) {
-			service.saveMachineBox(entity);
+		try {
+			if(Util.isEmpty(serial)) {
+				service.saveMachineBox(entity);
+			}
+			else {
+				service.updateMachineBox(entity);
+			}
+			view.addObject(Constant.ACTION_RESULT, "1");
+			log.info("END: {}.doConfirm() exec start, machineSN: {}, ethernetMac: {}, wifiMac: {}, area: {}, EIN: {}, authStart: {}, authEnd: {}, exec TIME: {} ms.", this.getClass(), machineSN, ethernetMac, wifiMac, area, EIN, authStart, authEnd, p.executeTime());
+			
 		}
-		else {
-			service.updateMachineBox(entity);
-		}
-		
-		log.info("END: {}.doConfirm() exec start, machineSN: {}, ethernetMac: {}, wifiMac: {}, area: {}, EIN: {}, authStart: {}, authEnd: {}, exec TIME: {} ms.", this.getClass(), machineSN, ethernetMac, wifiMac, area, EIN, authStart, authEnd, p.executeTime());
-		this.doIndex(view, request);
+		catch(Exception e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
+			log.error(StringUtil.getStackTraceAsString(e));
+		}		
+		this.doIndex(view, request);		
 	}
 	
 	private void doEdit(ModelAndView view, HttpServletRequest request) throws NumberFormatException, TBoxException {
@@ -159,13 +181,18 @@ public class MachineDispatcher implements Dispatcher {
 		log.info("END: {}.doEdit(), serialNo: {}, exec TIME: {} ms.", this.getClass(), serialNo, p.executeTime());
 	}
 	
-	private void doIndex(ModelAndView view, HttpServletRequest request) throws TBoxException {
+	private void doIndex(ModelAndView view, HttpServletRequest request) {
 		Profiler p = new Profiler();
 		log.trace("START: {}.doIndex()", this.getClass());
-		List<MachineEntity> list = service.findAllMachine();
-		log.debug("list machine size: {}", list.size());
-		view.addObject(Constant.DATA_LIST, list);
-		view.setViewName("machine/index");
+		try {
+			List<MachineEntity> list = service.findAllMachine();
+			log.debug("list machine size: {}", list.size());
+			view.addObject(Constant.DATA_LIST, list);
+			view.setViewName("machine/index");
+		}
+		catch(Exception e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
 		log.info("END: {}.doIndex(), exec TIME: {} ms.", this.getClass(), p.executeTime());
 	}
 }

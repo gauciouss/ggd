@@ -52,10 +52,12 @@
 	<jsp:param value="<%=common.getValue(Constant.MAIN_PATH_HOST)%>"
 		name="main" />
 </jsp:include>
+<link rel="stylesheet" type="text/css" href="<%=common.getValue(Constant.MAIN_PATH_HOST)%>/ggd-js/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
 <jsp:include page="/WEB-INF/views/include/script.jsp">
 	<jsp:param value="<%=common.getValue(Constant.MAIN_PATH_HOST)%>" name="main" />
 </jsp:include>
-
+<script src="<%=common.getValue(Constant.MAIN_PATH_HOST)%>/ggd-js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="<%=common.getValue(Constant.MAIN_PATH_HOST)%>/ggd-js/bootstrap-datepicker/locales/bootstrap-datepicker.zh-TW.min.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -88,12 +90,16 @@
 						<div class="form-row">
 							<div class="col-md-6">
 								<label for="area">地區</label>
-								<select class="form-control" id="area" name="area"></select>
+								<select class="form-control" id="area" name="area">
+									<option value="-1">請選擇</option>
+								</select>
 							</div>
 							
 							<div class="col-md-6">
-								<label for="area">機台所屬公司</label>
-								<select class="form-control" id="EIN" name="EIN"></select>
+								<label for="EIN">機台所屬公司</label>
+								<select class="form-control" id="EIN" name="EIN">
+									<option value="-1">請選擇</option>
+								</select>
 							</div>
 						</div>
 					</div>
@@ -101,13 +107,13 @@
 					<div class="form-group">
 						<div class="form-row">
 							<div class="col-md-6">
-								<label for="account">起</label>
+								<label for="authStart">起</label>
 								<div class="input-group date">
                 					<input type="text" class="form-control" id="authStart" name="authStart" value="<%=startDate %>"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
               					</div>
 							</div>
 							<div class="col-md-6">
-								<label for="kind">迄</label> 
+								<label for="authEnd">迄</label> 
 								<div class="input-group date">
                 					<input type="text" class="form-control" id="authEnd" name="authEnd" value="<%=endDate%>"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
               					</div>
@@ -132,8 +138,8 @@
 
 	var areas = <%=areaStr %>;
 	var comps = <%=compsStr %>;
-	var areaId = "<%=box.getArea() == null ? "" : box.getArea().getAreaId() %>";
-	var compId = "<%=box.getCompany() == null ? "" : box.getCompany().getEIN() %>";
+	var areaId = "<%=box.getArea() == null ? "-1" : box.getArea().getAreaId() %>";
+	var compId = "<%=box.getCompany() == null ? "-1" : box.getCompany().getEIN() %>";
 
 	
 	var setDefaultValue = function() {
@@ -154,9 +160,23 @@
 		
 	};
 	
+	var beforeSubmit = function() {
+		if(ggd.util.isEmpty($("#machineSN").val)) {
+			alert("機器序號為必填欄位");
+			return false;
+		}
+		else {
+			return true;
+		}
+	};
+	
 	$(document).ready(function() {		
 		setDefaultValue();
 		
+		$('.input-group.date').datepicker({
+			 language: "zh-TW",
+			 format: "yyyy/mm/dd"
+		});
 	});
 	
 </script>

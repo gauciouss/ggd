@@ -56,14 +56,23 @@ var action = ggd.util.isEmpty("${param.action}") ? "confirm" : "${param.action}"
 	
 	$("#confirm").on("click", function() {
 		$("#<%=Constant.ACTION_TYPE %>").val(action);
-		if(typeof(beforeSubmit) == "function") beforeSubmit();
-		document.form.submit();
+		if(typeof(beforeSubmit) == "function") {
+			var cb = beforeSubmit();
+			if(cb == false) {
+				
+			}
+			else {
+				document.form.submit();
+			}
+		}
+		else {
+			document.form.submit();
+		}
 	});
 	
 	$("#delete").on("click", function() {
 		$("#<%=Constant.ACTION_TYPE %>").val("delete");
 		if(confirm("確定刪除嗎?")) {
-			if(typeof(beforeSubmit) == "function") beforeSubmit();
 			document.form.submit();
 		}
 	});
