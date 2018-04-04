@@ -116,7 +116,7 @@ public class ServiceTest {
 	public void testGetWeather() {
 		log.trace("******* START: {}.testGetWeather() *******", this.getClass());
 		try {
-			Entity entity = tboxService.findWeatherReport("54789963", "1A-2V-3S-FV-AS-FX", "");
+			Entity entity = tboxService.findWeatherReport("54789963");
 			log.debug("{}", entity);
 			log.info("******* END: {}.testGetWeather()", this.getClass());
 		} catch (TBoxException e) {

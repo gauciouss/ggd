@@ -146,7 +146,7 @@ public class IndexInfoCommand implements Command {
 	private Weather getWeather(TBoxInfo box) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getWeather(), box: {}", this.getClass(), box);
-		tbox.proxy.cwb.gov.tw.OpendataAPI.Entity entity = service.findWeatherReport(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());
+		tbox.proxy.cwb.gov.tw.OpendataAPI.Entity entity = service.findWeatherReport(box.getMachineSN());
 		Weather weather = new Weather(entity, fileServerPath);		
 		log.info("END: {}.getWeather(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
 		return weather;
