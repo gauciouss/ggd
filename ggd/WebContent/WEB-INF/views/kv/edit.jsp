@@ -239,7 +239,7 @@
 		});
 	};
 	
-	var confirmCallback = function() {
+	var beforeSubmit = function() {
 		$("#publish").val(JSON.stringify(publishJson));
 	};
 	
