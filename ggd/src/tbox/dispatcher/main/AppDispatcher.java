@@ -55,6 +55,7 @@ public class AppDispatcher implements Dispatcher {
 		Profiler p = new Profiler();
 		//String action = request.getParameter(Constant.ACTION_TYPE);	
 		//action = StringUtil.isEmptyString(action) ? "index" : action;
+		checkSessionAlive(view, request);
 		
 		String action = Constant.EMPTY;
 		FileItemFactory factory = new DiskFileItemFactory();
@@ -70,33 +71,28 @@ public class AppDispatcher implements Dispatcher {
 		}
 		action = Util.isEmpty(action) ? "index" : action;
 		log.trace("START: {}.handler(), action: {}", this.getClass(), action);
-		try {
-			switch(action) {
-				case "edit":
-					doEdit(view, request);
-					break;			
-				case "save":
-					doEdit(view, request);
-					break;
-				case "confirm":
-					doConfirm(view, request);
-					break;
-				case "cancel":
-					doCancel(view, request);
-					break;
-				case "delete":
-					doDelete(view, request);
-					break;
-				case "index":
-					doIndex(view, request);
-					break;			
-				default:
-					doIndex(view, request);
-					break;
-			}
-		}
-		catch(TBoxException e) {
-			view.addObject(Constant.ACTION_RESULT, "0");
+		switch(action) {
+			case "edit":
+				doEdit(view, request);
+				break;			
+			case "save":
+				doEdit(view, request);
+				break;
+			case "confirm":
+				doConfirm(view, request);
+				break;
+			case "cancel":
+				doCancel(view, request);
+				break;
+			case "delete":
+				doDelete(view, request);
+				break;
+			case "index":
+				doIndex(view, request);
+				break;			
+			default:
+				doIndex(view, request);
+				break;
 		}
 		log.info("END: {}.handler(), action: {}, exec TIME: {} ms.", this.getClass(), action, p.executeTime());
 	}
@@ -202,6 +198,12 @@ public class AppDispatcher implements Dispatcher {
 			result = item.isFormField() ? new String(item.getString().getBytes(Constant.ISO88591), Constant.UTF8) : new String(item.getName().getBytes(Constant.ISO88591), Constant.UTF8);
 		}
 		return result;
+	}
+	
+	private void checkSessionAlive(ModelAndView view, HttpServletRequest request) {
+		Object obj = request.getSession().getAttribute(Constant.USER);
+		if(obj == null)
+			view.setViewName("error/error");
 	}
 	
 }

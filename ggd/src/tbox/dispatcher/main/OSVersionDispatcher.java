@@ -38,6 +38,7 @@ public class OSVersionDispatcher implements Dispatcher {
 	@Override
 	public void handler(ModelAndView view, HttpServletRequest request) throws CoreException {
 		Profiler p = new Profiler();
+		this.checkSessionAlive(view, request);
 		String action = request.getParameter(Constant.ACTION_TYPE);		
 		action = Util.isEmpty(action) ? "index" : action;
 		log.trace("START: {}.handler(), action: {}", this.getClass(), action);
@@ -98,5 +99,11 @@ public class OSVersionDispatcher implements Dispatcher {
 		view.addObject(Constant.DATA_LIST, list);
 		view.setViewName("os/index");
 		log.info("END: {}.doIndex(), exec TIME: {} ms.", this.getClass(), p.executeTime());
+	}
+	
+	private void checkSessionAlive(ModelAndView view, HttpServletRequest request) {
+		Object obj = request.getSession().getAttribute(Constant.USER);
+		if(obj == null)
+			view.setViewName("error/error");
 	}
 }

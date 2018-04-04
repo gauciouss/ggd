@@ -45,6 +45,7 @@ public class AppClzDispatcher implements Dispatcher {
 		Profiler p = new Profiler();
 		//String action = request.getParameter(Constant.ACTION_TYPE);	
 		//action = StringUtil.isEmptyString(action) ? "index" : action;
+		this.checkSessionAlive(view, request);
 		
 		String action = request.getParameter(Constant.ACTION_TYPE);		
 		action = Util.isEmpty(action) ? "index" : action;
@@ -142,6 +143,12 @@ public class AppClzDispatcher implements Dispatcher {
 		}
 		log.info("END: {}.doIndex(), exec TIME: {} ms.", this.getClass(), p.executeTime());
 		
+	}
+	
+	private void checkSessionAlive(ModelAndView view, HttpServletRequest request) {
+		Object obj = request.getSession().getAttribute(Constant.USER);
+		if(obj == null)
+			view.setViewName("error/error");
 	}
 	
 }

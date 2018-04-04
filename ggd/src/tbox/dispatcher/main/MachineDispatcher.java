@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import baytony.util.Profiler;
 import baytony.util.StringUtil;
 import baytony.util.Util;
+import ggd.auth.vo.AdmUser;
 import ggd.core.common.Constant;
 import ggd.core.dispatcher.Dispatcher;
 import ggd.core.util.JSONUtil;
@@ -45,6 +46,7 @@ public class MachineDispatcher implements Dispatcher {
 	public static final String IMPORT_COUNT = MachineDispatcher.class + "_COUNT";
 	public static final String ALL_COMPANY = MachineDispatcher.class + "_ALL_COMPANY";
 	public static final String ALL_AREA = MachineDispatcher.class +"_ALL_AREA";
+	public static final String UPLOAD_FAIL_COUNT = MachineDispatcher.class + "_UPLOAD_FAIL_COUNT";			
 	
 	
 	@Autowired
@@ -57,10 +59,10 @@ public class MachineDispatcher implements Dispatcher {
 	@Override
 	public void handler(ModelAndView view, HttpServletRequest request) {
 		Profiler p = new Profiler();
+		checkSessionAlive(view, request);
 		String action = request.getParameter(Constant.ACTION_TYPE);		
 		action = Util.isEmpty(action) ? "index" : action;
 		log.trace("START: {}.handler(), action: {}", this.getClass(), action);
-		try {
 		switch(action) {
 			case "edit":
 				doEdit(view, request);
@@ -81,19 +83,6 @@ public class MachineDispatcher implements Dispatcher {
 				doIndex(view, request);
 				break;
 		}
-		}
-		catch(TBoxException e) {
-			view.addObject(Constant.ACTION_RESULT, "0");
-			log.error(StringUtil.getStackTraceAsString(e));
-		}
-		catch(NumberFormatException e) {
-			view.addObject(Constant.ACTION_RESULT, "0");
-			log.error(StringUtil.getStackTraceAsString(e));
-		}
-		catch(Exception e) {
-			view.addObject(Constant.ACTION_RESULT, "0");
-			log.error(StringUtil.getStackTraceAsString(e));
-		}
 		log.info("END: {}.handler(), action: {}, exec TIME: {} ms.", this.getClass(), action, p.executeTime());
 	}
 	
@@ -101,16 +90,30 @@ public class MachineDispatcher implements Dispatcher {
 		Profiler p = new Profiler();
 		log.trace("START: {}.upload()", this.getClass());
 		String csvData = request.getParameter("csvData");
+		AdmUser user = (AdmUser) request.getSession().getAttribute(Constant.USER);
 		try {
 			JsonNode node = JSONUtil.parser(csvData);
 			int count = 0;
 			List<MachineEntity> list = new ArrayList<MachineEntity>();
+			List<String> fails = new ArrayList<String>();
 			for(JsonNode box : node) {
+				
 				String sn = box.get("machineSN").asText();
+				if(box.get("EIN") == null || Util.isEmpty(box.get("EIN").asText())) {
+					//若上傳的excel中沒有EIN，則算失敗
+					fails.add(sn);
+					continue;
+				}
+				
+				if(Util.isEmpty(sn)) {
+					continue;
+				}
+				
+								
 				String mac = box.get("mac") == null ? "" : box.get("mac").asText();
 				String wifiMac = box.get("wifiMac") == null ? "" : box.get("wifiMac").asText();
 				int area = box.get("area") == null ? 1 : box.get("area").asInt();
-				String EIN = box.get("EIN") == null ? "" : box.get("EIN").asText();
+				String EIN = box.get("EIN") == null ? service.findEINByAccount(user.getAccount()) : box.get("EIN").asText();
 				String authStart = box.get("authStart") == null ? "" : box.get("authStart").asText();
 				String authEnd = box.get("authEnd") == null ? "" : box.get("authEnd").asText();				
 				Timestamp authStartDate = Util.isEmpty(authStart) ? null : new Timestamp(new Date(authStart).getTime());
@@ -121,6 +124,7 @@ public class MachineDispatcher implements Dispatcher {
 			count = service.importMachineBoxData(list);
 			view.addObject(IMPORT_COUNT, count);
 			view.addObject(Constant.ACTION_RESULT, "1");
+			view.addObject(UPLOAD_FAIL_COUNT, fails);
 			log.info("END: {}.upload(), exec TIME: {} ms.", this.getClass(), p.executeTime());
 			this.doIndex(view, request);
 		}
@@ -129,6 +133,10 @@ public class MachineDispatcher implements Dispatcher {
 			log.error(StringUtil.getStackTraceAsString(e));
 		} 
 		catch (TBoxException e) {
+			view.addObject(Constant.ACTION_RESULT, "0");
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
+		catch(Exception e) {
 			view.addObject(Constant.ACTION_RESULT, "0");
 			log.error(StringUtil.getStackTraceAsString(e));
 		}
@@ -167,19 +175,25 @@ public class MachineDispatcher implements Dispatcher {
 		this.doIndex(view, request);		
 	}
 	
-	private void doEdit(ModelAndView view, HttpServletRequest request) throws NumberFormatException, TBoxException {
+	private void doEdit(ModelAndView view, HttpServletRequest request) {
 		Profiler p = new Profiler();		
 		String serialNo = request.getParameter("serialNo"); 
 		log.trace("START: {}.deEdit(), serialNo: {}", this.getClass(), serialNo);
-		MachineBox box = Util.isEmpty(serialNo) ? new MachineBox() : service.findMachine(Integer.parseInt(serialNo));
-		log.debug("machine box: {}", box);
-		view.setViewName("machine/edit");
-		List<CompanyEntity> list = service.findAllComp();
-		List<Area> areas = service.findAllArea();
-		view.addObject(ALL_COMPANY, list);
-		view.addObject(ALL_AREA, areas);
-		view.addObject(Constant.DATA_LIST, box);
-		log.info("END: {}.doEdit(), serialNo: {}, exec TIME: {} ms.", this.getClass(), serialNo, p.executeTime());
+		try {
+			MachineBox box = Util.isEmpty(serialNo) ? new MachineBox() : service.findMachine(Integer.parseInt(serialNo));
+			log.debug("machine box: {}", box);
+			view.setViewName("machine/edit");
+			List<CompanyEntity> list = service.findAllComp();
+			List<Area> areas = service.findAllArea();
+			view.addObject(ALL_COMPANY, list);
+			view.addObject(ALL_AREA, areas);
+			view.addObject(Constant.DATA_LIST, box);
+			log.info("END: {}.doEdit(), serialNo: {}, exec TIME: {} ms.", this.getClass(), serialNo, p.executeTime());
+		}
+		catch(Exception e) {
+			log.error(StringUtil.getStackTraceAsString(e));
+		}
+		
 	}
 	
 	private void doIndex(ModelAndView view, HttpServletRequest request) {
@@ -195,5 +209,12 @@ public class MachineDispatcher implements Dispatcher {
 			log.error(StringUtil.getStackTraceAsString(e));
 		}
 		log.info("END: {}.doIndex(), exec TIME: {} ms.", this.getClass(), p.executeTime());
+	}
+	
+	
+	private void checkSessionAlive(ModelAndView view, HttpServletRequest request) {
+		Object obj = request.getSession().getAttribute(Constant.USER);
+		if(obj == null)
+			view.setViewName("error/error");
 	}
 }

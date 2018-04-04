@@ -103,7 +103,7 @@ public class ViewController extends CommonController {
 					Dispatcher d = context.getBean(beanEntity, Dispatcher.class);
 					if(d != null){
 						log.trace("Folder : {}, Found : Dispatcher {}.", category, d.getClass());
-						d.handler(view, request);
+						d.handler(view, request);						
 					} else {
 						log.trace("No Dispatcher found for folder: {}. Call JSP: {}.", category, view.getViewName());
 					}

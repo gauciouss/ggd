@@ -61,6 +61,7 @@ public class KVDispatcher implements Dispatcher {
 	@Override
 	public void handler(ModelAndView view, HttpServletRequest request) throws CoreException {
 		Profiler p = new Profiler();
+		this.checkSessionAlive(view, request);
 		String action = request.getParameter(Constant.ACTION_TYPE);
 		action = StringUtil.isEmptyString(action) ? "index" : action;
 		log.trace("START: {}.handler(), action: {}", this.getClass(), action);
@@ -119,11 +120,14 @@ public class KVDispatcher implements Dispatcher {
 		String msg = request.getParameter("msg");
 		log.trace("START: {}.doConfirm(), serial: {}, name: {}, kind: {}, clickLink: {}, publish: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}", this.getClass(), serial, name, kind, clickLink, publish, start, end, isEnabled, isApproved);
 		try {
-			JsonNode node = JSONUtil.parser(publish);
 			List<String> EINs = new ArrayList<String>();
-			node.forEach(n -> {
-				EINs.add(n.get("id").asText());
-			});
+			if(!Util.isEmpty(publish)) {
+				JsonNode node = JSONUtil.parser(publish);
+				node.forEach(n -> {
+					EINs.add(n.get("id").asText());
+				});
+			}
+			
 			
 			AdmUser loginUser = (AdmUser) request.getSession().getAttribute(Constant.USER);
 			Date d1 = new Date(start);
@@ -210,6 +214,12 @@ public class KVDispatcher implements Dispatcher {
 			log.error(StringUtil.getStackTraceAsString(e));
 		}
 		log.info("END: {}.doIndex(), exec TIME: {} ms.", this.getClass(), p.executeTime());
+	}
+	
+	private void checkSessionAlive(ModelAndView view, HttpServletRequest request) {
+		Object obj = request.getSession().getAttribute(Constant.USER);
+		if(obj == null)
+			view.setViewName("error/error");
 	}
 	
 }
