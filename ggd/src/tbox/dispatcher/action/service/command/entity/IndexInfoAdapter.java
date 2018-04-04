@@ -278,18 +278,18 @@ public class IndexInfoAdapter implements Serializable {
 			private String msg;
 			private String serialNo;
 
-			public KV(KVEntity entity) {
+			public KV(KVEntity entity, String fileServerPath) {
 				super();
 				this.link = entity.getClickLink();
-				this.imgPath = entity.getImgPath();
+				this.imgPath = fileServerPath + "/" + entity.getImgPath();
 				this.msg = entity.getMsg();
 				this.serialNo = entity.getSerialNo().toString();
 			}
 
-			public KV(String link, String imgPath, String msg, String serialNo) {
+			public KV(String link, String imgPath, String msg, String serialNo, String fileServerPath) {
 				super();
 				this.link = link;
-				this.imgPath = imgPath;
+				this.imgPath = fileServerPath + "/" + imgPath;
 				this.msg = msg;
 				this.serialNo = serialNo;
 			}

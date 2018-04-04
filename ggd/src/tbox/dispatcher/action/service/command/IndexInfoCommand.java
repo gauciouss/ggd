@@ -125,7 +125,7 @@ public class IndexInfoCommand implements Command {
 		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 2);
 		List<KV> list = new ArrayList<KV>();
 		for(KVEntity entity : entities) {
-			list.add(new KV(entity));
+			list.add(new KV(entity, fileServerPath));
 		}
 		log.info("END: {}.getKV2(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
 		return list;
@@ -137,7 +137,7 @@ public class IndexInfoCommand implements Command {
 		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 1);
 		List<KV> list = new ArrayList<KV>();
 		for(KVEntity entity : entities) {
-			list.add(new KV(entity));
+			list.add(new KV(entity, fileServerPath));
 		}
 		log.info("END: {}.getKV1(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
 		return list;

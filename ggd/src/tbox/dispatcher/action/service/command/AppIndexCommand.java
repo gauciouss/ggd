@@ -55,7 +55,7 @@ public class AppIndexCommand implements Command {
 	private List<App> getApps(TBoxInfo box) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getControlApp(), box: {}", this.getClass(), box);
-		String ein = service.findEINByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());		
+		//String ein = service.findEINByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC());		
 		//List<AppEntity> entities = service.findAppsWithLastVersion(ein);
 		List<AppEntity> entities = service.findAllApps(null);
 		List<App> apps = new ArrayList<App>();
@@ -78,7 +78,7 @@ public class AppIndexCommand implements Command {
 		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 3);
 		List<KV> list = new ArrayList<KV>();
 		for(KVEntity entity : entities) {
-			list.add(new KV(entity));
+			list.add(new KV(entity, fileServerPath));
 		}
 		log.info("END: {}.getKV2(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
 		return list;
@@ -96,7 +96,7 @@ public class AppIndexCommand implements Command {
 		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 5);
 		List<KV> list = new ArrayList<KV>();
 		for(KVEntity entity : entities) {
-			list.add(new KV(entity));
+			list.add(new KV(entity, fileServerPath));
 		}
 		log.info("END: {}.getKV1(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
 		return list;
