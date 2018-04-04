@@ -806,7 +806,7 @@ public class TBoxServiceImpl implements TBoxService {
 	@Override
 	public Entity findWeatherReport(String sn) throws TBoxException {
 		Profiler p = new Profiler();
-		log.trace("START: {}.getWeatherReport(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
+		log.trace("START: {}.getWeatherReport(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn);
 		Entity entity = null;
 		try {
 			String code = areaQuery.findCWBCode(sn);
@@ -816,7 +816,7 @@ public class TBoxServiceImpl implements TBoxService {
 		} catch (Exception e) {
 			throw new TBoxException(TBoxCodeMsg.EX_004, e.getMessage());
 		}
-		log.info("END: {}.getWeatherReport(),  sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
+		log.info("END: {}.getWeatherReport(),  sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, p.executeTime());
 		return entity;
 	}
 
