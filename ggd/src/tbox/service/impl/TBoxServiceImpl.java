@@ -1030,12 +1030,12 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#findKVsByComp(java.lang.String, java.lang.String, java.lang.String, int)
 	 */
 	@Override
-	public List<KVEntity> findKVsByMachine(String sn, String mac, String wifi, int kind) throws TBoxException {
+	public List<KVEntity> findKVsByMachine(String sn, int kind) throws TBoxException {
 		Profiler p = new Profiler();
-		log.trace("START: {}.findKVsByMachine(), sn: {}, mac: {}, wifi: {}, kind: {}", this.getClass(), sn, mac, wifi, kind);
-		List<KVEntity> list = kvQuery.findAllKVByMachine(sn, mac, wifi, kind);
-		log.debug("sn: {}, mac: {}, wifi: {}, kind: {}, list: {}", sn, mac, wifi, kind, list);
-		log.info("END: {}.findKVsByMachine(), sn: {}, mac: {}, wifi: {}, kind: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, kind, p.executeTime());
+		log.trace("START: {}.findKVsByMachine(), sn: {}, kind: {}", this.getClass(), sn, kind);
+		List<KVEntity> list = kvQuery.findAllKVByMachine(sn, kind);
+		log.debug("sn: {}, kind: {}, list: {}", sn, kind, list);
+		log.info("END: {}.findKVsByMachine(), sn: {}, kind: {}, exec TIME: {} ms.", this.getClass(), sn, kind, p.executeTime());
 		return list;
 	}
 

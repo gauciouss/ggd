@@ -366,7 +366,7 @@ public interface TBoxService {
 	 * @return
 	 * @throws TBoxException
 	 */
-	public List<KVEntity> findKVsByMachine(String sn, String mac, String wifi, int kind) throws TBoxException;
+	public List<KVEntity> findKVsByMachine(String sn, int kind) throws TBoxException;
 	
 	
 	/**

@@ -161,13 +161,22 @@
 	};
 	
 	var beforeSubmit = function() {
-		if(ggd.util.isEmpty($("#machineSN").val)) {
+		if(ggd.util.isEmpty($("#machineSN").val())) {
 			alert("機器序號為必填欄位");
 			return false;
 		}
-		else {
-			return true;
+		
+		if($("#area").val() == -1) {
+			alert("地區為必填欄位");
+			return false;
 		}
+		
+		if($("#EIN").val() == -1) {
+			alert("機台所屬公司為必填欄位");
+			return false;
+		}
+		
+		return true;
 	};
 	
 	$(document).ready(function() {		

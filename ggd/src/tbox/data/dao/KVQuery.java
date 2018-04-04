@@ -43,8 +43,6 @@ public class KVQuery extends HibernateQuery {
 			"      and kcm.isApproved = true " +
 			"      and kv.kind = ? " +
 			"      and box.machine_sn = ? " + 
-			"      and box.ethernet_mac = ? " + 
-			"      and box.wifi_mac = ? " +
 			"      and ? between kcm.start_date and kcm.end_date";
 	
 	
@@ -95,11 +93,11 @@ public class KVQuery extends HibernateQuery {
 	 * @param kind
 	 * @return
 	 */
-	public List<KVEntity> findAllKVByMachine(String sn, String mac, String wifi, int kind) {
+	public List<KVEntity> findAllKVByMachine(String sn, int kind) {
 		Profiler p = new Profiler();
-		log.trace("START: {}.getKVByMachine(), sn: {}, mac: {}, wifi: {}, kind: {}", this.getClass(), sn, mac, wifi, kind);
-		List<KVEntity> kvs = super.findBySql(SQL_FIND_KV_BY_MACHINE, KVEntity.class, kind, sn, mac, wifi, new Timestamp(System.currentTimeMillis()));
-		log.info("END: {}.getKVByMachine(), sn: {}, mac: {}, wifi: {}, kind: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, kind, p.executeTime());
+		log.trace("START: {}.getKVByMachine(), sn: {}, kind: {}", this.getClass(), sn, kind);
+		List<KVEntity> kvs = super.findBySql(SQL_FIND_KV_BY_MACHINE, KVEntity.class, kind, sn, new Timestamp(System.currentTimeMillis()));
+		log.info("END: {}.getKVByMachine(), sn: {}, kind: {}, exec TIME: {} ms.", this.getClass(), sn, kind, p.executeTime());
 		return kvs;
 	}
 	

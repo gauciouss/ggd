@@ -172,6 +172,7 @@ public class MachineDispatcher implements Dispatcher {
 		String serialNo = request.getParameter("serialNo"); 
 		log.trace("START: {}.deEdit(), serialNo: {}", this.getClass(), serialNo);
 		MachineBox box = Util.isEmpty(serialNo) ? new MachineBox() : service.findMachine(Integer.parseInt(serialNo));
+		log.debug("machine box: {}", box);
 		view.setViewName("machine/edit");
 		List<CompanyEntity> list = service.findAllComp();
 		List<Area> areas = service.findAllArea();

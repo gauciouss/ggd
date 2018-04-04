@@ -75,7 +75,7 @@ public class AppIndexCommand implements Command {
 	private List<KV> getKV3(TBoxInfo box) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getKV2(), box: {}", this.getClass(), box);
-		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 3);
+		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), 3);
 		List<KV> list = new ArrayList<KV>();
 		for(KVEntity entity : entities) {
 			list.add(new KV(entity, fileServerPath));
@@ -93,7 +93,7 @@ public class AppIndexCommand implements Command {
 	private List<KV> getKV5(TBoxInfo box) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getKV1(), box: {}", this.getClass(), box);
-		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 5);
+		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), 5);
 		List<KV> list = new ArrayList<KV>();
 		for(KVEntity entity : entities) {
 			list.add(new KV(entity, fileServerPath));

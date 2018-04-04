@@ -97,7 +97,7 @@ public class IndexInfoCommand implements Command {
 	private List<Msg> getMarquee(TBoxInfo box) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getMsg(), box: {}", this.getClass(), box);
-		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 4);
+		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), 4);
 		List<Msg> list = new ArrayList<Msg>();
 		for(KVEntity entity : entities) {
 			list.add(new Msg(entity));
@@ -110,7 +110,7 @@ public class IndexInfoCommand implements Command {
 	private List<Msg> getMsg(TBoxInfo box) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getMsg(), box: {}", this.getClass(), box);
-		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 6);
+		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), 6);
 		List<Msg> list = new ArrayList<Msg>();
 		for(KVEntity entity : entities) {
 			list.add(new Msg(entity));
@@ -122,7 +122,7 @@ public class IndexInfoCommand implements Command {
 	private List<KV> getKV2(TBoxInfo box) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getKV2(), box: {}", this.getClass(), box);
-		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 2);
+		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), 2);
 		List<KV> list = new ArrayList<KV>();
 		for(KVEntity entity : entities) {
 			list.add(new KV(entity, fileServerPath));
@@ -134,7 +134,7 @@ public class IndexInfoCommand implements Command {
 	private List<KV> getKV1(TBoxInfo box) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getKV1(), box: {}", this.getClass(), box);
-		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), box.getMAC(), box.getWIFIMAC(), 1);
+		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), 1);
 		List<KV> list = new ArrayList<KV>();
 		for(KVEntity entity : entities) {
 			list.add(new KV(entity, fileServerPath));
