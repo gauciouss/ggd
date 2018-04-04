@@ -27,13 +27,13 @@ public class AreaQuery extends HibernateQuery {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public String findCWBCode(String sn, String mac, String wifi) {
+	public String findCWBCode(String sn) {
 		Profiler p = new Profiler();
-		log.trace("START: {}.findCWBCode(), sn: {}, mac: {}, wifi: {}", this.getClass(), mac, wifi);
+		log.trace("START: {}.findCWBCode(), sn: {}", this.getClass());
 		//String code = ((List<String>) super.findBySql(SQL_QUERY_CWB_CODE, sn, mac, wifi)).get(0);
 		String code = ((List<String>) super.findBySql(SQL_QUERY_CWB_CODE, sn)).get(0);
-		log.debug("sn: {}, mac: {}, wifi: {}, cwbCode: {}", sn, mac, wifi, code);
-		log.info("END: {}.findCWBCode(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
+		log.debug("sn: {}, cwbCode: {}", sn, code);
+		log.info("END: {}.findCWBCode(), sn: {}, exec TIME: {} ms.", this.getClass(), sn, p.executeTime());
 		return code;
 	}
 }

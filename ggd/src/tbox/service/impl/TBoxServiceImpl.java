@@ -804,12 +804,12 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#getWeatherReport(java.lang.String)
 	 */
 	@Override
-	public Entity findWeatherReport(String sn, String mac, String wifi) throws TBoxException {
+	public Entity findWeatherReport(String sn) throws TBoxException {
 		Profiler p = new Profiler();
 		log.trace("START: {}.getWeatherReport(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
 		Entity entity = null;
 		try {
-			String code = areaQuery.findCWBCode(sn, mac, wifi);
+			String code = areaQuery.findCWBCode(sn);
 			entity = cwbAPI.call(code);
 		} catch (IOException e) {
 			throw new TBoxException(TBoxCodeMsg.EX_003, e.getMessage());

@@ -245,12 +245,10 @@ public interface TBoxService {
 	/**
 	 * 取得天氣預報
 	 * @param sn
-	 * @param mac
-	 * @param wifi
 	 * @return
 	 * @throws TBoxException
 	 */
-	public tbox.proxy.cwb.gov.tw.OpendataAPI.Entity findWeatherReport(String sn, String mac, String wifi) throws TBoxException;
+	public tbox.proxy.cwb.gov.tw.OpendataAPI.Entity findWeatherReport(String sn) throws TBoxException;
 	
 	/**
 	 * 判斷是否為合法的機器
