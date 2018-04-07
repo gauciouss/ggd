@@ -57,7 +57,6 @@
 							<div class="col-md-6">
 								<label for="kind">類別</label> 
 								<select id="kind" name="kind" class="form-control">
-									<option value="">請選擇</option>
 									<%
 										for(AppClz kind : kinds) {
 									%>
