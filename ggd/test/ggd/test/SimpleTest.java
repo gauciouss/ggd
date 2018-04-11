@@ -9,7 +9,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
@@ -27,6 +30,35 @@ import net.dongliu.apk.parser.bean.Icon;
 
 
 public class SimpleTest {
+	
+	@Test
+	public void testGetMinFile() {
+		String tempRESPath = "G:\\外包\\GGD\\fileserver\\WebContent\\app\\APP0000026\\res";
+		Map<String, Long> map = new HashMap<String, Long>();
+		File[] iconDirs = new File(tempRESPath).listFiles();
+		for(File dir : iconDirs) {
+			File[] fs = dir.listFiles();
+			for(File iconFile : fs) {
+				if(iconFile.getName().contains(".png")) {
+					map.put(iconFile.getParentFile().getName(), iconFile.length());
+				}
+			}
+		}
+		
+		String p = "";
+		long t = Long.MAX_VALUE;
+		Set<String> keys = map.keySet();
+		for(String key : keys) {
+			long value = map.get(key);
+			System.out.println("File: " + key + ", size: " + value);
+			if(t > value) {
+				t = value;
+				p = key;
+			}
+		}
+		
+		System.out.println("min file path: " + p + ", size: " + t);
+	}
 	
 	@Test
 	public void testDir() {
