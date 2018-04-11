@@ -110,7 +110,7 @@
 					
 					
 					<div class="form-group">
-						<input type="file" id="apk" name="apk">
+						<input type="file" id="apk" name="apk" accept=".apk">
 						<a href="#" id="upload" class="btn btn-primary">上傳</a>						
 					</div>
 					

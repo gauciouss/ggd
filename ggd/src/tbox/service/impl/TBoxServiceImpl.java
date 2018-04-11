@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.http.fileupload.FileItem;
@@ -287,7 +290,7 @@ public class TBoxServiceImpl implements TBoxService {
 
 
 	
-	private static final String[] ICON_PATH = {"/res/mipmap-hdpi-v4/ic_launcher.png", "/res/mipmap-mdpi-v4/ic_launcher.png", "/res/mipmap-xhdpi-v4/ic_launcher.png", "/res/mipmap-xxhdpi-v4/ic_launcher.png"};
+	//private static final String[] ICON_PATH = {"/res/mipmap-hdpi-v4/ic_launcher.png", "/res/mipmap-mdpi-v4/ic_launcher.png", "/res/mipmap-xhdpi-v4/ic_launcher.png", "/res/mipmap-xxhdpi-v4/ic_launcher.png"};
 	
 	@Override
 	public void saveOrUpdateAppInfo(String appId, int clzId, String appName, String appEngName, String version, String pkgName, String appDesc) throws TBoxException {
@@ -295,38 +298,64 @@ public class TBoxServiceImpl implements TBoxService {
 		log.trace("START: {}.saveOrUpdateAppInfo(), appId: {}, clzId: {}, appName: {}, appEngName: {}, version: {}, pkgName: {}, appDesc: {}", this.getClass(), appId, clzId, appName, appEngName, version, pkgName , appDesc);
 		String path = "/app/" + appId;
 		
-		String iconDapth = Constant.EMPTY;
-		for(String iPath : ICON_PATH) {
+		String iconDpath = Constant.EMPTY;
+		/*for(String iPath : ICON_PATH) {
 			String tp = physicalPath + path + "/temp/" + iPath;
 			log.debug("icon path: {}", tp);
 			if(new File(tp).exists()) {
-				iconDapth = path + iPath;
-				break;
+				//iconDapth = path + iPath;
+				//break;
 			}
-		}
-		
-		if(Util.isEmpty(iconDapth)) {
-			File res = new File(physicalPath + path + "/temp/res/");
-			File[] list = res.listFiles();
-			if(!Util.isEmpty(list)) {
-				for(File obj : list) {
-					if(obj.isDirectory() && obj.getName().indexOf("dpi-") >= 0) {
-						File[] dirSub = obj.listFiles();
-						for(File pic : dirSub) {
-							if(pic.getName().indexOf(".png") >= 0) {
-								iconDapth = path + "/res/" + obj.getName() + "/" + pic.getName();
-								break;
-							}
-						}
-						break;					
-					}
+		}*/
+		//TODO 從所有圖檔中把最小的抓出來
+		Map<String, Long> map = new HashMap<String, Long>();
+		String tempRESPath = physicalPath + path + "/temp/res/";
+		File[] iconDirs = new File(tempRESPath).listFiles();
+		for(File dir : iconDirs) {
+			File[] fs = dir.listFiles();
+			for(File iconFile : fs) {
+				if(iconFile.getName().contains(".png")) {
+					map.put(path + "/res/" + iconFile.getParentFile().getName() + "/" + iconFile.getName() , iconFile.length());
 				}
 			}
 		}
 		
-		log.debug("iconDapth: {}", iconDapth);
-		if(!Util.isEmpty(iconDapth))
-			appQuery.updateAppInfo(appId, appName, appEngName, clzId, iconDapth, appDesc, pkgName);
+		long t = Long.MAX_VALUE;
+		Set<String> keys = map.keySet();
+		for(String key : keys) {
+			long value = map.get(key);
+			log.debug("File: {}, size: {}", key, value);
+			if(t > value) {
+				t = value;
+				iconDpath = key;
+			}
+		}
+		log.debug("min file path: {}, size: {}", iconDpath, t);
+		
+		
+//		if(Util.isEmpty(iconDpath)) {
+//			//File res = new File(physicalPath + path + "/temp/res/");
+//			File res = new File(tempRESPath);
+//			File[] list = res.listFiles();
+//			if(!Util.isEmpty(list)) {
+//				for(File obj : list) {
+//					if(obj.isDirectory() && obj.getName().indexOf("dpi-") >= 0) {
+//						File[] dirSub = obj.listFiles();
+//						for(File pic : dirSub) {
+//							if(pic.getName().indexOf(".png") >= 0) {
+//								iconDpath = path + "/res/" + obj.getName() + "/" + pic.getName();
+//								break;
+//							}
+//						}
+//						break;					
+//					}
+//				}
+//			}
+//		}
+		
+		log.debug("iconDapth: {}", iconDpath);
+		if(!Util.isEmpty(iconDpath))
+			appQuery.updateAppInfo(appId, appName, appEngName, clzId, iconDpath, appDesc, pkgName);
 		else 
 			appQuery.updateAppInfo(appId, appName, appEngName, clzId, appDesc, pkgName);
 		
