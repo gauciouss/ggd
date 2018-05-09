@@ -1120,43 +1120,20 @@ public class TBoxServiceImpl implements TBoxService {
 		log.info("END: {}.findCompanyByEIN(), exec TIME: {} ms.", this.getClass(), p.executeTime());
 		return comp;
 	}
-
-	
-	
-	
 	
 
-//	/* (non-Javadoc)
-//	 * @see tbox.service.TBoxService#addCompany(tbox.data.vo.Company)
-//	 */
-//	@Override
-//	public void addCompany(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) throws TBoxException {
-//		Profiler p = new Profiler();
-//		log.trace("START: {}.addCompany(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
-//		compDao.save(EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
-//		log.info("END: {}.addCompany(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId, p.executeTime());
-//	}
-//
-//	/* (non-Javadoc)
-//	 * @see tbox.service.TBoxService#updateCompInfo(tbox.data.vo.Company)
-//	 */
-//	@Override
-//	public void updateCompInfo(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) throws TBoxException {
-//		Profiler p = new Profiler();
-//		log.trace("START: {}.updateCompInfo(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
-//		compDao.update(EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId);
-//		log.info("END: {}.updateCompInfo(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, fastKey1: {}, fastKey2: {}, fastKey3: {}, fastKey4: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, fastKey1, fastKey2, fastKey3, fastKey4, grpId, p.executeTime());
-//	}
 
 	/* (non-Javadoc)
 	 * @see tbox.service.TBoxService#addCompany(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void addCompany(String EIN, String name, String areaId, String logo, String bg, String idxApp1,
-			String idxApp2, String idxApp3, String idxApp4, String ctrlApp1, String ctrlApp2, String ctrlApp3,
-			String ctrlApp4, String grpId) throws TBoxException {
-		// TODO Auto-generated method stub
-		
+	public void addCompany(String EIN, String name, String areaId, String logo, String bg, String idxApp1, String idxApp2, String idxApp3, String idxApp4, String idxApp5, String idxApp6, String ctrlApp1, String ctrlApp2, String ctrlApp3, String ctrlApp4, String grpId) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.addCompany(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, idxApp1: {}, idxApp2: {}, idxApp3: {}, idxApp4: {}, idxApp5: {}, idxApp6: {}, ctrlApp1: {}, ctrlApp2: {}, ctrlApp3: {}, ctrlApp4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, idxApp1, idxApp2, idxApp3, idxApp4, idxApp5, idxApp6, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4, grpId);
+		compDao.save(EIN, name, areaId, logo, bg, grpId);
+		compDao.saveFastApp(1, EIN, idxApp1, idxApp2, idxApp3, idxApp4, idxApp5, idxApp6);
+		compDao.saveFastApp(2, EIN, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4);
+		log.info("END: {}.addCompany(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, idxApp1: {}, idxApp2: {}, idxApp3: {}, idxApp4: {}, idxApp5: {}, idxApp6: {}, ctrlApp1: {}, ctrlApp2: {}, ctrlApp3: {}, ctrlApp4: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, idxApp1, idxApp2, idxApp3, idxApp4, idxApp5, idxApp6, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4, grpId, p.executeTime());
 	}
 
 
@@ -1164,17 +1141,15 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#updateCompInfo(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void updateCompInfo(String EIN, String name, String areaId, String logo, String bg, String idxApp1,
-			String idxApp2, String idxApp3, String idxApp4, String ctrlApp1, String ctrlApp2, String ctrlApp3,
-			String ctrlApp4, String grpId) throws TBoxException {
+	public void updateCompInfo(String EIN, String name, String areaId, String logo, String bg, String idxApp1, String idxApp2, String idxApp3, String idxApp4, String idxApp5, String idxApp6, String ctrlApp1, String ctrlApp2, String ctrlApp3, String ctrlApp4, String grpId) throws TBoxException {
 		Profiler p = new Profiler();
-		log.trace("START: {}.updateCompInfo(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, idxApp1: {}, idxApp2: {}, idxApp3: {}, idxApp4: {}, ctrlApp1: {}, ctrlApp2: {}, ctrlApp3: {}, ctrlApp4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, idxApp1, idxApp2, idxApp3, idxApp4, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4, grpId);
+		log.trace("START: {}.updateCompInfo(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, idxApp1: {}, idxApp2: {}, idxApp3: {}, idxApp4: {}, idxApp5: {}, idxApp6: {}, ctrlApp1: {}, ctrlApp2: {}, ctrlApp3: {}, ctrlApp4: {}, grpId: {}", this.getClass(), EIN, name, areaId, logo, bg, idxApp1, idxApp2, idxApp3, idxApp4, idxApp5, idxApp6, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4, grpId);
 		compDao.update(EIN, name, areaId, logo, bg, grpId);
 		compDao.deleteFastApps(1, EIN);
 		compDao.deleteFastApps(2, EIN);
-		compDao.saveFastApp(1, EIN, idxApp1, idxApp2, idxApp3, idxApp4);
+		compDao.saveFastApp(1, EIN, idxApp1, idxApp2, idxApp3, idxApp4, idxApp5, idxApp6);
 		compDao.saveFastApp(2, EIN, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4);
-		log.info("END: {}.updateCompInfo(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, idxApp1: {}, idxApp2: {}, idxApp3: {}, idxApp4: {}, ctrlApp1: {}, ctrlApp2: {}, ctrlApp3: {}, ctrlApp4: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, idxApp1, idxApp2, idxApp3, idxApp4, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4, grpId, p.executeTime());
+		log.info("END: {}.updateCompInfo(), EIN: {}, name: {}, areaId: {}, logo: {}, bg: {}, idxApp1: {}, idxApp2: {}, idxApp3: {}, idxApp4: {}, idxApp5: {}, idxApp6: {}, ctrlApp1: {}, ctrlApp2: {}, ctrlApp3: {}, ctrlApp4: {}, grpId: {}, exec TIME: {} ms.", this.getClass(), EIN, name, areaId, logo, bg, idxApp1, idxApp2, idxApp3, idxApp4, idxApp5, idxApp6, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4, grpId, p.executeTime());
 	}
 
 

@@ -120,7 +120,15 @@
 									</div>
 									<div class="col-mod-3">
 										<label for="fastKey4">快捷APP4</label>
-										<select class="form-control apps idx-apps" id="idxApp3" name="idxApp4"></select>
+										<select class="form-control apps idx-apps" id="idxApp4" name="idxApp4"></select>
+									</div>
+									<div class="col-mod-3">
+										<label for="fastKey4">快捷APP5</label>
+										<select class="form-control apps idx-apps" id="idxApp5" name="idxApp5"></select>
+									</div>
+									<div class="col-mod-3">
+										<label for="fastKey4">快捷APP6</label>
+										<select class="form-control apps idx-apps" id="idxApp6" name="idxApp6"></select>
 									</div>
 								</div>
 							</div>

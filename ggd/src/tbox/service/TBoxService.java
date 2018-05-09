@@ -472,6 +472,8 @@ public interface TBoxService {
 	 * @param idxApp2
 	 * @param idxApp3
 	 * @param idxApp4
+	 * @param idxApp5
+	 * @param idxApp6
 	 * @param ctrlApp1
 	 * @param ctrlApp2
 	 * @param ctrlApp3
@@ -479,24 +481,9 @@ public interface TBoxService {
 	 * @param grpId
 	 * @throws TBoxException
 	 */
-	public void addCompany(String EIN, String name, String areaId, String logo, String bg, String idxApp1, String idxApp2, String idxApp3, String idxApp4, String ctrlApp1, String ctrlApp2, String ctrlApp3, String ctrlApp4, String grpId) throws TBoxException;
+	public void addCompany(String EIN, String name, String areaId, String logo, String bg, String idxApp1, String idxApp2, String idxApp3, String idxApp4, String idxApp5, String idxApp6, String ctrlApp1, String ctrlApp2, String ctrlApp3, String ctrlApp4, String grpId) throws TBoxException;
 	
 	
-	/**
-	 * 更新廠商資訊
-	 * @param EIN
-	 * @param name
-	 * @param areaId
-	 * @param logo
-	 * @param bg
-	 * @param fastKey1
-	 * @param fastKey2
-	 * @param fastKey3
-	 * @param fastKey4
-	 * @param grpId
-	 * @throws TBoxException
-	 */
-	//public void updateCompInfo(String EIN, String name, String areaId, String logo, String bg, String fastKey1, String fastKey2, String fastKey3, String fastKey4, String grpId) throws TBoxException;
 	
 	
 	/**
@@ -510,6 +497,8 @@ public interface TBoxService {
 	 * @param idxApp2
 	 * @param idxApp3
 	 * @param idxApp4
+	 * @param idxApp5
+	 * @param idxApp6
 	 * @param ctrlApp1
 	 * @param ctrlApp2
 	 * @param ctrlApp3
@@ -517,7 +506,7 @@ public interface TBoxService {
 	 * @param grpId
 	 * @throws TBoxException
 	 */
-	public void updateCompInfo(String EIN, String name, String areaId, String logo, String bg, String idxApp1, String idxApp2, String idxApp3, String idxApp4, String ctrlApp1, String ctrlApp2, String ctrlApp3, String ctrlApp4, String grpId) throws TBoxException;
+	public void updateCompInfo(String EIN, String name, String areaId, String logo, String bg, String idxApp1, String idxApp2, String idxApp3, String idxApp4, String idxApp5, String idxApp6, String ctrlApp1, String ctrlApp2, String ctrlApp3, String ctrlApp4, String grpId) throws TBoxException;
 	
 	/**
 	 * 取得地區

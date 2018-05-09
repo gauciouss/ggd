@@ -98,6 +98,8 @@ public class CompanyDispatcher implements Dispatcher {
 		String idxApp2 = request.getParameter("idxApp2");
 		String idxApp3 = request.getParameter("idxApp3");
 		String idxApp4 = request.getParameter("idxApp4");
+		String idxApp5 = request.getParameter("idxApp5");
+		String idxApp6 = request.getParameter("idxApp6");
 		
 		//遙控器快捷APP
 		String ctrlApp1 = request.getParameter("ctrlApp1");
@@ -105,7 +107,7 @@ public class CompanyDispatcher implements Dispatcher {
 		String ctrlApp3 = request.getParameter("ctrlApp3");
 		String ctrlApp4 = request.getParameter("ctrlApp4");
 		
-		log.trace("START: {}.doConfirm(), EIN: {}, compName: {}, area: {}, group: {}, idxApp1: {}, idxApp2: {}, idxApp3: {}, idxApp4: {}, ctrlApp1: {}, ctrlApp2: {}, ctrlApp3: {}, ctrlApp4: {}", this.getClass(), EIN, compName, area, group, idxApp1, idxApp2, idxApp3, idxApp4, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4);
+		log.trace("START: {}.doConfirm(), EIN: {}, compName: {}, area: {}, group: {}, idxApp1: {}, idxApp2: {}, idxApp3: {}, idxApp4: {}, idxApp5: {}, idxApp6: {}, ctrlApp1: {}, ctrlApp2: {}, ctrlApp3: {}, ctrlApp4: {}", this.getClass(), EIN, compName, area, group, idxApp1, idxApp2, idxApp3, idxApp4, idxApp5, idxApp6, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4);
 		
 		if(Util.isEmpty(logo) || Util.isEmpty(bg)) {
 			log.warn("******** logo or bg base64 value is empty !!!!!!!!!");
@@ -126,7 +128,7 @@ public class CompanyDispatcher implements Dispatcher {
 				if(!Util.isEmpty(bg))
 					StandardUtil.writeBase64ToFile(bg, imgAbsPath, "bg.png");
 				//service.addCompany(EIN, compName, area, imgPath + "logo.png", imgPath + "bg.png", fk1, fk2, fk3, fk4, group);
-				service.addCompany(EIN, compName, area, compName, imgPath + "bg.png", idxApp1, idxApp2, idxApp3, idxApp4, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4, group);
+				service.addCompany(EIN, compName, area, compName, imgPath + "bg.png", idxApp1, idxApp2, idxApp3, idxApp4, idxApp5, idxApp6, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4, group);
 			}
 			else {
 				log.debug("EIN: {}, do action: update.", EIN);
@@ -134,7 +136,7 @@ public class CompanyDispatcher implements Dispatcher {
 					StandardUtil.writeBase64ToFile(logo, imgAbsPath, "logo.png");
 				if(!Util.isEmpty(bg))
 					StandardUtil.writeBase64ToFile(bg, imgAbsPath, "bg.png");
-				service.updateCompInfo(EIN, compName, area, imgPath + "logo.png", imgPath + "bg.png", idxApp1, idxApp2, idxApp3, idxApp4, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4, group);
+				service.updateCompInfo(EIN, compName, area, imgPath + "logo.png", imgPath + "bg.png", idxApp1, idxApp2, idxApp3, idxApp4, idxApp5, idxApp6, ctrlApp1, ctrlApp2, ctrlApp3, ctrlApp4, group);
 			}
 			
 			view.addObject(Constant.ACTION_RESULT, "1");
