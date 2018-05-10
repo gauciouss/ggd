@@ -57,7 +57,7 @@ public class IndexInfoCommand implements Command {
 		log.trace("START: {}.execute(), tbox: {}", this.getClass(), tbox);
 		TBoxInfo box = tbox.getTBoxInfo();
 		KVS kvs = new KVS(getKV1(box), getKV2(box));
-		IndexInfoAdapter adapter = new IndexInfoAdapter(getControlApp(box), getIdxFastApp(box), getMsg(box), getMarquee(box), kvs, getWeather(box));
+		IndexInfoAdapter adapter = new IndexInfoAdapter(getControlApp(box), getIdxFastApp(box), getMsg(box), getMarquee(box), kvs, getWeather(box), getScreenProtection(box));
 		view.addObject(Constant.JSON_RESPONSE, adapter);
 		log.info("END: {}.execute(), tbox: {}, exec TIME: {}", this.getClass(), tbox, p.executeTime());
 	}
@@ -117,6 +117,15 @@ public class IndexInfoCommand implements Command {
 		}
 		log.info("END: {}.getMsg(), box: {}, exec TIME: {} ms.", this.getClass(), box, p.executeTime());
 		return list;
+	}
+	
+	private String getScreenProtection(TBoxInfo box) throws TBoxException {
+		Profiler p = new Profiler();
+		log.trace("START: {}.getScreenProtection(), box: {}", this.getClass(), box);
+		List<KVEntity> entities = service.findKVsByMachine(box.getMachineSN(), 7);
+		String path = Util.isEmpty(entities) ? "" : fileServerPath + entities.get(0).getImgPath();
+		log.info("END: {}.getScreenProtection(), box: {}, path: {}, exec TIME: {} ms.", this.getClass(), box, path, p.executeTime());
+		return path;
 	}
 	
 	private List<KV> getKV2(TBoxInfo box) throws TBoxException {

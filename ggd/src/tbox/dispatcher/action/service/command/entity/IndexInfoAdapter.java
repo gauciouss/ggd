@@ -20,11 +20,12 @@ public class IndexInfoAdapter implements Serializable {
 	private List<Msg> marquee;
 
 	private KVS kv;
+	
+	private String screenProtection;
 
 	private Weather weather;
 
-	public IndexInfoAdapter(List<App> controlPanel, List<App> idxFastApp, List<Msg> msg, List<Msg> marquee, KVS kv,
-			Weather weather) {
+	public IndexInfoAdapter(List<App> controlPanel, List<App> idxFastApp, List<Msg> msg, List<Msg> marquee, KVS kv, Weather weather, String screenProtection) {
 		super();
 		this.controlPanel = controlPanel;
 		this.msg = msg;
@@ -32,6 +33,11 @@ public class IndexInfoAdapter implements Serializable {
 		this.weather = weather;
 		this.idxFastApp = idxFastApp;
 		this.marquee = marquee;
+		this.screenProtection = screenProtection;
+	}
+	
+	public String getScreenProtection() {
+		return screenProtection;
 	}
 
 	/**
