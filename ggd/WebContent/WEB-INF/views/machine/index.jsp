@@ -256,6 +256,10 @@
 					}
 				}
 				
+				if(msg == "undefined") {
+					msg = "執行成功";
+				}
+				
 				alert(msg);
 			}
 			else if(ar == "0") {

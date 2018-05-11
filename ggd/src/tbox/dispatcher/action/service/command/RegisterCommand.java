@@ -32,7 +32,6 @@ public class RegisterCommand implements Command {
 		Profiler p = new Profiler();
 		log.trace("START: {}.execute(), tbox: {}", this.getClass(), tbox);
 		TBoxInfo info = tbox.getTBoxInfo();		
-		//TODO
 		RegisterInfoEntity entity = null;
 		long time = service.activeMachine(info.getMachineSN(), info.getMAC(), info.getWIFIMAC(), WebUtil.getClientIpAddr(request));
 		entity = new RegisterInfoEntity("1", "啟動成功", String.valueOf(time));

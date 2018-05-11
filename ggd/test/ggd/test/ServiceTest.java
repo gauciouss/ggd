@@ -29,6 +29,7 @@ import tbox.data.vo.App;
 import tbox.data.vo.AppEntity;
 import tbox.data.vo.CompanyEntity;
 import tbox.proxy.cwb.gov.tw.OpendataAPI.Entity;
+import tbox.service.MachineService;
 import tbox.service.TBoxService;
 import tbox.service.entity.ApkInfoEntity;
 
@@ -48,6 +49,8 @@ public class ServiceTest {
 	@Autowired
 	@Qualifier("TBoxService")
 	private TBoxService tboxService;
+	
+	
 	
 	@Test
 	public void testGetApkInfo() {

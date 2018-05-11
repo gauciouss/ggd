@@ -27,6 +27,8 @@ import tbox.data.dao.AreaDao;
 import tbox.data.dao.CompanyDao;
 import tbox.data.dao.KVDao;
 import tbox.data.dao.KVQuery;
+import tbox.data.dao.MachineDao;
+import tbox.data.dao.MachineQuery;
 import tbox.data.vo.AppEntity;
 import tbox.data.vo.Area;
 import tbox.data.vo.Company;
@@ -68,8 +70,6 @@ public class DaoTest {
 	@Autowired
 	@Qualifier("AppQuery")
 	private AppQuery appQuery;
-	
-	
 	
 	
 	@Test
