@@ -68,6 +68,9 @@ public class MachineBox implements Serializable {
 
 	@Column(name = "authorized_end_date")
 	private Timestamp authorizedEndDate;
+	
+	@Column(name = "password")
+	private String password;
 
 	public MachineBox() {
 	}
@@ -316,6 +319,14 @@ public class MachineBox implements Serializable {
 	 */
 	public void setAuthorizedEndDate(Timestamp authorizedEndDate) {
 		this.authorizedEndDate = authorizedEndDate;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	/*

@@ -21,15 +21,11 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 			"select EIN "
 			+ " from machine_box m "
 			+ " where m.machine_sn = ? ";
-//			+ "   and m.ethernet_mac = ? "
-//			+ "   and m.wifi_mac = ?";
 	
 
 	private static final String HQL_FIND_BY_SN_MAC_WIFI =
 			"from MachineBox m "
 			+ " where m.machineSN = ? ";
-//			+ "   and m.ethernetMAC = ? "
-//			+ "   and m.wifiMAC = ?";
 	
 	private static final String HQL_FIND_BY_SN =
 			"from MachineBox m "
@@ -47,9 +43,37 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 	private static final String SQL_ADD_NEW_MACHINE = 
 			"insert into machine_box (machine_sn, wifi_mac, ethernet_mac, area_id, EIN, start_date, authorized_start_date, authorized_end_date, isEnabled) values (?, ?, ?, ?, ?, ?, ?, ?, true)";
 	
+	
+	
+	private static final String SQL_UPDATE_MACHINE_BOX_PWD =
+			"update machine_box set password = ? where machine_sn = ?";
+	/**
+	 * 設定機上盒密碼
+	 * @param sn
+	 * @param password
+	 * @return
+	 */
+	public int setPassword(String sn, String password) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.setPassword(), sn: {}, password: {}", this.getClass(), sn, password);
+		int i = super.executeUpateQuery(SQL_UPDATE_MACHINE_BOX_PWD, password, sn);
+		log.info("END: {}.setPassword(), sn: {}, password: {}, exec TIME: {} ms.", this.getClass(), sn, password, p.executeTime());
+		return i;
+	}
+	
 	private static final String SQL_UPDATE_MACHINE_BOX =
 			"update machine_box set isEnabled = true, area_id = ?, EIN = ?, start_date = ? , authorized_start_date = ? , authorized_end_date = ? where machine_sn = ? and ethernet_mac = ? and wifi_mac = ?";
-	
+	/**
+	 * 更新機上盒資料
+	 * @param machineSN
+	 * @param wifiMac
+	 * @param mac
+	 * @param areaId
+	 * @param EIN
+	 * @param start
+	 * @param end
+	 * @return
+	 */
 	public int updateMachineBox(String machineSN, String wifiMac, String mac, int areaId, String EIN, Timestamp start, Timestamp end) {
 		Profiler p = new Profiler();
 		log.trace("START: {}.updateMachineBox(), machineSN: {}, wifiMac: {}, mac: {}, areaId: {}, EIN: {}, start: {}, end: {}", this.getClass(), machineSN, wifiMac, mac, areaId, EIN, start, end);
@@ -84,6 +108,15 @@ public class MachineDao extends HibernateDao<MachineBox, Integer> {
 		log.trace("START: {}.activeMachine(), sn: {}, mac: {}, wifi: {}", this.getClass(), sn, mac, wifi);
 		List<String> list = (List<String>) super.findBySql(SQL_FIND_EIN_BY_MACHINE, sn);
 		log.info("END: {}.activeMachine(), sn: {}, mac: {}, wifi: {}, exec TIME: {} ms.", this.getClass(), sn, mac, wifi, p.executeTime());
+		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> findEINByMachine(String sn) {
+		Profiler p = new Profiler();
+		log.trace("START: {}.activeMachine(), sn: {}", this.getClass(), sn);
+		List<String> list = (List<String>) super.findBySql(SQL_FIND_EIN_BY_MACHINE, sn);
+		log.info("END: {}.activeMachine(), sn: {}, exec TIME: {} ms.", this.getClass(), sn, p.executeTime());
 		return list;
 	}
 	
