@@ -34,6 +34,7 @@ public class TBoxInfoImpl implements TBoxInfo {
 		return this.action;
 	}
 
+	@Override
 	public JsonNode getParams() {
 		return params;
 	}

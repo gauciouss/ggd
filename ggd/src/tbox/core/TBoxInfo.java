@@ -1,5 +1,7 @@
 package tbox.core;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 public interface TBoxInfo {
 
 	public String getMachineSN();
@@ -9,5 +11,7 @@ public interface TBoxInfo {
 	public String getWIFIMAC();
 
 	public String getAction();
+	
+	public JsonNode getParams();
 
 }
