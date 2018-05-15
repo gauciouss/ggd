@@ -81,8 +81,7 @@ public class ViewController extends CommonController {
 	}
 	
 	@RequestMapping(path = PATH, method = RequestMethod.POST)
-	public ModelAndView post(@PathVariable(CATAGORY) String category, @PathVariable(COMMAND) String command
-			, String arg, HttpServletRequest request, HttpServletResponse res) {		
+	public ModelAndView post(@PathVariable(CATAGORY) String category, @PathVariable(COMMAND) String command, String arg, HttpServletRequest request, HttpServletResponse res) {		
 		log.debug("{}.post() exec start. action: {}, type: {}, arg: {}.", this.getClass(), category, command, arg);
 		return doRequest(category, command, arg, request, res);
 	}

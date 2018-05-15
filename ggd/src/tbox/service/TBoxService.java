@@ -380,9 +380,10 @@ public interface TBoxService {
 	 * @param isEnabled
 	 * @param isApproved
 	 * @param EINs
+	 * @param type
 	 * @throws TBoxException
 	 */
-	public void addKV(int kind, String name, String imgB64, String clickLink, String msg, String createUser, Timestamp start, Timestamp end, boolean isEnabled, boolean isApproved, List<String> EINs) throws TBoxException;
+	public void addKV(int kind, String name, String imgB64, String clickLink, String msg, String createUser, Timestamp start, Timestamp end, boolean isEnabled, boolean isApproved, List<String> EINs, String type) throws TBoxException;
 	
 	/**
 	 * 更新廣告/跑馬燈訊息
@@ -398,9 +399,10 @@ public interface TBoxService {
 	 * @param isEnabled
 	 * @param isApproved
 	 * @param EINs
+	 * @param type
 	 * @throws TBoxException
 	 */
-	public void updateKV(int serialNo, int kind, String name, String imgB64, String clickLink, String msg, String updateUser, Timestamp start, Timestamp end, boolean isEnabled, boolean isApproved, List<String> EINs) throws TBoxException;
+	public void updateKV(int serialNo, int kind, String name, String imgB64, String clickLink, String msg, String updateUser, Timestamp start, Timestamp end, boolean isEnabled, boolean isApproved, List<String> EINs, String type) throws TBoxException;
 	
 	
 	/**

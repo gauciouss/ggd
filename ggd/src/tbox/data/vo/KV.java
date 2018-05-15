@@ -51,6 +51,9 @@ public class KV implements Serializable {
 	
 	@Column(name = "click_count")
 	private Integer clickCount;
+	
+	@Column(name = "type")
+	private Integer type;
 
 	@ManyToMany
 	@JoinTable(name = "kv_comp_mapping", joinColumns = {
@@ -223,6 +226,14 @@ public class KV implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public Integer getType() {
+		return type;
+	}
+	
+	public void setType(Integer type) {
+		this.type = type;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -252,6 +263,8 @@ public class KV implements Serializable {
 		builder.append(updateUser);
 		builder.append(", clickCount=");
 		builder.append(clickCount);
+		builder.append(", type=");
+		builder.append(type);
 		builder.append(", companies=");
 		builder.append(companies);
 		builder.append("]");

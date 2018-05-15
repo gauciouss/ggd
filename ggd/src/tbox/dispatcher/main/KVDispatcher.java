@@ -28,6 +28,8 @@ import ggd.core.dispatcher.Dispatcher;
 import ggd.core.util.JSONUtil;
 import ggd.core.util.StandardUtil;
 import tbox.TBoxException;
+import tbox.data.vo.App;
+import tbox.data.vo.AppEntity;
 import tbox.data.vo.CompanyEntity;
 import tbox.data.vo.KV;
 import tbox.data.vo.KVEntity;
@@ -43,6 +45,7 @@ public class KVDispatcher implements Dispatcher {
 	public static final String ALL_KV_COMP = KVDispatcher.class + "_COMPS";
 	public static final String KV_BASE64 = KVDispatcher.class + "_BASE64";
 	public static final String KV_ENTITY = KVDispatcher.class + "_ENTITY";
+	public static final String ALL_APPS = KVDispatcher.class + "_APP";;
 	
 	
 	
@@ -118,7 +121,8 @@ public class KVDispatcher implements Dispatcher {
 		String end = request.getParameter("end");
 		String kvB64 = request.getParameter("kvB64");
 		String msg = request.getParameter("msg");
-		log.trace("START: {}.doConfirm(), serial: {}, name: {}, kind: {}, clickLink: {}, publish: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}", this.getClass(), serial, name, kind, clickLink, publish, start, end, isEnabled, isApproved);
+		String type = request.getParameter("type");
+		log.trace("START: {}.doConfirm(), serial: {}, name: {}, kind: {}, clickLink: {}, publish: {}, type: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}", this.getClass(), serial, name, kind, clickLink, publish, type, start, end, isEnabled, isApproved);
 		try {
 			List<String> EINs = new ArrayList<String>();
 			if(!Util.isEmpty(publish)) {
@@ -134,11 +138,11 @@ public class KVDispatcher implements Dispatcher {
 			Date d2 = new Date(end);
 			if(Util.isEmpty(serial)) {
 				//新增
-				service.addKV(Integer.parseInt(kind), name, kvB64, clickLink, msg, loginUser.getAccount(), DateUtil.changeToTimestamp(d1), DateUtil.changeToTimestamp(d2), Integer.parseInt(isEnabled) == 1, Integer.parseInt(isApproved) == 1, EINs);
+				service.addKV(Integer.parseInt(kind), name, kvB64, clickLink, msg, loginUser.getAccount(), DateUtil.changeToTimestamp(d1), DateUtil.changeToTimestamp(d2), Integer.parseInt(isEnabled) == 1, Integer.parseInt(isApproved) == 1, EINs, type);
 			}
 			else {
 				//更新			
-				service.updateKV(Integer.parseInt(serial), Integer.parseInt(kind), name, kvB64, clickLink, msg, loginUser.getAccount(), DateUtil.changeToTimestamp(d1), DateUtil.changeToTimestamp(d2), Integer.parseInt(isEnabled) == 1, Integer.parseInt(isApproved) == 1, EINs);
+				service.updateKV(Integer.parseInt(serial), Integer.parseInt(kind), name, kvB64, clickLink, msg, loginUser.getAccount(), DateUtil.changeToTimestamp(d1), DateUtil.changeToTimestamp(d2), Integer.parseInt(isEnabled) == 1, Integer.parseInt(isApproved) == 1, EINs, type);
 			}
 			view.addObject(Constant.ACTION_RESULT, "1");
 		}
@@ -157,6 +161,7 @@ public class KVDispatcher implements Dispatcher {
 	private void doEdit(ModelAndView view, HttpServletRequest request) {
 		Profiler p = new Profiler();		
 		String serialNo = request.getParameter("serialNo"); 
+		AdmUser loginUser = (AdmUser) request.getSession().getAttribute(Constant.USER);
 		log.trace("START: {}.deEdit(), serialNo: {}", this.getClass(), serialNo);		
 		try {
 			
@@ -184,11 +189,15 @@ public class KVDispatcher implements Dispatcher {
 				kvB64 = StandardUtil.readFileToBase64(physicalPath + "/" + kvPath);
 			}
 			log.debug("kvB64: {}", kvB64);
+			
+			List<AppEntity> apps = service.findAllApps(loginUser.getGroup());
+			
 			view.addObject(Constant.DATA_LIST, kv);
 			view.addObject(KV_ENTITY, entity);
 			view.addObject(KV_BASE64, kvB64);
 			view.addObject(ALL_KV_KIND, kinds);
 			view.addObject(ALL_KV_COMP, comps);
+			view.addObject(ALL_APPS, apps);
 			view.setViewName("kv/edit");
 		}
 		catch(TBoxException e) {

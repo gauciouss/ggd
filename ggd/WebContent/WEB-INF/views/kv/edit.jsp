@@ -1,3 +1,4 @@
+<%@page import="tbox.data.vo.AppEntity"%>
 <%@page import="ggd.core.util.StandardUtil"%>
 <%@page import="baytony.util.date.DateUtil"%>
 <%@page import="tbox.data.vo.KVEntity"%>
@@ -27,6 +28,7 @@
 	List<KVKind> kinds = (List<KVKind>) request.getAttribute(KVDispatcher.ALL_KV_KIND);
 	List<CompanyEntity> comps = (List<CompanyEntity>) request.getAttribute(KVDispatcher.ALL_KV_COMP);
 	KVEntity kvEntity = (KVEntity) request.getAttribute(KVDispatcher.KV_ENTITY);
+	List<AppEntity> apps = (List<AppEntity>) request.getAttribute(KVDispatcher.ALL_APPS);
 	
 	String startDate = Constant.EMPTY;
 	String endDate = Constant.EMPTY;
@@ -59,8 +61,7 @@
 <head>
 <jsp:include page="/WEB-INF/views/include/header.jsp">
 	<jsp:param value="訊息編輯" name="title" />
-	<jsp:param value="<%=common.getValue(Constant.MAIN_PATH_HOST)%>"
-		name="main" />
+	<jsp:param value="<%=common.getValue(Constant.MAIN_PATH_HOST)%>" name="main" />
 </jsp:include>
 <link rel="stylesheet" type="text/css" href="<%=common.getValue(Constant.MAIN_PATH_HOST)%>/ggd-js/multi-select/multi-select.css">
 <link rel="stylesheet" type="text/css" href="<%=common.getValue(Constant.MAIN_PATH_HOST)%>/ggd-js/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
@@ -82,12 +83,17 @@
 					<input type="hidden" name="<%=Constant.ACTION_TYPE%>" id="<%=Constant.ACTION_TYPE%>" value="confirm" />
 					<input type="hidden" name="serial" id="serial" value="<%=kv.getSerialNo() == null ? "" : kv.getSerialNo()%>"/>
 					<input type="hidden" name="isSave" id="isSave" value="<%=isSave %>"/>
+					
+					<div class="form-group">
+						<div class="form-row">							
+							<label for="name">名稱</label>
+							<input type="text" id="name" class="form-control" name="name" value="<%=kv.getName() == null ? "" : kv.getName() %>" />
+						</div>
+					</div>
+					
+					
 					<div class="form-group">
 						<div class="form-row">
-							<div class="col-md-6">
-								<label for="name">名稱</label>
-								<input type="text" id="name" class="form-control" name="name" value="<%=kv.getName() == null ? "" : kv.getName() %>" />
-							</div>
 							<div class="col-md-6">
 								<label for="kind">廣告類別</label> 
 								<select id="kind" name="kind" class="form-control">
@@ -101,23 +107,49 @@
 									%>
 								</select>
 							</div>
+							
+							<div class="col-md-6">
+								<label for="type">廣告種類</label> 
+								<select id="type" name="type" class="form-control">
+									<option value="">請選擇</option>
+									<option value="1">純廣告</option>
+									<option value="2">推薦app廣告</option>
+									<option value="3">可留聯絡資訊的廣告</option>
+								</select>
+							</div>
+							
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="form-group kind kind1 kind2 kind3 kind4 kind5 kind6">
 						<div class="form-row">
-							<label for="account">連結</label>
+							<label for="clickLink" id="clickLinkTxt">連結</label>
 							<input type="text" id="clickLink" class="form-control" name="clickLink" value="<%=kv.getClickLink() == null ? "" : kv.getClickLink() %>" />
 						</div>
 					</div>
+					<div class="form-group" id="appDIV">
+						<div class="form-row">
+							<label for="clickLink" id="clickLinkTxt">app</label>
+							<select id="introduceApp" class="form-control">
+								<option value="">請選擇</option>
+							<%
+								for(AppEntity app : apps) {
+							%>
+								<option value="<%=app.getPkgName()%>"><%=app.getName()%></option>
+							<%
+								}
+							%>
+							</select>
+						</div>
+					</div>
 					
-					<div class="form-group">
+					<div class="form-group kind kind1 kind2 kind3 kind4 kind5 kind6">
 						<div class="form-row">
 							<label for="msg">訊息</label>
 								<textarea id="msg" name="msg" class="form-control" style="height: 250px"><%=kv.getMsg() == null ? "" : kv.getMsg()%></textarea>
 						</div>
 					</div>
 					
-					<div class="form-group" id="imgTag">
+					<div class="form-group kind kind1 kind2 kind3 kind4 kind5 kind6 kind7" id="imgTag">
 						<div class="form-row">
 							<div class="col-md-6">
 								<label for="kv">圖檔</label>
@@ -132,7 +164,6 @@
 						<label for="publishComp">發送對象</label>
 						<div class="form-row">
 							<select multiple="multiple" id="publishComp" name="publishComp" class="form-control">
-								
 								<%
 									List<CompanyEntity> temp = new ArrayList<CompanyEntity>();
 									temp.addAll(comps);
@@ -196,13 +227,16 @@
 
 <script>
 
-	var kind = <%=kv.getKind()%>;
+	var kind = <%=kv.getKind() == null ? "undefined" : kv.getKind() %>;
+	var type = <%=kv.getType() == null ? "undefined" : kv.getType() %>;
 	var publishJson = <%=publishJson %>;
 	var kvB64 = "<%=kvB64 %>";
+	var clickLink = "<%=kv.getClickLink() %>";
 
 	var setDefaultValue = function() {
-		$("#kind").val(kind);
-		if(kind == 4 || kind == 6) {
+		if(typeof(kind) !== "undefined")
+			$("#kind").val(kind);
+		if(kind == "4" || kind == "6") {
 			$("#imgTag").hide();
 		}
 		
@@ -211,16 +245,47 @@
 			$("#kvB64").val(kvB64);
 			kvB64 = "data:image/png;base64," + kvB64;			
 		}
+		
+		if(typeof(type) !== "undefined") {
+			$("#type").val(type);
+			if(type == 2) {
+				$("#appDIV").show();
+				$("#introduceApp").val(clickLink);
+			}
+		}
+		
+		
 	};
 	
 	var registerKindChangeEvent = function() {
 		$("#kind").on("change", function() {
-			if($(this).val() == 4 || $(this).val() == 6) {
-				$("#imgTag").hide();
+			var v = $(this).val();
+			$(".kind").hide();
+			$(".kind" + v).show();
+			if(v == 7) {
+				$("#type").val("").prop("disabled", true).trigger("change");
 			}
 			else {
-				$("#imgTag").show();
+				$("#type").prop("disabled", false);
 			}
+		});
+	};
+	
+	var registerTypeChangeEvent = function() {
+		$("#type").on("change", function() {
+			var v = $(this).val();			
+			if(v == 2) 
+				$("#appDIV").show();
+			else {
+				$("#appDIV").hide();
+				$("#clickLink").val("");
+			}
+		});
+	};
+	
+	var registerIntroduceAppChangeEvent = function() {
+		$("#introduceApp").on("change", function() {
+			$("#clickLink").val($(this).val());
 		});
 	};
 	
@@ -238,12 +303,14 @@
 			}
 		});
 	};
+		
 	
 	var beforeSubmit = function() {
 		$("#publish").val(JSON.stringify(publishJson));
 	};
 	
 	$(document).ready(function() {
+		$("#appDIV").hide();
 		setDefaultValue();
 		ggd.util.previewFileUploadIMG({
 			targetFile: $("#kv"),
@@ -252,13 +319,15 @@
 		
 		registerKindChangeEvent();
 		registerPublishSelector();
+		registerTypeChangeEvent();
+		registerIntroduceAppChangeEvent();
 		
-		 $('.input-group.date').datepicker({
-			 language: "zh-TW",
-			 format: "yyyy/mm/dd"
-		 });
+		$('.input-group.date').datepicker({
+		 	language: "zh-TW",
+			format: "yyyy/mm/dd"
+		});
 		 
-		 ggd.util.previewFileUploadIMG({
+		ggd.util.previewFileUploadIMG({
 			targetFile: $("#kv"),
 	    	targetImg: $("#kvimg"),
 	    	imgSrc: kvB64,
@@ -267,6 +336,8 @@
 	    		$("#kvB64").val(sp[1]);
 	    	}
 		});
+		
+		
 	});
 	
 </script>

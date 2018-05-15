@@ -43,6 +43,9 @@ public class KVEntity implements Serializable {
 	@Column(name = "isEnabled")
 	private boolean isEnabled;
 	
+	@Column(name = "type")
+	private Integer type;
+	
 	
 
 	/**
@@ -165,6 +168,15 @@ public class KVEntity implements Serializable {
 		this.name = name;
 	}
 
+	public Integer getType() {
+		return type;
+	}
+	
+	public void setType(Integer type) {
+		this.type = type;
+	}
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -224,6 +236,8 @@ public class KVEntity implements Serializable {
 		builder.append(endDate);
 		builder.append(", isEnabled=");
 		builder.append(isEnabled);
+		builder.append(", type=");
+		builder.append(type);
 		builder.append("]");
 		return builder.toString();
 	}

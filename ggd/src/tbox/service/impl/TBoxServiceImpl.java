@@ -393,18 +393,18 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#addKV(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List)
 	 */
 	@Override
-	public void addKV(int kind, String name, String imgB64, String clickLink, String msg, String createUser, Timestamp start, Timestamp end, boolean isEnabled, boolean isApproved, List<String> EINs) throws TBoxException {
+	public void addKV(int kind, String name, String imgB64, String clickLink, String msg, String createUser, Timestamp start, Timestamp end, boolean isEnabled, boolean isApproved, List<String> EINs, String type) throws TBoxException {
 		Profiler p = new Profiler();
-		log.trace("START: {}.addKV(), name: {}, kind: {}, clickLink: {}, msg: {}, createUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}", this.getClass(), name, kind, clickLink, msg, createUser, start, end, isEnabled, isApproved, EINs);
+		log.trace("START: {}.addKV(), name: {}, kind: {}, clickLink: {}, msg: {}, createUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}, type: {}", this.getClass(), name, kind, clickLink, msg, createUser, start, end, isEnabled, isApproved, EINs, type);
 		try {
 			int kvSerial = 0;
 			if(kind != 4 && kind != 6) {
 				String fileName = System.currentTimeMillis() + ".jpg";	
 				StandardUtil.writeBase64ToFile(imgB64, physicalPath + "/kv/", fileName);
-				kvSerial = kvQuery.addNewKV(kind, "kv/" + fileName, clickLink, msg, createUser, name);
+				kvSerial = kvQuery.addNewKV(kind, "kv/" + fileName, clickLink, msg, createUser, name, type);
 			}
 			else {
-				kvSerial = kvQuery.addNewKV(kind, "", clickLink, msg, createUser, name);
+				kvSerial = kvQuery.addNewKV(kind, "", clickLink, msg, createUser, name, type);
 			}
 			for(String EIN : EINs) {
 				kvQuery.addKVPublisher(EIN, kvSerial, start, end, isEnabled, isApproved);
@@ -419,7 +419,7 @@ public class TBoxServiceImpl implements TBoxService {
 			throw new TBoxException(TBoxCodeMsg.EX_004, e.getMessage());
 		}
 		finally {
-			log.info("END: {}.addKV(), name: {}, kind: {}, clickLink: {}, msg: {}, createUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}, exec TIME: {} ms.", this.getClass(), name, kind, clickLink, msg, createUser, start, end, isEnabled, isApproved, EINs, p.executeTime());
+			log.info("END: {}.addKV(), name: {}, kind: {}, clickLink: {}, msg: {}, createUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}, type: {}, exec TIME: {} ms.", this.getClass(), name, kind, clickLink, msg, createUser, start, end, isEnabled, isApproved, EINs, type, p.executeTime());
 		}
 	}
 	
@@ -428,21 +428,21 @@ public class TBoxServiceImpl implements TBoxService {
 	 * @see tbox.service.TBoxService#updateKV(int, int, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.sql.Timestamp, java.sql.Timestamp, boolean, boolean, java.util.List)
 	 */
 	@Override
-	public void updateKV(int serialNo, int kind, String name, String imgB64, String clickLink, String msg, String updateUser, Timestamp start, Timestamp end, boolean isEnabled, boolean isApproved, List<String> EINs) throws TBoxException {	
+	public void updateKV(int serialNo, int kind, String name, String imgB64, String clickLink, String msg, String updateUser, Timestamp start, Timestamp end, boolean isEnabled, boolean isApproved, List<String> EINs, String type) throws TBoxException {	
 		Profiler p = new Profiler();
-		log.trace("START: {}.updateKV(), serialNo: {}, kind: {}, name: {}, clickLink: {}, msg: {}, updateUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}", this.getClass(), serialNo, kind, name, clickLink, msg, updateUser, start, end, isEnabled, isApproved, EINs);
+		log.trace("START: {}.updateKV(), serialNo: {}, kind: {}, name: {}, clickLink: {}, msg: {}, updateUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}, type: {}", this.getClass(), serialNo, kind, name, clickLink, msg, updateUser, start, end, isEnabled, isApproved, EINs, type);
 		try {
 			if(kind != 4 && kind != 6) {
 				String fileName = System.currentTimeMillis() + ".jpg";	
 				StandardUtil.writeBase64ToFile(imgB64, physicalPath + "/kv/", fileName);
-				kvQuery.updateKV(serialNo, kind, "kv/" + fileName, clickLink, msg, updateUser, name);
+				kvQuery.updateKV(serialNo, kind, "kv/" + fileName, clickLink, msg, updateUser, name, type);
 				kvQuery.deleteAllKV_Comp(serialNo);
 				for(String EIN : EINs) {
 					kvQuery.addKVPublisher(EIN, serialNo, start, end, isEnabled, isApproved);
 				}
 			}
 			else {
-				kvQuery.updateKV(serialNo, kind, "", clickLink, msg, updateUser, name);
+				kvQuery.updateKV(serialNo, kind, "", clickLink, msg, updateUser, name, type);
 				kvQuery.deleteAllKV_Comp(serialNo);
 				for(String EIN : EINs) {
 					kvQuery.addKVPublisher(EIN, serialNo, start, end, isEnabled, isApproved);
@@ -458,7 +458,7 @@ public class TBoxServiceImpl implements TBoxService {
 			throw new TBoxException(TBoxCodeMsg.EX_004, e.getMessage());
 		}
 		finally {
-			log.info("END: {}.updateKV(), serialNo: {}, kind: {}, name: {}, clickLink: {}, msg: {}, updateUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}, exec TIME: {} ms.", this.getClass(), serialNo, kind, name, clickLink, msg, updateUser, start, end, isEnabled, isApproved, EINs, p.executeTime());
+			log.info("END: {}.updateKV(), serialNo: {}, kind: {}, name: {}, clickLink: {}, msg: {}, updateUser: {}, start: {}, end: {}, isEnabled: {}, isApproved: {}, EINs: {}, type: {}, exec TIME: {} ms.", this.getClass(), serialNo, kind, name, clickLink, msg, updateUser, start, end, isEnabled, isApproved, EINs, type, p.executeTime());
 		}
 		
 	}
